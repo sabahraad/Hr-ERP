@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/addCompany', [App\Http\Controllers\companyController::class, 'addCompany'])->name('addCompany');
+
+Route::get('/showCompany', [App\Http\Controllers\companyController::class, 'showCompany'])->name('showCompany');

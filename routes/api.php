@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/addCompany', [App\Http\Controllers\companyController::class, 'addCompany'])->name('addCompany');
+Route::get('/showCompany', [App\Http\Controllers\companyController::class, 'showCompany'])->name('showCompany');
+Route::post('/editCompany', [App\Http\Controllers\companyController::class, 'editCompany'])->name('editCompany');
+Route::post('/deleteCompany/{id}', [App\Http\Controllers\companyController::class, 'deleteCompany'])->name('deleteCompany');
+
