@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('logo');
             $table->string('contactNumber');
             $table->text('companyDetails');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

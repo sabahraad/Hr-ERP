@@ -48,16 +48,13 @@ class companyController extends Controller
 
     public function showCompany(){
         $data= Company::all();
-        $monir= Company::pluck('contactNumber');
-        dd($monir);
-                return response()->json($data);
-        // return $data;
+        return response()->json($data);
 
     }
 
-    public function editCompany(Request $request){
+    public function editCompany(Request $request,$id){
+
         
-        $id = $request->id;
         if($request->hasFile('logo')){
             $imageName =  time() . '.' . $request->logo->extension();
 
@@ -88,9 +85,14 @@ class companyController extends Controller
     }
 
     public function deleteCompany($id){
-        // dd($id);
-        Company::destroy($id);        
+       
+        Company::find($id)->delete();        
         return response()->json(['message' => 'Company deleted successfully']);
 
+    }
+
+    public function adminShow(){
+        $data = Company::withTrashed()->get();
+        return response()->json($data);
     }
 }
