@@ -9,4 +9,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Department extends Model
 {
     use HasFactory,SoftDeletes;
+    protected $primaryKey = 'dept_id';
 }
