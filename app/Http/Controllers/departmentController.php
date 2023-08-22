@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Response;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,25 +18,39 @@ class departmentController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'error' => $validator->errors(),
             ], 422);
         }
 
-    
         $data= new Department;
         $data->deptTitle = $request->deptTitle;
         $data->details = $request->details;
         $data->save();
 
         return response()->json([
-            'result' => 'Department Added Successfully'
-        ]);
+            'message' => 'Department Added Successfully',
+            'data'=>$request->all()
+        ],Response::HTTP_CREATED);
 
     }
 
     public function showDepartment(){
         $data= Department::all();
-        return response()->json($data);
+
+        if (count($data) === 0) {
+            return response()->json([
+                'message' => 'Please Add Department First',
+            ],Response::HTTP_NOT_FOUND);
+
+        }else{
+
+            return response()->json([
+                'message' => 'Department List',
+                'data' => $data,
+    
+            ],Response::HTTP_OK);
+        }
+        
     }
 
     public function editDepartment(Request $request,$id){
@@ -48,12 +62,13 @@ class departmentController extends Controller
         
         if ($data->save()) {
             return response()->json([
-                'result' => 'Department updated Successfully'
-            ]);
+                'message' => 'Department updated Successfully',
+                'data'=>$request->all()
+            ],Response::HTTP_OK);
         }else{
             return response()->json([
-                'result'=> 'Something Went Wrong'
-            ]);
+                'message'=> 'Something Went Wrong'
+            ],Response::HTTP_BAD_GATEWAY);
         }
 
 
@@ -63,7 +78,7 @@ class departmentController extends Controller
         
         Department::find($id)->delete();
         return response()->json([
-            'result' => 'Department Deleted'
+            'message' => 'Department Deleted'
         ]);
 
     }

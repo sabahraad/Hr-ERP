@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Response;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,14 +29,27 @@ class designationsController extends Controller
         $data->save();
 
         return response()->json([
-            'result' => 'Designation Added Successfully'
-        ]);
+            'message' => 'Designation Added Successfully',
+            'data'=> $request->all()
+        ],Response::HTTP_CREATED);
 
     }
 
     public function showDesignations(){
         $data= Designation::all();
-        return response()->json($data);
+        if (count($data) === 0) {
+            return response()->json([
+                'message' => 'Please Add Designation First',
+            ],Response::HTTP_NOT_FOUND);
+
+        }else{
+
+            return response()->json([
+                'message' => 'Designation List',
+                'data' => $data,
+    
+            ],Response::HTTP_OK);
+        }
     }
 
     public function editDesignations(Request $request,$id){
@@ -48,12 +61,12 @@ class designationsController extends Controller
         
         if ($data->save()) {
             return response()->json([
-                'result' => 'Designation updated Successfully'
-            ]);
+                'message' => 'Designation updated Successfully'
+            ],Response::HTTP_OK);
         }else{
             return response()->json([
-                'result'=> 'Something Went Wrong'
-            ]);
+                'message'=> 'Something Went Wrong'
+            ],Response::HTTP_BAD_GATEWAY);
         }
 
 
@@ -63,7 +76,7 @@ class designationsController extends Controller
         
         Designation::find($id)->delete();
         return response()->json([
-            'result' => 'Designation Deleted'
+            'message' => 'Designation Deleted'
         ]);
 
     }
