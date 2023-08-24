@@ -36,6 +36,11 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::delete('/delete/designations/{id}', [App\Http\Controllers\designationsController::class, 'deleteDesignations'])->name('deleteDesignations');
     
     Route::get('/adminShow', [App\Http\Controllers\companyController::class, 'adminShow'])->name('adminShow');
+
+    Route::post('/add-IP', [App\Http\Controllers\IpController::class, 'addIP'])->name('addIP');
+    Route::get('/IP-list', [App\Http\Controllers\IpController::class, 'showIP'])->name('showIP');
+    Route::post('/edit/IP/{id}', [App\Http\Controllers\IpController::class, 'updateIP'])->name('updateIP');
+    Route::delete('/delete/IP/{id}', [App\Http\Controllers\IpController::class, 'deleteIP'])->name('deleteIP');
     
     Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);

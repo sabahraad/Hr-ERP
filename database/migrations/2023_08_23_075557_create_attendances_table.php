@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('i_p_s', function (Blueprint $table) {
-            $table->increments('ip_id');
-            $table->string('ip');
-            $table->string('wifiName')->nullable();
+        Schema::create('attendances', function (Blueprint $table) {
+            $table->increments('attendance_id');
+            $table->timestamp('IN');
+            $table->timestamp('OUT');
+            $table->string('reason')->nullable();
+            $table->foreignId('id')->constrained('users');
             $table->string('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('i_p_s');
+        Schema::dropIfExists('attendances');
     }
 };
