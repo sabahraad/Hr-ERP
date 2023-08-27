@@ -9,11 +9,15 @@ use Illuminate\Support\Facades\Validator;
 class departmentController extends Controller
 {
 
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
+
     public function addDepartment(Request $request){
 
         $validator= Validator::make($request->all(), [
             'deptTitle' => 'required|string',
-            'details'  => 'required'
+            'details'  => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -22,9 +26,12 @@ class departmentController extends Controller
             ], 422);
         }
 
+        $company_id= auth()->user()->company_id;
+
         $data= new Department;
         $data->deptTitle = $request->deptTitle;
         $data->details = $request->details;
+        $data->company_id = $company_id;
         $data->save();
 
         return response()->json([
@@ -35,7 +42,8 @@ class departmentController extends Controller
     }
 
     public function showDepartment(){
-        $data= Department::all();
+        $company_id= auth()->user()->company_id;
+        $data= Department::where('company_id',$company_id)->get();
 
         if (count($data) === 0) {
             return response()->json([
@@ -55,6 +63,16 @@ class departmentController extends Controller
 
     public function editDepartment(Request $request,$id){
         
+        $validator= Validator::make($request->all(), [
+            'deptTitle' => 'required|string',
+            'details'  => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
         $data = Department::find($id);
         
         $data->deptTitle = $request->deptTitle;

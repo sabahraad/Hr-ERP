@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,25 +35,56 @@ class AuthController extends Controller
     }
    
     public function register(Request $request) {
+
         $validator = Validator::make($request->all(), [
+            'companyName' => 'required|string|unique:companies',
+            'address' => 'required|string',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'companyDetails' => 'required',
+            'contactNumber' => 'required',
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-            'company_id' => 'required|string'
+            'password' => 'required|string|confirmed|min:6'    
         ]);
+        
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors(),
             ], 422);
         }
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)]
-                ));
+
+      //Create Company
+        $imageName =  time() . '.' . $request->logo->extension();
+        $request->logo->move(public_path('images'), $imageName);
+        $imagePath = 'images/' . $imageName;
+
+        $data = new Company();
+            
+        $data->companyName = $request->companyName;
+        $data->logo = $imagePath;
+        $data->address = $request->address;
+        $data->contactNumber = $request->contactNumber;
+        $data->companyDetails = $request->companyDetails;
+        $data->save();
+
+        $company_id = Company::where('companyName',$request->companyName)->value('company_id');
+
+        
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->company_id = $company_id;
+        $user->role = 2;
+        $user->save();
+
+        // $user = User::create(array_merge(
+        //             $validator->validated(),
+        //             ['password' => bcrypt($request->password)]
+        //         ));
         
         return response()->json([
-            'message' => 'User successfully registered',
-            'data' => $user
+            'message' => 'Company Successfully Registered',
         ],Response::HTTP_CREATED);
     }
 

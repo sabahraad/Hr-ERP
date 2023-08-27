@@ -5,8 +5,9 @@ use Illuminate\Http\Response;
 use App\Models\Company;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class companyController extends Controller
 {
@@ -15,51 +16,16 @@ class companyController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function addCompany(Request $request){
-
-        
-        $validator= Validator::make($request->all(), [
-            'companyName' => 'required|string',
-            'address' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'companyDetails' => 'required',
-            'contactNumber' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors(),
-            ], 422);
-        }
-
-        $imageName =  time() . '.' . $request->logo->extension();
-        $request->logo->move(public_path('images'), $imageName);
-
-        $data = new Company();
-            
-        $data->companyName = $request->companyName;
-        $data->logo = $imageName;
-        $data->address = $request->address;
-        $data->contactNumber = $request->contactNumber;
-        $data->companyDetails = $request->companyDetails;
-        $data->save();
-
-        return response()->json([
-            'message' => 'Company Created Successfully',
-            'data'=> $request->all()
-            
-        ],Response::HTTP_CREATED);
-        
-
-    }
-
     public function showCompany(){
-
-        $data= Company::all();
+        
+        $company_id= auth()->user()->company_id;
+        
+        $data= Company::where('company_id',$company_id)->get();
         
         if (count($data) === 0) {
             return response()->json([
                 'message' => 'Please Add Company First',
+                'data'=> $data
             ],Response::HTTP_NOT_FOUND);
 
         }else{
@@ -72,17 +38,41 @@ class companyController extends Controller
         }
     }
 
-    public function editCompany(Request $request,$id){
+    public function editCompany(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'companyName' => 'required|string',
+            'address' => 'required|string',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'companyDetails' => 'required',
+            'contactNumber' => 'required',    
+        ]);
+        $company_id= auth()->user()->company_id;
+        Rule::unique('companies', 'companyName')->ignore($company_id, 'company_id');
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        
+        $data = Company::find($company_id);
+        if(!$data){
+            return response()->json([
+                'message' => 'Add Company First'
+            ],Response::HTTP_NOT_FOUND);
+        }
 
         if($request->hasFile('logo')){
             $imageName =  time() . '.' . $request->logo->extension();
             $request->logo->move(public_path('images'), $imageName);
-            $data = Company::find($id, 'company_id');
-            $data->logo = $imageName;
+            $imagePath = 'images/' . $imageName;
+            $data->logo = $imagePath;
             $data->save();
         }
 
-        $data = Company::find($id);
+        $data = Company::find($company_id);
         
         $data->companyName = $request->companyName;
         $data->address = $request->address;
@@ -90,7 +80,7 @@ class companyController extends Controller
         $data->companyDetails = $request->companyDetails;
         $data->save();
 
-        $data= Company::where('company_id',$id)->get();
+        $data= Company::where('company_id',$company_id)->get();
         
         return response()->json([
             'message' => 'Company updated Successfully',
@@ -99,20 +89,14 @@ class companyController extends Controller
 
     }
 
-    public function deleteCompany($id){
-       
-        Company::where('company_id',$id)->delete();        
+    public function deleteCompany(){
+
+        $company_id= auth()->user()->company_id;
+        Company::where('company_id',$company_id)->delete();        
         return response()->json([
             'message' => 'Company deleted successfully'
         ]);
 
     }
 
-    public function adminShow(){
-
-        $data = Company::withTrashed()->get();
-        return response()->json($data);
-    }
-
-   
 }
