@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('ip_id');
             $table->string('ip');
             $table->string('wifiName')->nullable();
-            $table->string('company_id');
+            $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
