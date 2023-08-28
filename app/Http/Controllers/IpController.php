@@ -9,15 +9,18 @@ use Illuminate\Http\Response;
 
 class IpController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
+    
     protected $validationRules = [
         'ip' => 'required|string',
         'wifiName' => 'string',
-        'company_id' => 'required|integer', 
         'status' => 'required|boolean', 
     ];
     
     public function addIP(Request $request){
-
+        
         $validator = Validator::make($request->all(), $this->validationRules);
 
         if ($validator->fails()) {
@@ -26,10 +29,12 @@ class IpController extends Controller
             ], 422);
         }
 
+        $company_id= auth()->user()->company_id;
+
         $ip = new IP();
         $ip->ip = $request->ip;
         $ip->wifiName = $request->wifiName;
-        $ip->company_id = $request->company_id;
+        $ip->company_id = $company_id;
         $ip->status = $request->status;
         $ip->save();
 
@@ -49,10 +54,12 @@ class IpController extends Controller
             ],422);
         }
 
+        $company_id= auth()->user()->company_id;
+
         $ip = IP::find($id);
         $ip->ip= $request->ip;
         $ip->wifiName = $request->wifiName;
-        $ip->company_id = $request->company_id;
+        $ip->company_id = $company_id;
         $ip->status = $request->status;
         $ip->save();
 
@@ -63,7 +70,8 @@ class IpController extends Controller
     }
 
     public function showIP(){
-        $data= IP::all();
+        $company_id= auth()->user()->company_id;
+        $data= IP::where('company_id',$company_id)->get();
 
         if (count($data) === 0) {
             return response()->json([

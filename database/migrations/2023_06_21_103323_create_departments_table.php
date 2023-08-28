@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id('dept_id');
+            $table->unsignedBigInteger('company_id');
+            $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->string('deptTitle');
             $table->text('details');
             $table->softDeletes();

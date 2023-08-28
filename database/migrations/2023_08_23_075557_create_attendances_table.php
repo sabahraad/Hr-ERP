@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamp('OUT');
             $table->string('reason')->nullable();
             $table->foreignId('id')->constrained('users');
-            $table->string('company_id');
+            $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

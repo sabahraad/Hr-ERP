@@ -15,17 +15,19 @@ class designationsController extends Controller
             'desigTitle' => 'required|string',
             'details'  => 'required'
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-    
+        $company_id= auth()->user()->company_id;
+
         $data= new Designation;
         $data->desigTitle = $request->desigTitle;
         $data->details = $request->details;
+        $data->company_id = $company_id;
         $data->save();
 
         return response()->json([
@@ -36,7 +38,9 @@ class designationsController extends Controller
     }
 
     public function showDesignations(){
-        $data= Designation::all();
+        $company_id= auth()->user()->company_id;
+        $data= Designation::where('company_id',$company_id)->get();
+
         if (count($data) === 0) {
             return response()->json([
                 'message' => 'Please Add Designation First',
@@ -53,6 +57,17 @@ class designationsController extends Controller
     }
 
     public function editDesignations(Request $request,$id){
+
+        $validator= Validator::make($request->all(), [
+            'desigTitle' => 'required|string',
+            'details'  => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
         
         $data = Designation::find($id);
         
@@ -61,7 +76,8 @@ class designationsController extends Controller
         
         if ($data->save()) {
             return response()->json([
-                'message' => 'Designation updated Successfully'
+                'message' => 'Designation updated Successfully',
+                'data'=> $request->all()
             ],Response::HTTP_OK);
         }else{
             return response()->json([
