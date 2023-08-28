@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->increments('attendance_id');
             $table->timestamp('IN');
-            $table->timestamp('OUT');
+            $table->timestamp('OUT')->nullable();
             $table->string('reason')->nullable();
             $table->foreignId('id')->constrained('users');
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
+            $table->string('edited')->nullable();
+            $table->string('editedBY')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

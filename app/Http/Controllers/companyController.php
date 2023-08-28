@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use App\Models\Company;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class companyController extends Controller
 {

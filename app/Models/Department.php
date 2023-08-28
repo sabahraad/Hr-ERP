@@ -10,4 +10,8 @@ class Department extends Model
 {
     use HasFactory,SoftDeletes;
     protected $primaryKey = 'dept_id';
+
+    public function company(){
+        return $this->belongsTo(company::class);
+    }
 }
