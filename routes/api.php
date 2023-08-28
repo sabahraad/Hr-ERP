@@ -27,6 +27,11 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
     Route::get('/unauthorized',[App\Http\Controllers\Controller::class, 'unauthorized'])->name('unauthorized');
     Route::get('/user-profile', [App\Http\Controllers\AuthController::class, 'userProfile']);   
+
+    Route::post('/attendance', [App\Http\Controllers\attendanceController::class, 'createAttendance'])->name('attendance');
+    Route::get('/attendance-list', [App\Http\Controllers\attendanceController::class, 'showattendance'])->name('showattendance');
+    Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteattendance'])->name('deleteattendance');
+
 });
 
 Route::middleware(RoleCheck::class)->group(function () {
@@ -49,5 +54,10 @@ Route::post('/add-IP', [App\Http\Controllers\IpController::class, 'addIP'])->nam
 Route::get('/IP-list', [App\Http\Controllers\IpController::class, 'showIP'])->name('showIP');
 Route::post('/edit/IP/{id}', [App\Http\Controllers\IpController::class, 'updateIP'])->name('updateIP');
 Route::delete('/delete/IP/{id}', [App\Http\Controllers\IpController::class, 'deleteIP'])->name('deleteIP');
+
+Route::post('/edit/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'updateattendance'])->name('updateattendance');
+
+Route::post('leave-setting', [App\Http\Controllers\leaveController::class, 'leavesetting'])->name('leavesetting');
+Route::get('leave-setting-list', [App\Http\Controllers\leaveController::class, 'leavesettingList'])->name('leavesettingList');
 
 });
