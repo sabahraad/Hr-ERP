@@ -16,5 +16,13 @@ class Company extends Model
     public function ip(){
         return $this->hasMany(IP::class);
     }
+
+    public function department(){
+        return $this->hasMany(department::class);
+    }
+
+    public function designation(){
+        return $this->hasMany(designation::class);
+    }
     
 }

@@ -10,5 +10,9 @@ class Designation extends Model
 {
     use HasFactory,SoftDeletes;
     protected $primaryKey = 'designation_id';
+
+    public function company(){
+        return $this->belongsTo(company::class);
+    }
     
 }
