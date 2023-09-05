@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('i_p_s', function (Blueprint $table) {
-            $table->increments('ip_id');
+            $table->id('ip_id');
             $table->string('ip');
             $table->string('wifiName')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
+            $table->boolean('status');
             $table->softDeletes();
             $table->timestamps();
         });
