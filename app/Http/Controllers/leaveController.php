@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\leaveApplication;
 use App\Models\leaveSetting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class leaveController extends Controller
 {
@@ -12,18 +15,20 @@ class leaveController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function leavesetting(Request $request){
+    public function addleavesetting(Request $request){
 
+        $company_id= auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
-            'annual_leave' => 'integer',
-            'casual_leave' => 'integer',
-            'maternity_leave' => 'integer',
-            'medical_leave' => 'integer',
-            'privilege_leave' => 'integer',
-            'probationary_leave' => 'integer',
-            'half_day_leave' => 'integer',
-            'extended_leave' => 'integer',
-            'paid_leave' => 'integer',
+            'days' => 'required|integer',
+            // 'leave_type' => 'required|string|max:20|unique:leave_settings',
+            'leave_type' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('leave_settings', 'leave_type')->where(function ($query) use ($company_id) {
+                    return $query->where('company_id', $company_id);
+                }),],
+            'status' => 'required|boolean'
         ]);
         
         
@@ -33,26 +38,15 @@ class leaveController extends Controller
             ], 422);
         }
 
-        $company_id= auth()->user()->company_id;
-        $id = leaveSetting::where('company_id',$company_id)->value('leave_setting_id');
-        $data=leaveSetting::find($id);
-        if(!$data){
-            $data= new leaveSetting();
-        }
         
-        $data->annual_leave = $request->annual_leave ?? $data->annual_leave ?? 0;
-        $data->casual_leave = $request->casual_leave ?? $data->casual_leave ?? 0;
-        $data->maternity_leave = $request->maternity_leave?? $data->maternity_leave?? 0;
-        $data->medical_leave = $request->medical_leave?? $data->medical_leave?? 0;
-        $data->privilege_leave = $request->privilege_leave?? $data->privilege_leave?? 0;
-        $data->probationary_leave = $request->probationary_leave?? $data->probationary_leave?? 0;
-        $data->half_day_leave = $request->half_day_leave?? $data->half_day_leave?? 0;
-        $data->extended_leave = $request->extended_leave?? $data->extended_leave?? 0;
-        $data->paid_leave = $request->paid_leave?? $data->paid_leave?? 0;
+        $data= new leaveSetting();
+        $data->days = $request->days;
+        $data->leave_type = $request->leave_type;
+        $data->status = $request->status;
         $data->company_id = $company_id;
         $data->save();
 
-        $data= leaveSetting::where('company_id',$company_id)->get();
+        // $data= leaveSetting::where('leave_type',$request->leave_type)->get();
 
         return response()->json([
             'message'=> 'Leave Setting Added',
@@ -72,5 +66,90 @@ class leaveController extends Controller
         ],200);
     }
 
+    public function updateleavesetting(Request $request,$id){
+
+        $validator = Validator::make($request->all(), [
+            'days' => 'required|integer',
+            'leave_type' => 'required|string|max:20',
+            'status' => 'required|boolean'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $company_id= auth()->user()->company_id;
+        $data = leaveSetting::find($id);
+        if(!$data){
+            return response()->json([
+                'message' => 'Leave Type Not Found'
+            ],404);
+        }
+        $data->days = $request->days;
+        $data->leave_type = $request->leave_type;
+        $data->status = $request->status;
+        $data->company_id = $company_id;
+        $data->save();
+
+        $data= leaveSetting::where('company_id',$company_id)->get();
+
+        return response()->json([
+            'message'=> 'Leave Setting Updated',
+            'data'=>$data
+        ],200);
+    }
+
+    public function deleteleavesetting($id){
+        leaveSetting::where('leave_setting_id',$id)->delete();        
+        return response()->json([
+            'message' => 'Leave Type deleted successfully'
+        ]);
+    }
+
+    public function createLeaveApplications(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'leave_setting_id' => 'required|integer',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'reason' => 'required|string'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $user_id = auth()->user()->id;
+        $emp_id= Employee::where('id',$user_id)->value('emp_id');
+
+        $data = new leaveApplication();
+
+        if($request->hasFile('image')){
+            $imageName =  time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $imagePath = 'images/' . $imageName;
+            $data->image = $imagePath;
+        }
+        
+        $data->emp_id = $emp_id;
+        $data->leave_setting_id = $request->leave_setting_id;
+        $data->start_date = $request->start_date;
+        $data->end_date = $request->end_date;
+        $data->status = $request->status;
+        $data->reason = $request->reason;
+        $data->approvel_date = $request->approvel_date;
+        $data->approval_name = $request->approval_name;
+        $data->save();
+
+        return response()->json([
+            'message' => 'Your Leave Application Submitted Successfully',
+            'data'=> $data
+        ],201);
+    }
 
 }

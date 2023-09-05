@@ -12,6 +12,10 @@ class Company extends Model
     use HasFactory ,SoftDeletes;
 
     protected $primaryKey = 'company_id';
+
+    public function users(){
+        return $this->hasMany(User::class, 'company_id', 'company_id');
+    }
     
     public function ip(){
         return $this->hasMany(IP::class);
@@ -24,5 +28,5 @@ class Company extends Model
     public function designation(){
         return $this->hasMany(designation::class);
     }
-    
+   
 }

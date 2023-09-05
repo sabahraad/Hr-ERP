@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use App\Models\Company;
+use App\Models\Department;
+use App\Models\Designation;
+use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -67,7 +71,6 @@ class companyController extends Controller
             $request->logo->move(public_path('images'), $imageName);
             $imagePath = 'images/' . $imageName;
             $data->logo = $imagePath;
-            $data->save();
         }
 
         $data = Company::find($company_id);
@@ -77,8 +80,6 @@ class companyController extends Controller
         $data->contactNumber = $request->contactNumber;
         $data->companyDetails = $request->companyDetails;
         $data->save();
-
-        $data= Company::where('company_id',$company_id)->get();
         
         return response()->json([
             'message' => 'Company updated Successfully',
@@ -90,11 +91,14 @@ class companyController extends Controller
     public function deleteCompany(){
 
         $company_id= auth()->user()->company_id;
-        Company::where('company_id',$company_id)->delete();        
+        $company = Company::find($company_id);
+        $company->users()->delete();  
+        $company->delete();
         return response()->json([
             'message' => 'Company deleted successfully'
         ]);
 
+    
     }
 
 }

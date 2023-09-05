@@ -17,7 +17,7 @@ class departmentController extends Controller
 
         $validator= Validator::make($request->all(), [
             'deptTitle' => 'required|string',
-            'details'  => 'required|string',
+            'details'  => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -36,7 +36,7 @@ class departmentController extends Controller
 
         return response()->json([
             'message' => 'Department Added Successfully',
-            'data'=>$request->all()
+            'data'=>$data
         ],Response::HTTP_CREATED);
 
     }
@@ -81,7 +81,7 @@ class departmentController extends Controller
         if ($data->save()) {
             return response()->json([
                 'message' => 'Department updated Successfully',
-                'data'=>$request->all()
+                'data'=>$data
             ],Response::HTTP_OK);
         }else{
             return response()->json([

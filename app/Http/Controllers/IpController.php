@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 
 class IpController extends Controller
 {
+    
     public function __construct() {
         $this->middleware('auth:api');
     }
