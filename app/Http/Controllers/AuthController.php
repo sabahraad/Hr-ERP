@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Department;
+use App\Models\Designation;
+use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +18,6 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    
-   
     public function login(Request $request){
 
     	$validator = Validator::make($request->all(), [
@@ -28,7 +29,9 @@ class AuthController extends Controller
         }
         
         if (!$token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'error' => 'Please Enter Valid Email & Password'
+            ], 401);
         }
         
         return $this->createNewToken($token);
@@ -67,21 +70,36 @@ class AuthController extends Controller
         $data->companyDetails = $request->companyDetails;
         $data->save();
 
-        $company_id = Company::where('companyName',$request->companyName)->value('company_id');
+       
 
-        
+        // $company_id = Company::where('companyName',$request->companyName)->value('company_id');
+
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        $user->company_id = $company_id;
+        $user->company_id = $data->company_id;
         $user->role = 2;
         $user->save();
 
-        // $user = User::create(array_merge(
-        //             $validator->validated(),
-        //             ['password' => bcrypt($request->password)]
-        //         ));
+        $dept = new Department();
+        $dept->deptTitle = "People Care";
+        $dept->company_id = $data->company_id;
+        $dept->save();
+
+        $desig = new Designation();
+        $desig->desigTitle = "HR";
+        $desig->company_id = $data->company_id;
+        $desig->save();
+
+        $employee= new Employee();
+        $employee->id = $user->id;
+        $employee->officeEmployeeID = $request->officeEmployeeID;
+        $employee->name = $request->name;
+        $employee->dept_id = $dept->dept_id;
+        $employee->designation_id = $desig->designation_id;
+        $employee->company_id = $data->company_id;
+        $employee->save();
         
         return response()->json([
             'message' => 'Company Successfully Registered',

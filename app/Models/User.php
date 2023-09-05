@@ -8,12 +8,21 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'company_id');
+    }
+
+    public function employee(){
+        return $this->hasOne(Employee::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -64,4 +73,6 @@ class User extends Authenticatable implements JWTSubject
     public function attendance(){
         return $this->hasMany(attendance::class);
     }
+
+    
 }

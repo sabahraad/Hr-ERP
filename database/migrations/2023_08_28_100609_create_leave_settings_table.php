@@ -12,18 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('leave_settings', function (Blueprint $table) {
-            $table->increments('leave_setting_id');
-            $table->integer('annual_leave')->nullable()->default(0);
-            $table->integer('casual_leave')->nullable()->default(0);
-            $table->integer('maternity_leave')->nullable()->default(0);
-            $table->integer('medical_leave')->nullable()->default(0);
-            $table->integer('privilege_leave')->nullable()->default(0);
-            $table->integer('probationary_leave')->nullable()->default(0);
-            $table->integer('half_day_leave')->nullable()->default(0);
-            $table->integer('extended_leave')->nullable()->default(0);
-            $table->integer('paid_leave')->nullable()->default(0);
+            $table->id('leave_setting_id');
+            $table->integer('days')->nullable()->default(0);
+            $table->string('leave_type');
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
+            $table->boolean('status');
             $table->softDeletes();
             $table->timestamps();
         });

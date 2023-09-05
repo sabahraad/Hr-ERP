@@ -31,10 +31,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/attendance', [App\Http\Controllers\attendanceController::class, 'createAttendance'])->name('attendance');
     Route::get('/attendance-list', [App\Http\Controllers\attendanceController::class, 'showattendance'])->name('showattendance');
     Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteattendance'])->name('deleteattendance');
+    
+    Route::post('/leave-applications', [App\Http\Controllers\leaveController::class, 'createLeaveApplications'])->name('createLeaveApplications');
 
 });
 
-Route::middleware(RoleCheck::class)->group(function () {
+Route::middleware([RoleCheck::class,SetDefaultJsonResponse::class])->group(function () {
 
 Route::get('/company-list', [App\Http\Controllers\companyController::class, 'showCompany'])->name('showCompany');
 Route::post('/edit/company', [App\Http\Controllers\companyController::class, 'editCompany'])->name('editCompany');
@@ -57,7 +59,14 @@ Route::delete('/delete/IP/{id}', [App\Http\Controllers\IpController::class, 'del
 
 Route::post('/edit/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'updateattendance'])->name('updateattendance');
 
-Route::post('leave-setting', [App\Http\Controllers\leaveController::class, 'leavesetting'])->name('leavesetting');
+Route::post('add-leave-setting', [App\Http\Controllers\leaveController::class, 'addleavesetting'])->name('addleavesetting');
 Route::get('leave-setting-list', [App\Http\Controllers\leaveController::class, 'leavesettingList'])->name('leavesettingList');
+Route::post('/edit/leave-setting/{id}', [App\Http\Controllers\leaveController::class, 'updateleavesetting'])->name('updateleavesetting');
+Route::delete('/delete/leave-setting/{id}', [App\Http\Controllers\leaveController::class, 'deleteleavesetting'])->name('deleteleavesetting');
+
+Route::post('add-employee', [App\Http\Controllers\employeeController::class, 'addEmployee'])->name('addEmployee');
+Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
+Route::post('/edit/employee/{id}', [App\Http\Controllers\employeeController::class, 'updateEmployee'])->name('updateEmployee');
+Route::delete('/delete/employee/{id}', [App\Http\Controllers\employeeController::class, 'deleteEmployee'])->name('deleteEmployee');
 
 });

@@ -9,11 +9,15 @@ use Illuminate\Http\Request;
 
 class designationsController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
+    
     public function addDesignations(Request $request){
 
         $validator= Validator::make($request->all(), [
             'desigTitle' => 'required|string',
-            'details'  => 'required'
+            'details'  => 'string'
         ]);
         
         if ($validator->fails()) {
@@ -32,7 +36,7 @@ class designationsController extends Controller
 
         return response()->json([
             'message' => 'Designation Added Successfully',
-            'data'=> $request->all()
+            'data'=> $data
         ],Response::HTTP_CREATED);
 
     }
@@ -77,7 +81,7 @@ class designationsController extends Controller
         if ($data->save()) {
             return response()->json([
                 'message' => 'Designation updated Successfully',
-                'data'=> $request->all()
+                'data'=> $data
             ],Response::HTTP_OK);
         }else{
             return response()->json([
