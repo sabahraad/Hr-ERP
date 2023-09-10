@@ -16,11 +16,13 @@ return new class extends Migration
             $table->timestamp('IN');
             $table->timestamp('OUT')->nullable();
             $table->string('reason')->nullable();
+            $table->string('edited')->nullable();
+            $table->string('editedBY')->nullable();
             $table->foreignId('emp_id')->constrained('employees')->onDelete('cascade');
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
-            $table->string('edited')->nullable();
-            $table->string('editedBY')->nullable();
+            $table->unsignedBigInteger('id');
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
