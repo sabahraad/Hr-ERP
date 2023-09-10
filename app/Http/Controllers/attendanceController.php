@@ -55,9 +55,10 @@ class attendanceController extends Controller
 
     public function showattendance(){
 
-        $user_id = auth()->user()->id;
-        $data= Attendance::where('id',$user_id)->get();
-
+        $user_id = auth()->user()->emp_id;
+        dd($user_id);
+        $data= Attendance::where('attendance_id',$user_id)->get();
+        dd($data);
         if (count($data) === 0) {
             return response()->json([
                 'message' => 'No Attendance Found',
