@@ -69,4 +69,29 @@ Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'em
 Route::post('/edit/employee/{id}', [App\Http\Controllers\employeeController::class, 'updateEmployee'])->name('updateEmployee');
 Route::delete('/delete/employee/{id}', [App\Http\Controllers\employeeController::class, 'deleteEmployee'])->name('deleteEmployee');
 
+Route::post('add-office-location', [App\Http\Controllers\officeLocationController::class, 'createOfficeLocation'])->name('createOfficeLocation');
+Route::get('office-location-list', [App\Http\Controllers\officeLocationController::class, 'OfficeLocationList'])->name('OfficeLocationList');
+Route::post('/edit/office-location/{id}', [App\Http\Controllers\officeLocationController::class, 'updateOfficeLocation'])->name('updateOfficeLocation');
+Route::delete('/delete/office-location/{id}', [App\Http\Controllers\officeLocationController::class, 'deleteOfficeLocation'])->name('deleteOfficeLocation');
+
+Route::post('add-weekend', [App\Http\Controllers\weekendController::class, 'createWeekend'])->name('createWeekend');
+Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
+Route::post('/edit/weekend/{id}', [App\Http\Controllers\weekendController::class, 'updateWeekend'])->name('updateWeekend');
+Route::delete('/delete/weekend/{id}', [App\Http\Controllers\weekendController::class, 'deleteWeekend'])->name('deleteWeekend');
+
+Route::post('add-holiday', [App\Http\Controllers\holidayController::class, 'createHoliday'])->name('createHoliday');
+Route::get('holiday-list', [App\Http\Controllers\holidayController::class, 'HolidayList'])->name('HolidayList');
+Route::post('/edit/holiday/{id}', [App\Http\Controllers\holidayController::class, 'updateHoliday'])->name('updateHoliday');
+Route::delete('/delete/holiday/{id}', [App\Http\Controllers\holidayController::class, 'deleteHoliday'])->name('deleteHoliday');
+
+Route::post('add-attendance-setting', [App\Http\Controllers\attendanceSettingsController::class, 'createAttendanceSetting'])->name('createAttendanceSetting');
+Route::get('attendance-setting-list', [App\Http\Controllers\attendanceSettingsController::class, 'AttendanceSettingList'])->name('AttendanceSettingList');
+Route::post('/edit/attendance-setting/{id}', [App\Http\Controllers\attendanceSettingsController::class, 'updateAttendanceSetting'])->name('updateAttendanceSetting');
+Route::delete('/delete/attendance-setting/{id}', [App\Http\Controllers\attendanceSettingsController::class, 'deleteAttendanceSetting'])->name('deleteAttendanceSetting');
+
+Route::post('add-attendance-type', [App\Http\Controllers\attendanceTypeController::class, 'createAttendanceType'])->name('createAttendanceType');
+Route::get('attendance-type-details', [App\Http\Controllers\attendanceTypeController::class, 'AttendanceTypeList'])->name('AttendanceTypeList');
+Route::post('/edit/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'updateAttendanceType'])->name('updateAttendanceType');
+Route::delete('/delete/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'deleteAttendanceType'])->name('deleteAttendanceType');
+
 });
