@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id('attendance_id');
-            $table->timestamp('IN');
-            $table->timestamp('OUT')->nullable();
+            $table->boolean('IN');
+            $table->boolean('OUT')->nullable();
             $table->string('reason')->nullable();
             $table->string('edited')->nullable();
             $table->string('editedBY')->nullable();
