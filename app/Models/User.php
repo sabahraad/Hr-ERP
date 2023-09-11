@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    protected $primaryKey = 'id';
 
     public function company()
     {
