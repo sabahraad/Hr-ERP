@@ -76,7 +76,7 @@ Route::delete('/delete/office-location/{id}', [App\Http\Controllers\officeLocati
 
 Route::post('add-weekend', [App\Http\Controllers\weekendController::class, 'createWeekend'])->name('createWeekend');
 Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
-Route::post('/edit/weekend/{id}', [App\Http\Controllers\weekendController::class, 'updateWeekend'])->name('updateWeekend');
+// Route::post('/edit/weekend/{id}', [App\Http\Controllers\weekendController::class, 'updateWeekend'])->name('updateWeekend');
 Route::delete('/delete/weekend/{id}', [App\Http\Controllers\weekendController::class, 'deleteWeekend'])->name('deleteWeekend');
 
 Route::post('add-holiday', [App\Http\Controllers\holidayController::class, 'createHoliday'])->name('createHoliday');
