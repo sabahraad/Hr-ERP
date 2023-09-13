@@ -135,7 +135,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             // 'expires_in' => JWTAuth::manager()->getPayloadFactory()->buildClaimsCollection()->toPlainArray()['exp'],
 
-            'expires_in' => Auth()->factory()->getTTL() * 60,
+            'expires_in' => Auth()->factory()->getTTL(),
             'user' => auth()->user()
         ]);
     }
