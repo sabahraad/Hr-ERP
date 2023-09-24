@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id('attendance_id');
             $table->boolean('IN');
             $table->boolean('OUT')->nullable();
-            $table->string('reason')->nullable();
+            $table->string('lateINreason')->nullable();
             $table->string('edited')->nullable();
             $table->string('editedBY')->nullable();
+            $table->integer('INstatus')->default(0);
+            $table->integer('OUTstatus')->default(0);
+            $table->string('earlyOUTreason')->nullable();
             $table->foreignId('emp_id')->constrained('employees')->onDelete('cascade');
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');

@@ -30,9 +30,9 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
 
     Route::post('/attendance', [App\Http\Controllers\attendanceController::class, 'createAttendance'])->name('attendance');
     Route::get('/attendance-list', [App\Http\Controllers\attendanceController::class, 'showattendance'])->name('showattendance');
-    Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteattendance'])->name('deleteattendance');
     
     Route::post('/leave-applications', [App\Http\Controllers\leaveController::class, 'createLeaveApplications'])->name('createLeaveApplications');
+    Route::get('/currentDateStatus', [App\Http\Controllers\attendanceController::class, 'currentDateStatus'])->name('currentDateStatus');
 
 });
 
@@ -93,5 +93,8 @@ Route::post('add-attendance-type', [App\Http\Controllers\attendanceTypeControlle
 Route::get('attendance-type-details', [App\Http\Controllers\attendanceTypeController::class, 'AttendanceTypeList'])->name('AttendanceTypeList');
 Route::post('/edit/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'updateAttendanceType'])->name('updateAttendanceType');
 Route::delete('/delete/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'deleteAttendanceType'])->name('deleteAttendanceType');
+
+Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteattendance'])->name('deleteattendance');
+Route::post('/update-reason', [App\Http\Controllers\attendanceController::class, 'updateReason'])->name('updateReason');
 
 });

@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\leaveApplication;
+use App\Models\Weekend;
+use App\Models\Holiday;
 use App\Models\leaveSetting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -126,6 +128,48 @@ class leaveController extends Controller
 
         $user_id = auth()->user()->id;
         $emp_id= Employee::where('id',$user_id)->value('emp_id');
+        $company_id= auth()->user()->company_id;
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+        //leave Date List
+        while ($startDate <= $endDate) {
+            $dateList[] = $startDate->toDateString();
+            $startDate->addDay();
+        }
+        //delete holiday from the list
+        $holiday=Holiday::where('company_id',$company_id)->get();
+        foreach($holiday as $raw){
+            $data=$raw->date;
+            $dateListWithoutHoliday = array_filter($dateList, function($value) use ($data) {
+                return $value !== $data ;
+            });
+            $dateList = $dateListWithoutHoliday;
+        }
+        //get date and Day as key value pair
+        foreach ($dateListWithoutHoliday as $date) {
+            $carbonDate = Carbon::parse($date);
+            $dayNames[] = $carbonDate->format('l'); // 'l' format gives the full day name
+        }
+        $keyValueDateList = array_combine( $dateListWithoutHoliday,$dayNames);
+        
+        $weekend=Weekend::where('company_id',$company_id)->first();
+        $data=$weekend->getAttributes();
+        $weekendDayNames = array_keys(array_filter($data, function($value) {
+            return $value === 1;
+        }));
+        $weekendDayNames = array_diff($weekendDayNames, ["company_id"]);
+        
+        foreach($weekendDayNames as $raw){
+            $dateListWithoutWeekend = array_filter($keyValueDateList, function($value) use ($raw) {
+                return $value !== $raw ;
+            });
+            $keyValueDateList = $dateListWithoutWeekend ;
+        }
+
+        $dateArray=array_keys($dateListWithoutWeekend );
+        $jsonData = json_encode($dateArray);
+
+        $count=count($dateArray);
 
         $data = new leaveApplication();
 
@@ -140,6 +184,8 @@ class leaveController extends Controller
         $data->leave_setting_id = $request->leave_setting_id;
         $data->start_date = $request->start_date;
         $data->end_date = $request->end_date;
+        $data->dateArray = $jsonData;
+        $data->count = $count;
         $data->status = $request->status;
         $data->reason = $request->reason;
         $data->approvel_date = $request->approvel_date;

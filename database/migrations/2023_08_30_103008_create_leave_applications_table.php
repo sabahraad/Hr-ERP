@@ -19,8 +19,10 @@ return new class extends Migration
             $table->foreign('leave_setting_id')->references('leave_setting_id')->on('leave_settings')->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date');
+            $table->json('dateArray');
+            $table->integer('count');
             $table->string('image')->nullable();
-            $table->string('status')->nullable();
+            $table->boolean('status')->default(0);
             $table->string('reason');
             $table->date('approvel_date')->nullable();
             $table->longText('approval_name')->nullable();

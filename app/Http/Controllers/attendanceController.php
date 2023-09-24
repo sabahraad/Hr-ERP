@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\AttendanceSetting;
+use App\Models\AttendanceType;
 use App\Models\Employee;
+use App\Models\IP;
+use App\Models\officeLocation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 
 class attendanceController extends Controller
 {
@@ -18,8 +21,9 @@ class attendanceController extends Controller
     }
 
     protected $validationRules = [
-        'IN' => 'boolean',
-        'OUT' => 'boolean',
+        'latitude' => 'required|numeric ',
+        'longitude' => 'required|numeric    ',
+        'action' => 'required|integer',
         'reason' => 'string', 
         'edited' => 'boolean', 
         'editedBY' => 'string'
@@ -34,48 +38,118 @@ class attendanceController extends Controller
                 'error' => $validator->errors()
             ], 422);
         }
-        dd($request->IN);
-        $currentDate = Carbon::now()->toDateString(); // Gets current date
+
         $currentTime = Carbon::now()->toTimeString();
-        $date=$request->IN;
-        $carbonDate = Carbon::parse($date);  
-        if ($carbonDate->isToday()) {
-            // The provided date is today
-            if ($carbonDate->gt(Carbon::now())) {
-                // The provided date is in the future
-            } elseif ($carbonDate->lt(Carbon::now())) {
-                // The provided date is in the past
-            } else {
-                // The provided date is exactly now
-            }
-        } else {
-            // The provided date is not today
-        }
-        if ($carbonDate->isToday()) {
-            dd('ok');
-        }
-        dd($carbonDate,$currentTime);     
-        $company_id= auth()->user()->company_id;
         $user_id = auth()->user()->id;
         $emp_id= Employee::where('id',$user_id)->value('emp_id');
+        $company_id= auth()->user()->company_id;
+        $checkIN = 1;
+        $checkOut = 2;
+        if($request->action == $checkIN){
+            //Current date attendance check
+            $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');
+            if($attendance == 1){
+                return response()->json([
+                    'message'=> 'Your Are Already Checked IN'
+                ],200);
+            }
+            //Late or on time check
+            $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
+            $graceTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('grace_time'));
+            $totalTime = $officeTime->addHours($graceTime->hour)
+                        ->addMinutes($graceTime->minute)
+                        ->addSeconds($graceTime->second);
+            $totalTime = $totalTime->format('H:i:s');
+            if($totalTime >= $currentTime){
+                $status = 1;
+            }else{
+                $status = 2;
+            }
+            //Attendance check
+            $attendanceType = AttendanceType::where('company_id',$company_id)->first();
+            $data=$attendanceType->getAttributes();
+            $attendanceType = array_keys(array_filter($data, function($value) {
+                return $value === 1;
+            }));
+            if(in_array("location_based",$attendanceType)){
+                $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->first();
+                // Radius of the Earth in km
+                $earthRadius = 6371;
+               // Convert latitude and longitude from degrees to radians
+                $userLat = deg2rad($request->latitude);
+                $userLong = deg2rad($request->longitude);
+                $targetLat = deg2rad($officeLocation->latitude);
+                $targetLong = deg2rad($officeLocation->longitude);
+                $radius = $officeLocation->radius;
+                // Calculate the change in coordinates
+                $latDiff = $targetLat - $userLat;
+                $longDiff = $targetLong - $userLong;
+                // Haversine formula
+                $a = sin($latDiff/2) * sin($latDiff/2) + cos($userLat) * cos($targetLat) * sin($longDiff/2) * sin($longDiff/2);
+                $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+                $distance = $earthRadius * $c;
+                
+                if($distance <= $radius){
+                    $takePresent = 1;
+                }else{
+                    return response()->json([
+                        'message'=> 'You are presently away from the office premises.'
+                    ],200);
+                }
+            }
+            if(in_array("wifi_based",$attendanceType)){
+                $ip = IP::where('company_id',$company_id)->value('ip');
+                if($request->ip() == $ip){
+                    $takePresent = 1;
+                }else{
+                    return response()->json([
+                        'message'=> 'Please connect to the office network'
+                    ],200);
+                }
+            }
+            if(in_array("remote",$attendanceType)){
+                $takePresent = 1;
+            }
         
+            if($takePresent == 1){
+                $data = new Attendance();
+                $data->IN = 1;
+                $data->OUT = $request->OUT;
+                $data->lateINreason = $request->reason;
+                $data->INstatus = $status;
+                $data->emp_id = $emp_id;
+                $data->company_id = $company_id;
+                $data->edited = $request->edited;
+                $data->editedBY = $request->editedBY;
+                $data->id = $user_id;
+                $data->save();
 
-        $data = new Attendance();
-        $data->IN = $request->IN;
-        $data->OUT = $request->OUT;
-        $data->reason = $request->reason;
-        $data->emp_id = $emp_id;
-        $data->company_id = $company_id;
-        $data->edited = $request->edited;
-        $data->editedBY = $request->editedBY;
-        $data->id = $user_id;
-        $data->save();
-
-        return response()->json([
-            'message' => 'Attendance Accepted Successfully',
-            'data' => $request->all()
-        ], 201);
-
+                return response()->json([
+                    'message' => 'Attendance Accepted Successfully',
+                    'data' => $request->all()
+                ], 201);
+            }                    
+        }
+        if($request->action == $checkOut){
+            $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');
+            if($attendance == 1){
+                $endTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('end_time'));
+                $endTime = $endTime->format('H:i:s');
+                $onTime = 1;
+                $earlyLeave = 2;
+                if($endTime <= $currentTime){
+                    $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
+                    $data->OUT = 1;
+                    $data->OUTstatus = $onTime;
+                    $data->save();
+                }else{
+                    $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
+                    $data->OUT = 1;
+                    $data->OUTstatus = $earlyLeave;
+                    $data->save();
+                }
+            }
+        }   
     }
 
     public function showattendance(){
@@ -97,39 +171,37 @@ class attendanceController extends Controller
         }
     }
 
-    public function updateattendance(Request $request,$id){
-
-        $validator = Validator::make($request->all(), $this->validationRules);
+    public function updateReason(Request $request){
+        $validator = Validator::make($request->all(), [
+            'action' => 'required|integer',
+            'reason' => 'required|string'
+        ]);
         
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors()
+                'error' => $validator->errors(),
             ], 422);
         }
-
-        $data = Attendance::find($id);
-        if(!$data){
-            return response()->json([
-                'message' => 'No Attendance Found'
-            ],Response::HTTP_NOT_FOUND);
-        }
-        $company_id= auth()->user()->company_id;
         $user_id = auth()->user()->id;
+        $checkIN = 1;
+        $checkOut = 2;
 
-        $data->IN = $request->IN;
-        $data->OUT = $request->OUT;
-        $data->reason = $request->reason;
-        $data->id = $user_id;
-        $data->company_id = $company_id;
-        $data->edited = $request->edited;
-        $data->editedBY = $request->editedBY;
-        $data->save();
-
-        return response()->json([
-            'message' => 'Attendance Updated Successfully',
-            'data' => $request->all()
-        ], 201);
-
+        if($request->action == $checkIN){
+            $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('id',$user_id)->first();
+            $data->lateINreason = $request->reason;
+            $data->save();
+            return response()->json([
+                'message' => 'Late entry reason added'
+            ],200);
+        }
+        if($request->action == $checkOut){
+            $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('id',$user_id)->first();
+            $data->earlyOUTreason = $request->reason;
+            $data->save();
+            return response()->json([
+                'message' => 'Early leave reason added'
+            ],200);
+        }     
     }
 
 }

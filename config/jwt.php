@@ -100,8 +100,8 @@ return [
     | Notice: If you set this to null you should remove 'exp' element from 'required_claims' list.
     |
     */
-    
-    'ttl' => 86400,
+    $token_life_minute = 60*24*60,  //minute*hour*days
+    'ttl' => $token_life_minute,
     
     //env('JWT_TTL', 1440)
     /*
