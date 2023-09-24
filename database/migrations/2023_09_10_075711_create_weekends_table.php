@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('weekends', function (Blueprint $table) {
             $table->id('weekends_id');
-            $table->boolean('sunday')->default(0)->nullable();
-            $table->boolean('monday')->default(0)->nullable();
-            $table->boolean('tuesday')->default(0)->nullable();
-            $table->boolean('wednesday')->default(0)->nullable();
-            $table->boolean('thursday')->default(0)->nullable();
-            $table->boolean('friday')->default(0)->nullable();
-            $table->boolean('saturday')->default(0)->nullable();
+            $table->boolean('Sunday')->default(0)->nullable();
+            $table->boolean('Monday')->default(0)->nullable();
+            $table->boolean('Tuesday')->default(0)->nullable();
+            $table->boolean('Wednesday')->default(0)->nullable();
+            $table->boolean('Thursday')->default(0)->nullable();
+            $table->boolean('Friday')->default(0)->nullable();
+            $table->boolean('Saturday')->default(0)->nullable();
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
