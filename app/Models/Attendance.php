@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Attendance extends Model
 {
     use HasFactory,SoftDeletes;
+    protected $primaryKey = 'attendance_id';
 
+    
     public function user(){
         return $this->belongsTo(User::class);
     }
