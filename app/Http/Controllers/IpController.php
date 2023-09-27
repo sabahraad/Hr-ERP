@@ -6,6 +6,7 @@ use App\Models\IP;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class IpController extends Controller
 {
@@ -15,7 +16,7 @@ class IpController extends Controller
     }
     
     protected $validationRules = [
-        'ip' => 'required|string',
+        'ip' => 'required|array',
         'wifiName' => 'string',
         'status' => 'required|boolean', 
     ];
@@ -31,43 +32,35 @@ class IpController extends Controller
         }
 
         $company_id= auth()->user()->company_id;
-
-        $ip = new IP();
-        $ip->ip = $request->ip;
-        $ip->wifiName = $request->wifiName;
-        $ip->company_id = $company_id;
-        $ip->status = $request->status;
-        $ip->save();
-
-        return response()->json([
-            'message' => 'IP added successfully',
-            'data' => $request->all()
-        ], 201);
-    }
-
-    public function updateIP(Request $request,$id){
-
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        if($validator->fails()){
+        $id =  IP::where('company_id',$company_id)->value('ip_id');
+         
+        if($id){
+            $data = IP::find($id);
+            $data->ip = json_encode($request->ip);
+            $data->wifiName = $request->wifiName;
+            $data->status = $request->status;
+            $data->save();
             return response()->json([
-                'error'=> $validator->errors()
-            ],422);
+                'message' => 'Ip list has been updated',
+                'data' => $data
+            ],200);
+        }else{
+
+            $ip = new IP();
+            $ip->ip = json_encode($request->ip);
+            $ip->wifiName = $request->wifiName;
+            $ip->company_id = $company_id;
+            $ip->status = $request->status;
+            $ip->save();
+    
+            return response()->json([
+                'message' => 'IP added successfully',
+                'data' => $request->all()
+            ], 201);
+
         }
 
-        $company_id= auth()->user()->company_id;
-
-        $ip = IP::find($id);
-        $ip->ip= $request->ip;
-        $ip->wifiName = $request->wifiName;
-        $ip->company_id = $company_id;
-        $ip->status = $request->status;
-        $ip->save();
-
-        return response()->json([
-            'message'=>'IP Updated Successfully',
-            'data' => $request->all()
-        ],200);
+      
     }
 
     public function showIP(){
@@ -89,9 +82,10 @@ class IpController extends Controller
         }
     }
 
-    public function deleteIP($id){
+    public function deleteIP(){
 
-        IP::where('ip_id',$id)->delete();
+        $company_id= auth()->user()->company_id;
+        IP::where('company_id',$company_id)->delete();
         return response()->json([
             'message'=>'IP Deleted Successfully'
         ],200);

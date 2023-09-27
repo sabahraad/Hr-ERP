@@ -45,13 +45,14 @@ class attendanceController extends Controller
         $company_id= auth()->user()->company_id;
         $checkIN = 1;
         $checkOut = 2;
+        
         if($request->action == $checkIN){
             //Current date attendance check
             $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');
             if($attendance == 1){
                 return response()->json([
                     'message'=> 'Your Are Already Checked IN'
-                ],200);
+                ],400);
             }
             //Late or on time check
             $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
@@ -99,7 +100,8 @@ class attendanceController extends Controller
             }
             if(in_array("wifi_based",$attendanceType)){
                 $ip = IP::where('company_id',$company_id)->value('ip');
-                if($request->ip() == $ip){
+                $ipList=json_decode($ip);
+                if (in_array($request->ip(), $ipList)) {
                     $takePresent = 1;
                 }else{
                     return response()->json([
@@ -139,15 +141,25 @@ class attendanceController extends Controller
                 $earlyLeave = 2;
                 if($endTime <= $currentTime){
                     $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
-                    $data->OUT = 1;
+                    $data->OUT = $onTime;
                     $data->OUTstatus = $onTime;
                     $data->save();
+                    return response()->json([
+                        'message' => 'Successfully Checked Out for Today'
+                    ],201);
                 }else{
                     $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
-                    $data->OUT = 1;
+                    $data->OUT = $earlyLeave;
                     $data->OUTstatus = $earlyLeave;
                     $data->save();
+                    return response()->json([
+                        'message' => 'Successfully Checked Out for Today'
+                    ],201);
                 }
+            }else{
+                return response()->json([
+                    'message' => 'Give attendance first'
+                ],403);
             }
         }   
     }
@@ -196,7 +208,7 @@ class attendanceController extends Controller
         }
         if($request->action == $checkOut){
             $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('id',$user_id)->first();
-            $data->earlyOUTreason = $request->reason;
+             $data->earlyOUTreason = $request->reason;
             $data->save();
             return response()->json([
                 'message' => 'Early leave reason added'

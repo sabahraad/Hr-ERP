@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Company;
 use Illuminate\Http\Response;
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -73,8 +76,8 @@ class departmentController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $data = Department::find($id);
-        
+        $company_id= auth()->user()->company_id;
+        $data = Department::where('company_id',$company_id)->find($id);
         $data->deptTitle = $request->deptTitle;
         $data->details = $request->details;
         
@@ -88,7 +91,6 @@ class departmentController extends Controller
                 'message'=> 'Something Went Wrong'
             ],Response::HTTP_BAD_GATEWAY);
         }
-
 
     }
 
