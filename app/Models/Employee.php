@@ -11,6 +11,8 @@ class Employee extends Model
     use HasFactory,SoftDeletes;
     protected $primaryKey = 'emp_id';
     public function users(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'id','id');
     }
+
+    
 }
