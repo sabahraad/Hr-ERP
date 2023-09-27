@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('office_locations', function (Blueprint $table) {
-            $table->id('office_locations_id');
+            $table->bigIncrements('office_locations_id');
             $table->string('location_name');
             $table->double('latitude');
             $table->double('longitude');
             $table->double('radius');
             $table->string('status')->default('1');
-            $table->unsignedBigInteger('company_id');
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

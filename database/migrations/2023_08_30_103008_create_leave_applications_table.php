@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('leave_applications', function (Blueprint $table) {
-            $table->id('leave_application_id');
-            $table->unsignedBigInteger('emp_id');
-            $table->foreign('emp_id')->references('emp_id')->on('employees');
-            $table->unsignedBigInteger('leave_setting_id');
-            $table->foreign('leave_setting_id')->references('leave_setting_id')->on('leave_settings')->onDelete('cascade');
+            $table->bigIncrements('leave_application_id');
             $table->date('start_date');
             $table->date('end_date');
             $table->json('dateArray');
@@ -26,6 +22,10 @@ return new class extends Migration
             $table->string('reason');
             $table->date('approvel_date')->nullable();
             $table->longText('approval_name')->nullable();
+            $table->bigInteger('emp_id')->unsigned();
+            $table->foreign('emp_id')->references('emp_id')->on('employees');
+            $table->bigInteger('leave_setting_id')->unsigned();
+            $table->foreign('leave_setting_id')->references('leave_setting_id')->on('leave_settings')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id('attendance_id');
+            $table->bigIncrements('attendance_id');
             $table->boolean('IN');
             $table->boolean('OUT')->nullable();
             $table->string('lateINreason')->nullable();
@@ -21,10 +21,11 @@ return new class extends Migration
             $table->integer('INstatus')->default(0);
             $table->integer('OUTstatus')->default(0);
             $table->string('earlyOUTreason')->nullable();
-            $table->foreignId('emp_id')->constrained('employees')->onDelete('cascade');
-            $table->unsignedBigInteger('company_id');
+            $table->bigInteger('emp_id')->unsigned();
+            $table->foreign('emp_id')->references('emp_id')->on('employees')->onDelete('cascade');
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
-            $table->unsignedBigInteger('id');
+            $table->bigInteger('id')->unsigned();
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

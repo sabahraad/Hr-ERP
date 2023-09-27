@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('weekends', function (Blueprint $table) {
-            $table->id('weekends_id');
+            $table->bigIncrements('weekends_id');
             $table->boolean('Sunday')->default(0)->nullable();
             $table->boolean('Monday')->default(0)->nullable();
             $table->boolean('Tuesday')->default(0)->nullable();
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('Thursday')->default(0)->nullable();
             $table->boolean('Friday')->default(0)->nullable();
             $table->boolean('Saturday')->default(0)->nullable();
-            $table->unsignedBigInteger('company_id');
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

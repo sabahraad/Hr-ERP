@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendance_settings', function (Blueprint $table) {
-            $table->id('attendance_settings_id');
+            $table->bigIncrements('attendance_settings_id');
             $table->string('office_hour_type');
             $table->time('office_hour');
             $table->time('start_time');
             $table->time('end_time');
             $table->time('grace_time');
-            $table->unsignedBigInteger('company_id');
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
