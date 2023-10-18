@@ -50,7 +50,7 @@ Route::post('/edit/department/{id}', [App\Http\Controllers\departmentController:
 Route::delete('/delete/department/{id}', [App\Http\Controllers\departmentController::class, 'deleteDepartment'])->name('deleteDepartment');
 
 Route::post('/add-designations', [App\Http\Controllers\designationsController::class, 'addDesignations'])->name('addDesignations');
-Route::get('/designations-list', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
+Route::get('/designations-list/{id}', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
 Route::post('/edit/designations/{id}', [App\Http\Controllers\designationsController::class, 'editDesignations'])->name('editDesignations');
 Route::delete('/delete/designations/{id}', [App\Http\Controllers\designationsController::class, 'deleteDesignations'])->name('deleteDesignations');
 
