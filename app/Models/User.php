@@ -30,7 +30,6 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::deleting(function($user) {
-            // Delete the associated user
             $user->employee()->delete();
         });
     }
