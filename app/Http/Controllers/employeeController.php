@@ -16,7 +16,7 @@ class employeeController extends Controller
     public function addEmployee(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'officeEmployeeID' => 'string',
+            'officeEmployeeID' => 'string|unique:employees,officeEmployeeID',
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
             'dob' => 'string',
@@ -98,7 +98,7 @@ class employeeController extends Controller
             'designation_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'string',
-            'email' => 'required|string|email|max:100',
+            'email' => 'required|string|email|max:100|unique:users,email,'.$id.',id',
             'password' => 'string|confirmed|min:6' 
         ]);
         
@@ -107,8 +107,8 @@ class employeeController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-
-        $userInfo = User::where('email',$request->email)->first();
+        $user_id = Employee::where('emp_id',$id)->value('id');
+        $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
         if(!$userInfo){
             return response()->json([
@@ -160,7 +160,7 @@ class employeeController extends Controller
     }
 
     public function deleteEmployee($id){
-        Employee::where('emp_id',$id)->delete();        
+        User::where('id',$id)->delete();
         return response()->json([
             'message' => 'Employee deleted successfully'
         ]);

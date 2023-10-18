@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendance_types', function (Blueprint $table) {
-            $table->id('attendance_types_id');
+            $table->bigIncrements('attendance_types_id');
             $table->boolean('location_based');
             $table->boolean('remote');
             $table->boolean('wifi_based');
             $table->boolean('iot_based');
-            $table->unsignedBigInteger('company_id');
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

@@ -22,7 +22,16 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function employee(){
-        return $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class,'id','id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($user) {
+            $user->employee()->delete();
+        });
     }
     /**
      * The attributes that are mass assignable.

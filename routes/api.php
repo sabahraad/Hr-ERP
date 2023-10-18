@@ -20,10 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(SetDefaultJsonResponse::class)->group(function () {
-
+    
     Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+    Route::post('/forget-password', [App\Http\Controllers\AuthController::class, 'forgetPassword']);
+
     Route::post('/refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
     Route::get('/unauthorized',[App\Http\Controllers\Controller::class, 'unauthorized'])->name('unauthorized');
     Route::get('/user-profile', [App\Http\Controllers\AuthController::class, 'userProfile']);   
@@ -48,14 +50,13 @@ Route::post('/edit/department/{id}', [App\Http\Controllers\departmentController:
 Route::delete('/delete/department/{id}', [App\Http\Controllers\departmentController::class, 'deleteDepartment'])->name('deleteDepartment');
 
 Route::post('/add-designations', [App\Http\Controllers\designationsController::class, 'addDesignations'])->name('addDesignations');
-Route::get('/designations-list', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
+Route::get('/designations-list/{id}', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
 Route::post('/edit/designations/{id}', [App\Http\Controllers\designationsController::class, 'editDesignations'])->name('editDesignations');
 Route::delete('/delete/designations/{id}', [App\Http\Controllers\designationsController::class, 'deleteDesignations'])->name('deleteDesignations');
 
 Route::post('/add-IP', [App\Http\Controllers\IpController::class, 'addIP'])->name('addIP');
 Route::get('/IP-list', [App\Http\Controllers\IpController::class, 'showIP'])->name('showIP');
-Route::post('/edit/IP/{id}', [App\Http\Controllers\IpController::class, 'updateIP'])->name('updateIP');
-Route::delete('/delete/IP/{id}', [App\Http\Controllers\IpController::class, 'deleteIP'])->name('deleteIP');
+Route::delete('/delete/IP', [App\Http\Controllers\IpController::class, 'deleteIP'])->name('deleteIP');
 
 Route::post('/edit/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'updateattendance'])->name('updateattendance');
 
@@ -76,8 +77,7 @@ Route::delete('/delete/office-location/{id}', [App\Http\Controllers\officeLocati
 
 Route::post('add-weekend', [App\Http\Controllers\weekendController::class, 'createWeekend'])->name('createWeekend');
 Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
-// Route::post('/edit/weekend/{id}', [App\Http\Controllers\weekendController::class, 'updateWeekend'])->name('updateWeekend');
-Route::delete('/delete/weekend/{id}', [App\Http\Controllers\weekendController::class, 'deleteWeekend'])->name('deleteWeekend');
+Route::delete('/delete/weekend', [App\Http\Controllers\weekendController::class, 'deleteWeekend'])->name('deleteWeekend');
 
 Route::post('add-holiday', [App\Http\Controllers\holidayController::class, 'createHoliday'])->name('createHoliday');
 Route::get('holiday-list', [App\Http\Controllers\holidayController::class, 'HolidayList'])->name('HolidayList');
@@ -86,13 +86,11 @@ Route::delete('/delete/holiday/{id}', [App\Http\Controllers\holidayController::c
 
 Route::post('add-attendance-setting', [App\Http\Controllers\attendanceSettingsController::class, 'createAttendanceSetting'])->name('createAttendanceSetting');
 Route::get('attendance-setting-list', [App\Http\Controllers\attendanceSettingsController::class, 'AttendanceSettingList'])->name('AttendanceSettingList');
-Route::post('/edit/attendance-setting/{id}', [App\Http\Controllers\attendanceSettingsController::class, 'updateAttendanceSetting'])->name('updateAttendanceSetting');
-Route::delete('/delete/attendance-setting/{id}', [App\Http\Controllers\attendanceSettingsController::class, 'deleteAttendanceSetting'])->name('deleteAttendanceSetting');
+Route::delete('/delete/attendance-setting', [App\Http\Controllers\attendanceSettingsController::class, 'deleteAttendanceSetting'])->name('deleteAttendanceSetting');
 
 Route::post('add-attendance-type', [App\Http\Controllers\attendanceTypeController::class, 'createAttendanceType'])->name('createAttendanceType');
 Route::get('attendance-type-details', [App\Http\Controllers\attendanceTypeController::class, 'AttendanceTypeList'])->name('AttendanceTypeList');
-Route::post('/edit/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'updateAttendanceType'])->name('updateAttendanceType');
-Route::delete('/delete/attendance-type/{id}', [App\Http\Controllers\attendanceTypeController::class, 'deleteAttendanceType'])->name('deleteAttendanceType');
+Route::delete('/delete/attendance-type', [App\Http\Controllers\attendanceTypeController::class, 'deleteAttendanceType'])->name('deleteAttendanceType');
 
 Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteattendance'])->name('deleteattendance');
 Route::post('/update-reason', [App\Http\Controllers\attendanceController::class, 'updateReason'])->name('updateReason');

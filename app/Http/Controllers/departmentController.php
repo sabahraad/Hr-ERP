@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Company;
 use Illuminate\Http\Response;
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,7 +19,7 @@ class departmentController extends Controller
     public function addDepartment(Request $request){
 
         $validator= Validator::make($request->all(), [
-            'deptTitle' => 'required|string',
+            'deptTitle' => 'required||unique:departments',
             'details'  => 'string',
         ]);
 
@@ -73,8 +76,8 @@ class departmentController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $data = Department::find($id);
-        
+        $company_id= auth()->user()->company_id;
+        $data = Department::where('company_id',$company_id)->find($id);
         $data->deptTitle = $request->deptTitle;
         $data->details = $request->details;
         
@@ -89,12 +92,11 @@ class departmentController extends Controller
             ],Response::HTTP_BAD_GATEWAY);
         }
 
-
     }
 
     public function deleteDepartment($id){
-        
-        Department::find($id)->delete();
+        $company_id= auth()->user()->company_id;
+        Department::find($id)->where('company_id',$company_id)->delete();
         return response()->json([
             'message' => 'Department Deleted'
         ]);

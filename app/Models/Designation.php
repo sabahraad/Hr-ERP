@@ -14,5 +14,9 @@ class Designation extends Model
     public function company(){
         return $this->belongsTo(company::class);
     }
+
+    public function department(){
+        return $this->belongsTo(Department::class,'dept_id');
+    }
     
 }

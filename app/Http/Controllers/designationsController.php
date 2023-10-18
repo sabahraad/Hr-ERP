@@ -17,7 +17,8 @@ class designationsController extends Controller
 
         $validator= Validator::make($request->all(), [
             'desigTitle' => 'required|string',
-            'details'  => 'string'
+            'details'  => 'string',
+            'dept_id' => 'required|integer'
         ]);
         
         if ($validator->fails()) {
@@ -31,7 +32,7 @@ class designationsController extends Controller
         $data= new Designation;
         $data->desigTitle = $request->desigTitle;
         $data->details = $request->details;
-        $data->company_id = $company_id;
+        $data->dept_id = $request->dept_id;
         $data->save();
 
         return response()->json([
@@ -41,9 +42,9 @@ class designationsController extends Controller
 
     }
 
-    public function showDesignations(){
+    public function showDesignations($id){
         $company_id= auth()->user()->company_id;
-        $data= Designation::where('company_id',$company_id)->get();
+        $data= Designation::where('dept_id',$id)->get();
 
         if (count($data) === 0) {
             return response()->json([

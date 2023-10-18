@@ -15,7 +15,7 @@ class AuthController extends Controller
    
 
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','forgetPassword']]);
     }
 
     public function login(Request $request){
@@ -44,7 +44,7 @@ class AuthController extends Controller
             'address' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'companyDetails' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|regex:/^\d{10,}$/',
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6'    
@@ -55,14 +55,12 @@ class AuthController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-
       //Create Company
         $imageName =  time() . '.' . $request->logo->extension();
         $request->logo->move(public_path('images'), $imageName);
         $imagePath = 'images/' . $imageName;
 
         $data = new Company();
-            
         $data->companyName = $request->companyName;
         $data->logo = $imagePath;
         $data->address = $request->address;
@@ -70,9 +68,6 @@ class AuthController extends Controller
         $data->companyDetails = $request->companyDetails;
         $data->save();
 
-       
-
-        // $company_id = Company::where('companyName',$request->companyName)->value('company_id');
 
         $user = new User();
         $user->name = $request->name;
@@ -89,7 +84,7 @@ class AuthController extends Controller
 
         $desig = new Designation();
         $desig->desigTitle = "HR";
-        $desig->company_id = $data->company_id;
+        $desig->dept_id = $dept->dept_id;
         $desig->save();
 
         $employee= new Employee();
@@ -127,6 +122,32 @@ class AuthController extends Controller
             'data' => Auth()->user()
         ],Response::HTTP_OK);
             
+    }
+
+    public function forgetPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|confirmed|min:6'    
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::where('email',$request->email)->first();
+        if($user){
+            $user->password = bcrypt($request->password);
+            $user->save();
+            return response()->json([
+                'message' => 'Your password has been changed'
+            ],201);
+        }else{
+            return response()->json([
+                'message' => $request->email .' '.'is not registered in the system'
+            ],404);
+        }
     }
   
     protected function createNewToken($token){

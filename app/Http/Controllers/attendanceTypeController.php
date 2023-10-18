@@ -28,19 +28,33 @@ class attendanceTypeController extends Controller
         }
 
         $company_id= auth()->user()->company_id;
+        $attendanceType = AttendanceType::where('company_id',$company_id)->first();
+        if($attendanceType){
+            $attendanceType->location_based = $request->location_based;
+            $attendanceType->remote = $request->remote;
+            $attendanceType->wifi_based = $request->wifi_based;
+            $attendanceType->iot_based = $request->iot_based;
+            $attendanceType->company_id = $company_id;
+            $attendanceType->save();
 
-        $data=new AttendanceType();
-        $data->location_based = $request->location_based;
-        $data->remote = $request->remote;
-        $data->wifi_based = $request->wifi_based;
-        $data->iot_based = $request->iot_based;
-        $data->company_id = $company_id;
-        $data->save();
-
-        return response()->json([
-            'message'=>'Attendance Type Added Successfully',
-            'data'=>$data
-        ],201);
+            return response()->json([
+                'message'=>'Attendance Type Updated Successfully',
+                'data'=>$attendanceType
+            ],200);
+        }else{
+            $data=new AttendanceType();
+            $data->location_based = $request->location_based;
+            $data->remote = $request->remote;
+            $data->wifi_based = $request->wifi_based;
+            $data->iot_based = $request->iot_based;
+            $data->company_id = $company_id;
+            $data->save();
+    
+            return response()->json([
+                'message'=>'Attendance Type Added Successfully',
+                'data'=>$data
+            ],201);
+        }
     }
 
     public function AttendanceTypeList(){
@@ -52,40 +66,9 @@ class attendanceTypeController extends Controller
         ],200);
     }
 
-    public function updateAttendanceType(Request $request,$id){
-
-        $validator = Validator::make($request->all(), [
-            'location_based' => 'required|boolean',
-            'remote' => 'required|boolean',
-            'wifi_based' => 'required|boolean',
-            'iot_based' => 'required|boolean'
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors(),
-            ], 422);
-        }
-
-        $company_id= auth()->user()->company_id;
-
-        $data=AttendanceType::find($id);
-        $data->location_based = $request->location_based;
-        $data->remote = $request->remote;
-        $data->wifi_based = $request->wifi_based;
-        $data->iot_based = $request->iot_based;
-        $data->company_id = $company_id;
-        $data->save();
-
-        return response()->json([
-            'message'=>'Attendance Type Updated Successfully',
-            'data'=>$data
-        ],200);
-
-    }
-
-    public function deleteAttendanceType($id){
-        AttendanceType::where('attendance_types_id',$id)->delete();        
+    public function deleteAttendanceType(){
+        $company_id = auth()->user()->company_id;
+        AttendanceType::where('company_id',$company_id)->delete();        
         return response()->json([
             'message' => 'Attendance Type deleted successfully'
         ]);
