@@ -178,7 +178,6 @@ class attendanceController extends Controller
             return response()->json([
                 'message' => 'Attendance List',
                 'data' => $data,
-    
             ],Response::HTTP_OK);
         }
     }

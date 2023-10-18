@@ -42,23 +42,21 @@ class companyController extends Controller
 
     public function editCompany(Request $request){
 
+        $company_id= auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
-            'companyName' => 'required|string',
+            'companyName' => 'required|unique:companies,companyName,' . $company_id . ',company_id',
             'address' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'companyDetails' => 'required',
             'contactNumber' => 'required',    
         ]);
-        $company_id= auth()->user()->company_id;
         Rule::unique('companies', 'companyName')->ignore($company_id, 'company_id');
-        
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors(),
             ], 422);
         }
 
-        
         $data = Company::find($company_id);
         if(!$data){
             return response()->json([

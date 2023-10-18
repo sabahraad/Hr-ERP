@@ -186,7 +186,7 @@ class leaveController extends Controller
         $data->end_date = $request->end_date;
         $data->dateArray = $jsonData;
         $data->count = $count;
-        $data->status = $request->status;
+        $data->status = 1;
         $data->reason = $request->reason;
         $data->approvel_date = $request->approvel_date;
         $data->approval_name = $request->approval_name;

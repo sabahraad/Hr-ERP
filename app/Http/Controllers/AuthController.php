@@ -44,7 +44,7 @@ class AuthController extends Controller
             'address' => 'required|string',
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'companyDetails' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|regex:/^\d{10,}$/',
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6'    
@@ -55,7 +55,6 @@ class AuthController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-
       //Create Company
         $imageName =  time() . '.' . $request->logo->extension();
         $request->logo->move(public_path('images'), $imageName);

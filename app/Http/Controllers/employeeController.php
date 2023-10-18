@@ -16,7 +16,7 @@ class employeeController extends Controller
     public function addEmployee(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'officeEmployeeID' => 'string',
+            'officeEmployeeID' => 'string|unique:employees,officeEmployeeID',
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
             'dob' => 'string',

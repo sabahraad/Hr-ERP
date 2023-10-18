@@ -19,7 +19,7 @@ class departmentController extends Controller
     public function addDepartment(Request $request){
 
         $validator= Validator::make($request->all(), [
-            'deptTitle' => 'required|string',
+            'deptTitle' => 'required||unique:departments',
             'details'  => 'string',
         ]);
 
@@ -95,8 +95,8 @@ class departmentController extends Controller
     }
 
     public function deleteDepartment($id){
-        
-        Department::find($id)->delete();
+        $company_id= auth()->user()->company_id;
+        Department::find($id)->where('company_id',$company_id)->delete();
         return response()->json([
             'message' => 'Department Deleted'
         ]);
