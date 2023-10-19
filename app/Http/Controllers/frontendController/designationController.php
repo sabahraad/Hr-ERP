@@ -12,7 +12,6 @@ class designationController extends Controller
         
         $access_token = session('access_token');
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://hrm.aamarpay.dev/api/designations-list/65',
         CURLOPT_RETURNTRANSFER => true,
