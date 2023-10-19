@@ -15,11 +15,12 @@ class CheckAccessToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session('access_token') && session('role') == 2 ) {
-            return $next($request);
+        
+        if (!session('access_token') && session('role') !== 2) {
+            return redirect('/login')->with('error', 'You do not have permission to log in.');
         }
 
-        return redirect('/login-form')->with('error', 'You do not have permission to log in.');
+        return $next($request);
         
     }
 }

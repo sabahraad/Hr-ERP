@@ -22,8 +22,34 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
-        $request->session()->forget('access_token');
-        return view('frontend.login');
+        $access_token = session('access_token');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/logout',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer ' . $access_token),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($response,true);
+        if($response['status'] == 200){
+            $request->session()->flush();
+            return redirect()->route('loginForm');
+        }else{
+            return response()->json([
+                'message' => ' Something Went Wrong'
+            ],400);
+        }
+        
     }
 
     public function login(Request $request){
@@ -57,33 +83,17 @@ class AuthController extends Controller
             if($data['status'] == 401){
                 return redirect('/login-form')->with('error','Invalid credentials. Please try again.'); 
             }
-            
+            // dd($data['user']['role']);
             $access_token = $data['access_token'];
-            session(['access_token' => $access_token]);
+            session([
+                'access_token' => $access_token,
+                'role' => $data['user']['role']
+            ]);
         }else{
             $access_token = session('access_token');
         }
         
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/department-list',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer ' . $access_token),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $dataArray = json_decode($response,true);
-        return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);
-        
+        return redirect()->route('department'); 
     }
     
 
@@ -153,11 +163,4 @@ class AuthController extends Controller
         return view('frontend.test');
     }
 
-    public function holidays(){
-        return view('frontend.holidays');
-    }
-    
-    public function designation(){
-        return view('frontend.designation');
-    }
 }
