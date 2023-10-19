@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Designation;
 use Illuminate\Http\Request;
 
-class designationController extends Controller
+class officeLocationController extends Controller
 {
-    public function designation(){
-        
+    public function officeLocation(){
+
         $access_token = session('access_token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/designations-list/65',
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/office-location-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -24,12 +23,9 @@ class designationController extends Controller
         CURLOPT_HTTPHEADER => array(
             'Authorization: Bearer ' . $access_token),
         ));
-
         $response = curl_exec($curl);
-
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.designation',compact('dataArray'), ['jwtToken' => $access_token]);
-        
+        return view('frontend.officeLocation',compact('dataArray'), ['jwtToken' => $access_token]);
     }
 }

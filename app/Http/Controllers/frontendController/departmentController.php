@@ -8,11 +8,9 @@ use Illuminate\Http\Request;
 
 class departmentController extends Controller
 {
-    
     public function department(){
         $access_token = session('access_token');
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://hrm.aamarpay.dev/api/department-list',
         CURLOPT_RETURNTRANSFER => true,
@@ -33,12 +31,4 @@ class departmentController extends Controller
         
     }
 
-
-    public function deleteDepartment($id){
-        Department::find($id)->delete();
-        return response()->json([
-            'message' => 'Department Deleted'
-        ]);
-
-    }
 }
