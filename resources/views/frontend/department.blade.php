@@ -22,11 +22,10 @@
                     </div>
                 </div>
                 <!-- /Page Header -->
-                
                 <div class="row">
                     <div class="col-md-12">
-                        <div>
-                            <table class="table table-striped custom-table mb-0 datatable">
+                        <div class="table-responsive">
+                            <table class="table table-striped custom-table mb-0" id="deptTable">
                                 <thead>
                                     <tr>
                                         <th class="width-thirty">#</th>
@@ -156,12 +155,14 @@
         </div>
         <!-- /Page Wrapper -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
+    $(document).ready(function() {
+        $('#deptTable').DataTable();
+    });
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";

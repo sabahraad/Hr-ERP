@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div>
-                            <table class="table table-striped custom-table mb-0 datatable">
+                            <table class="table table-striped custom-table mb-0 " id="leaveTypeTable">
                                 <thead>
                                     <tr>
                                         <th class="width-thirty">#</th>
@@ -158,13 +158,14 @@
         </div>
         <!-- /Page Wrapper -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-
+    $(document).ready(function(){
+        $('#leaveTypeTable').DataTable();
+    });
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
     $('#msform').submit(function(e) {
@@ -185,8 +186,8 @@
                     console.log(response);
                     Swal.fire({
                         icon: 'success',
-                        title: 'Department added successful',
-                        text: 'Your department registration was successful!',
+                        title: 'leave type added successful',
+                        text: 'Your leave type registration was successful!',
                         showConfirmButton: false, // Hide the OK button
                         }); 
                         setTimeout(function() {
@@ -262,8 +263,8 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Department Edited successfully',
-                        text: 'Your department edit was successful!',
+                        title: 'leave type Edited successfully',
+                        text: 'Your leave type edit was successful!',
                         showConfirmButton: false, 
                     });
                     setTimeout(function() {
@@ -328,8 +329,8 @@
                     console.log(response);
                     Swal.fire({
                         icon: 'success',
-                        title: 'Department successfully deleted',
-                        text: 'You have successfully deleted a department',
+                        title: 'leave type successfully deleted',
+                        text: 'You have successfully deleted a leave type',
                         showConfirmButton: false, 
                     });
                     setTimeout(function() {

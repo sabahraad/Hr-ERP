@@ -164,17 +164,14 @@
         
     </div>
 
-   <script>
-    $(document).ready(function() {
-        $('#holidayTable').DataTable();
-    });
-    </script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
     <script>
-        
+        $(document).ready(function() {
+            $('#holidayTable').DataTable();
+        });
 
         $(document).ready(function() {
             var jwtToken = "{{ $jwtToken }}";

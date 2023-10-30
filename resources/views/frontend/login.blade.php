@@ -72,8 +72,8 @@
 										</div>
 									</div>
 									<div class="position-relative">
-										<input class="form-control" type="password" name="password">
-										<span class="fa-solid fa-eye-slash" id="toggle-password"></span>
+										<input class="form-control" type="password" name="password" id="password">
+										<span class="fa-solid fa-eye-slash" id="toggle-password" style="cursor: pointer"></span>
 									</div>
 								</div>
 								<div class="input-block mb-4 text-center">
@@ -95,16 +95,23 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-		<!-- jQuery -->
-        <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-		
-		<!-- Custom JS -->
-        <script src="{{ asset('js/app.js') }}"></script>
-		
 		<script> 
+			document.getElementById('toggle-password').addEventListener('click', function() {
+				var passwordInput = document.getElementById('password');
+				var icon = document.getElementById('toggle-password');
+
+				if (passwordInput.type === "password") {
+					passwordInput.type = "text";
+					icon.classList.remove('fa-eye-slash');
+					icon.classList.add('fa-eye');
+				} else {
+					passwordInput.type = "password";
+					icon.classList.remove('fa-eye');
+					icon.classList.add('fa-eye-slash');
+				}
+			});
+
+
 			$(document).ready(function() {
 				$('#loginform').submit(function(e) {
 					e.preventDefault();

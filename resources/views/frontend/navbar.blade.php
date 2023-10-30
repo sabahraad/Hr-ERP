@@ -21,8 +21,8 @@
 								<a href="#"><i class="la la-institution"></i> <span> Company</span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="{{route('company')}}">Company Details</a></li>
-									<li><a href="admin-dashboard.html">Office Location</a></li>
-									<li><a href="admin-dashboard.html">IP/Wifi Settings</a></li>
+									<li><a href="{{route('officeLocation')}}">Office Location</a></li>
+									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
 									<li><a href="{{route('department')}}">Departments</a></li>
 									<li><a href="{{route('designation')}}">Designations</a></li>
 								</ul>
@@ -34,7 +34,7 @@
 							<li class="submenu">
 								<a href="#" ><i class="la la-users"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a class="" href="employees.html">All Employees</a></li>
+									<li><a class="" href="{{route('employee')}}">All Employees</a></li>
 									<li><a href="{{route('holidays')}}">Holidays</a></li>
 									<li><a href="leaves.html">Leaves (Admin)</a></li>
 									<li><a href="leaves-employee.html">Leaves (Employee)</a></li>
@@ -50,10 +50,10 @@
 							</li>
 							<li class="submenu">
 								<a href="#"><i class="la la-ticket"></i> <span> Leave Settings </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="admin-dashboard.html">Leave Type</a></li>
-									<li><a href="admin-dashboard.html">Weekend</a></li>
-									<li><a href="admin-dashboard.html">Holiday</a></li>
+								<ul> 	
+									<li><a href="{{route('leaveList')}}">Leave Type</a></li>
+									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
+									<li><a href="{{route('holidays')}}">Holiday</a></li>
 								</ul>
 							</li>
 							
@@ -63,9 +63,9 @@
 							<li class="submenu">
 								<a href="#"><i class="la la-houzz"></i> <span>Attendance </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="admin-dashboard.html">Attendance Settitngs</a></li>
-									<li><a href="admin-dashboard.html">Attendance Type</a></li>
-									<li><a href="admin-dashboard.html">Attendance List</a></li>
+									<li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
+									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
+									<li><a href="{{route('attendance')}}">Attendance List</a></li>
 								</ul>
 							</li>
 							

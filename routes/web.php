@@ -31,5 +31,11 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/designation', [App\Http\Controllers\FrontendController\designationController::class, 'designation'])->name('designation');
     Route::get('/leave-list', [App\Http\Controllers\FrontendController\leaveController::class, 'leaveList'])->name('leaveList');
     Route::get('/office-location', [App\Http\Controllers\FrontendController\officeLocationController::class, 'officeLocation'])->name('officeLocation');
+    Route::get('/ip-list', [App\Http\Controllers\FrontendController\ipController::class, 'ipList'])->name('ipList');
+    Route::get('/weekend-list', [App\Http\Controllers\FrontendController\weekendController::class, 'weekendlist'])->name('weekendlist');
+    Route::get('/employee', [App\Http\Controllers\FrontendController\employeeController::class, 'employee'])->name('employee');
+    Route::get('/attendance-type', [App\Http\Controllers\FrontendController\attendanceController::class, 'attendanceType'])->name('attendanceType');
+    Route::get('/attendance-setting', [App\Http\Controllers\FrontendController\attendanceController::class, 'attendanceSetting'])->name('attendanceSetting');
+    Route::get('/attendance-list', [App\Http\Controllers\FrontendController\attendanceController::class, 'attendanceList'])->name('attendanceList');
 
 });
