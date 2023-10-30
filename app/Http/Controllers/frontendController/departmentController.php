@@ -27,8 +27,8 @@ class departmentController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);
-        
+        return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);   
     }
 
+    
 }

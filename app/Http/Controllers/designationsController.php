@@ -44,7 +44,10 @@ class designationsController extends Controller
 
     public function showDesignations($id){
         $company_id= auth()->user()->company_id;
-        $data= Designation::where('dept_id',$id)->get();
+        // $data= Designation::where('dept_id',$id)->get();
+        $data = Designation::where('designations.dept_id',$id)
+                ->join("departments","departments.dept_id","=","designations.dept_id")
+                ->get(['designations.*','departments.deptTitle']);
 
         if (count($data) === 0) {
             return response()->json([
@@ -99,6 +102,10 @@ class designationsController extends Controller
         return response()->json([
             'message' => 'Designation Deleted'
         ]);
+    }
 
+    public function designationNameList($id){
+        $data = Designation::where('dept_id',$id)->pluck('desigTitle','designation_id');
+        return $data;
     }
 }

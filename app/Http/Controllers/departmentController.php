@@ -103,4 +103,10 @@ class departmentController extends Controller
 
     }
 
+    public function departmentNameList(){
+        $company_id= auth()->user()->company_id;
+        $data = Department::where('company_id',$company_id)->pluck('deptTitle','dept_id');
+        return $data;
+    }
+
 }
