@@ -199,7 +199,7 @@ $(document).ready(function() {
 
 	if($('.timepicker').length > 0) {
 		$('.timepicker').datetimepicker({
-			format: "hh:mm:ss",
+			format: "HH:mm:ss",
 			icons: {
 				up: "fa fa-angle-up",
 				down: "fa-solid fa-angle-down",
