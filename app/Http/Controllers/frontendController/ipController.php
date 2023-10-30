@@ -1,18 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-use App\Models\Department;
-use Illuminate\Support\Facades\Validator;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class departmentController extends Controller
+class ipController extends Controller
 {
-    public function department(){
+    public function ipList(){
         $access_token = session('access_token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/department-list',
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/IP-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -25,10 +24,9 @@ class departmentController extends Controller
         ));
 
         $response = curl_exec($curl);
+
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);   
+        return view('frontend.ip',compact('dataArray'), ['jwtToken' => $access_token]);
     }
-
-    
 }

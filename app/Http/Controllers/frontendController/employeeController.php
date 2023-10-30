@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-use App\Models\Department;
-use Illuminate\Support\Facades\Validator;
+
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
-class departmentController extends Controller
+class employeeController extends Controller
 {
-    public function department(){
+    public function employee(){
         $access_token = session('access_token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/department-list',
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/employee-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -23,12 +23,9 @@ class departmentController extends Controller
         CURLOPT_HTTPHEADER => array(
             'Authorization: Bearer ' . $access_token),
         ));
-
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);   
+        return view('frontend.employee',compact('dataArray'), ['jwtToken' => $access_token]);
     }
-
-    
 }

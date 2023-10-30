@@ -78,7 +78,11 @@ class employeeController extends Controller
     public function employeeList(){
 
         $company_id= auth()->user()->company_id;
-        $data = Employee::where('company_id',$company_id)->get();
+        $data = Employee::where('employees.company_id',$company_id)
+                ->join("users", "users.id", "=", "employees.id")
+                ->join("departments","departments.dept_id","=","employees.dept_id")
+                ->join("designations","designations.designation_id","=","employees.designation_id")
+                ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle']);
         return response()->json([
             'message'=> 'Employee List',
             'data'=>$data
@@ -87,7 +91,7 @@ class employeeController extends Controller
     }
 
     public function updateEmployee(Request $request,$id){
-
+        $user_id = Employee::where('emp_id',$id)->value('id');
         $validator = Validator::make($request->all(), [
             'officeEmployeeID' => 'string',
             'name' => 'required|string|between:2,100',
@@ -98,7 +102,7 @@ class employeeController extends Controller
             'designation_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'string',
-            'email' => 'required|string|email|max:100|unique:users,email,'.$id.',id',
+            'email' => 'required|string|email|max:100|unique:users,email,'.$user_id.',id',
             'password' => 'string|confirmed|min:6' 
         ]);
         
@@ -107,7 +111,6 @@ class employeeController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $user_id = Employee::where('emp_id',$id)->value('id');
         $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
         if(!$userInfo){

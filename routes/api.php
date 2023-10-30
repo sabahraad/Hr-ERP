@@ -96,3 +96,5 @@ Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceControl
 Route::post('/update-reason', [App\Http\Controllers\attendanceController::class, 'updateReason'])->name('updateReason');
 
 });
+Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
+Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');

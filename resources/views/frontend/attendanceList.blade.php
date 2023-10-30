@@ -10,14 +10,14 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h3 class="page-title">Department</h3>
+                            <h3 class="page-title">Attendance List</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Department</li>
+                                <li class="breadcrumb-item active">Attendance List</li>
                             </ul>
                         </div>
                         <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Department</a>
+                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Attendance</a>
                         </div>
                     </div>
                 </div>
@@ -29,8 +29,13 @@
                                 <thead>
                                     <tr>
                                         <th class="width-thirty">#</th>
-                                        <th>Department Name</th>
-                                        <th>Department Description</th>
+                                        <th>Employee ID</th>
+                                        <th>Employee Name</th>
+                                        <th>Date</th>
+                                        <th>Enter Time</th>
+                                        <th>Exit Time</th>
+                                        <th>late Entry Reason</th>
+                                        <th>Early Out Reason</th>
                                         <th >Action</th>
                                         <!-- class="text-end" -->
                                     </tr>
@@ -39,17 +44,31 @@
                                 @if($dataArray === null || empty($dataArray['data']))
                                 <tr><td colspan="4" class="text-center">No department is available</td></tr>
                                 @else
-                                    @foreach($dataArray['data'] as $key =>$department)
+                                    @foreach($dataArray['data'] as $key =>$attendance)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$department['deptTitle']}}</td>
-                                        <td>{{$department['details']}}</td>
+                                        <td>{{$attendance['emp_id']}}</td>
+                                        <td>{{$attendance['company_id']}}</td>
+                                        @php
+                                            $in_time = $attendance['created_at'];
+                                            $out_time =$attendance['updated_at'];
+                                            $dateObject = \Carbon\Carbon::parse($in_time);
+                                            $dateObject1 = \Carbon\Carbon::parse($out_time);
+                                            $formattedDate = $dateObject->format('Y-m-d'); // Customize the format as per your requirement
+                                            $in_time = $dateObject->format('H:i:s');
+                                            $out_time = $dateObject1->format('H:i:s'); // Customize the format as per your requirement
+                                        @endphp
+                                        <td>{{$formattedDate?? 'N/A'}}</td>
+                                        <td>{{$in_time?? 'N/A'}} </td>
+                                        <td>{{$out_time?? 'N/A'}} </td>
+                                        <td>{{$attendance['lateINreason'] ?? 'N/A'}} </td>
+                                        <td>{{$attendance['earlyOUTreason']?? 'N/A'}}  </td>
                                         <td>
                                         <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $department['dept_id'] }}"></i> Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $department['dept_id'] }}"></i> Delete</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $attendance['attendance_id'] }}"></i> Edit</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $attendance['attendance_id'] }}"></i> Delete</a>
                                             </div>
                                             </div>
                                         </td>

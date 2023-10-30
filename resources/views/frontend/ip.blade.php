@@ -10,46 +10,49 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h3 class="page-title">Department</h3>
+                            <h3 class="page-title">IP/Wifi</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Department</li>
+                                <li class="breadcrumb-item active">IP</li>
                             </ul>
                         </div>
+                        @if($dataArray === null || empty($dataArray['data']))
                         <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Department</a>
+                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add IP/Wifi</a>
                         </div>
+                        @endif
                     </div>
                 </div>
                 <!-- /Page Header -->
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped custom-table mb-0" id="deptTable">
+                        <div>
+                            <table class="table table-striped custom-table mb-0 datatable">
                                 <thead>
                                     <tr>
                                         <th class="width-thirty">#</th>
-                                        <th>Department Name</th>
-                                        <th>Department Description</th>
+                                        <th>IP</th>
+                                        <th>Wifi Name</th>
                                         <th >Action</th>
                                         <!-- class="text-end" -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @if($dataArray === null || empty($dataArray['data']))
-                                <tr><td colspan="4" class="text-center">No department is available</td></tr>
+                                <tr><td colspan="4" class="text-center">No IP/Wifi details is available</td></tr>
                                 @else
-                                    @foreach($dataArray['data'] as $key =>$department)
+                                    @foreach($dataArray['data'] as $key =>$ipDetail)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$department['deptTitle']}}</td>
-                                        <td>{{$department['details']}}</td>
+                                        <td>@foreach(json_decode($ipDetail['ip']) as $ip)
+                                        {{$ip}}<br>
+                                        @endforeach</td>
+                                        <td>{{$ipDetail['wifiName'] ?: 'N/A'}}</td>
                                         <td>
                                         <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $department['dept_id'] }}"></i> Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $department['dept_id'] }}"></i> Delete</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{$ipDetail['ip_id']}}"></i> Edit</a>
                                             </div>
                                             </div>
                                         </td>
@@ -69,7 +72,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Add Department</h5>
+                            <h5 class="modal-title">Add IP/Wifi</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -78,10 +81,13 @@
                             <form id="msform">
                                 @csrf
                                 <div class="input-block mb-3">
-                                    <label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name= "deptTitle" >
-                                    <label class="col-form-label">Department Description</label>
-                                    <input class="form-control" type="text" name= "details">
+                                    <div id="ipInputs">
+                                        <!-- IP address input fields will be dynamically added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn" style="margin: 15px;" onclick="addIpInput()">Add IP</button>
+                                    <button type="button" class="btn btn-primary btn" onclick="removeIpInput()">Cancel</button><br>
+                                    <label class="col-form-label">Wifi Name</label>
+                                    <input class="form-control" type="text" name= "wifiName">
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>
@@ -107,11 +113,16 @@
                             <form id="editSubmit">
                             @csrf
                                 <div class="input-block mb-3">
-                                    <label class="col-form-label">Department Name</label>
-                                    <input id ="deptName" class="form-control" name="deptTitle" type="text">
-                                    <label class="col-form-label">Department Description </label>
-                                    <input id ="details" class="form-control" name="details" type="text">
-                                    <input id ="dept_id" class="form-control" name="dept_id" type="hidden">
+                                    <div id="container"></div>
+                                    <div id="ipInputsEdit">
+                                        <!-- IP address input fields will be dynamically added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn" style="margin: 15px;" onclick="addIpInput()">Add IP</button>
+                                    <button type="button" class="btn btn-primary btn" onclick="removeIpInput()">Cancel</button><br>
+
+                                    <label class="col-form-label">Wifi Name</label>
+                                    <input id ="wifiName" class="form-control" name="wifiName" type="text">
+                                    <input class="form-control" type="text" name= "status" value="1" hidden>
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Save</button>
@@ -123,46 +134,44 @@
             </div>
             <!-- /Edit Department Modal -->
 
-            <!-- Delete Department Modal -->
-            <div class="modal custom-modal fade" id="delete_department" role="dialog">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="form-header">
-                                <h3>Delete Department</h3>
-                                <p>Are you sure want to delete?</p>
-                            </div>
-                            <div class="modal-btn delete-action">
-                                <div class="row">
-                                    <div class="col-6">
-                                    <form id="deptDelete">
-                                        @csrf
-                                        <input id ="dept_id" class="form-control" name="dept_id" type="hidden">
-                                        <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
-                                    </form>
-                                    </div>
-                                    <div class="col-6">
-                                        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Delete Department Modal -->
-            
+
         </div>
         <!-- /Page Wrapper -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-    $(document).ready(function() {
-        $('#deptTable').DataTable();
-    });
+
+    function addIpInput() {
+        const ipInputs = document.getElementById('ipInputs');
+        const ipInputsEdit = document.getElementById('ipInputsEdit');
+
+        const input = document.createElement('input');
+        input.classList.add('form-control'); // Replace 'yourClassName' with the desired class name
+        input.type = 'text';
+        input.name = 'ip[]';
+        input.placeholder = 'Enter IP address';
+        const inputCopy = input.cloneNode(true); // Create a copy of the input element
+        ipInputs.appendChild(input);
+        ipInputsEdit.appendChild(inputCopy);
+    }
+
+    function removeIpInput() {
+        const ipInputs = document.getElementById('ipInputs');
+        const ipInputsEdit = document.getElementById('ipInputsEdit');
+
+        // Check if there are any input fields to remove
+        if (ipInputs.children.length > 0) {
+            ipInputs.removeChild(ipInputs.lastChild);
+        }
+
+        if (ipInputsEdit.children.length > 0) {
+            ipInputsEdit.removeChild(ipInputsEdit.lastChild);
+        }
+    }
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
@@ -170,9 +179,8 @@
         e.preventDefault();
 
         var formData = new FormData(this);
-
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-department', 
+                url: 'https://hrm.aamarpay.dev/api/add-IP', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -184,8 +192,8 @@
                     console.log(response);
                     Swal.fire({
                         icon: 'success',
-                        title: 'Department added successful',
-                        text: 'Your department registration was successful!',
+                        title: 'IP/WIfi added successful',
+                        text: 'Your IP/Wifi was successfully added!',
                         showConfirmButton: false, // Hide the OK button
                         }); 
                         setTimeout(function() {
@@ -224,14 +232,30 @@
             var trElement = $(this).closest('tr');
 
             // Find the 'td' elements within the 'tr'
-            var deptTitle = trElement.find('td:eq(1)').text();
-            var details = trElement.find('td:eq(2)').text();
+            var ipList = trElement.find('td:eq(1)').text();
+            var ipArray = ipList.split('\n');
+            // Assuming `container` is the element where you want to add the input fields
+            var container = document.getElementById('container'); 
+
+            ipArray.forEach(function(ip) {
+                if (ip && ip.trim() !== "") {
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'ip[]';
+                input.classList.add('form-control'); // Replace 'yourClassName' with the desired class name
+                input.value = ip.trim();
+                container.appendChild(input);
+                }
+            });
+
+
+            var wifiName = trElement.find('td:eq(2)').text();
 
             // Log the data to the console
-            console.log('deptTitle:', deptTitle);
-            console.log('details:', details);
-            $('#deptName').val(deptTitle);
-            $('#details').val(details);
+            console.log('ipList:', ipList);
+            console.log('wifiName:', wifiName);
+            $('#ipList').val(ipList);
+            $('#wifiName').val(wifiName);
             $('#dept_id').val(deptId);
             // Show the modal
             $('#edit_department').modal('show');
@@ -244,13 +268,10 @@
         var jwtToken = "{{ $jwtToken }}";
     $('#editSubmit').submit(function(e) {
         e.preventDefault();
-        var dept_id = $('#dept_id').val();
-        console.log(dept_id);
-
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/department/'+dept_id, 
+                url: 'https://hrm.aamarpay.dev/api/add-IP', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -261,78 +282,14 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Department Edited successfully',
-                        text: 'Your department edit was successful!',
+                        title: 'IP/Wifi Edited successfully',
+                        text: 'Your Ip address are edited successfully!',
                         showConfirmButton: false, 
                     });
                     setTimeout(function() {
                             location.reload(); // This will refresh the current page
                         }, 200);
 
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-
-    $(document).ready(function() {
-        $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
-            // Get the dept_id from the clicked element's data-id attribute
-            var deptId = $(this).find('.fa-regular').data('id');
-            // Log the dept_id to the console
-            console.log(deptId);
-            var trElement = $(this).closest('tr');
-            $('#dept_id').val(deptId);
-        });
-    });
-
-
-
-
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var dept_id = $('#dept_id').val();
-        console.log(dept_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/department/'+dept_id, 
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Department successfully deleted',
-                        text: 'You have successfully deleted a department',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },200);
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
