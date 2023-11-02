@@ -39,3 +39,6 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/attendance-list', [App\Http\Controllers\FrontendController\attendanceController::class, 'attendanceList'])->name('attendanceList');
 
 });
+
+
+Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController::class, 'resetPassword'])->name('resetPassword');

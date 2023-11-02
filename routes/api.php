@@ -98,3 +98,4 @@ Route::post('/update-reason', [App\Http\Controllers\attendanceController::class,
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
+Route::post('/forget-password-email', [App\Http\Controllers\forgetPasswordEmailController::class, 'emailData']);
