@@ -91,7 +91,7 @@
         console.log(data);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-attendance-setting', 
+                url: 'https://hrm.aamarpay.dev/api/add-office-hour', 
                 type: 'POST',
                 contentType: 'application/json',
                 headers: {
@@ -102,8 +102,8 @@
                     console.log(response);
                     Swal.fire({
                         icon: 'success',
-                        title: 'Attendance Settings added successful',
-                        text: 'Your Attendance Settings was successfully added!',
+                        title: 'Office Hour Settings added successful',
+                        text: 'Your Office Hour Settings was successfully added!',
                         showConfirmButton: false, // Hide the OK button
                         }); 
                         setTimeout(function() {

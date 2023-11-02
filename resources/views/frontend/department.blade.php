@@ -316,7 +316,7 @@
 
         $.ajax({
                 url: 'https://hrm.aamarpay.dev/api/delete/department/'+dept_id, 
-                type: 'POST',
+                type: 'DELETE',
                 data: formData,
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken

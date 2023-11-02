@@ -12,7 +12,7 @@ class companyController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://hrm.aamarpay.dev/api/company-list',
+          CURLOPT_URL => 'https://hrm.aamarpay.dev/api/company-details',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,

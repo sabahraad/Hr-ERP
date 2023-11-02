@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
 use App\Models\User;
 use App\Models\Company;
@@ -160,4 +161,6 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
+
+   
 }

@@ -65,7 +65,7 @@
 								<ul>
 									<li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
 									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
-									<li><a href="{{route('attendance')}}">Attendance List</a></li>
+									<li><a href="{{route('attendanceList')}}">Attendance List</a></li>
 								</ul>
 							</li>
 							

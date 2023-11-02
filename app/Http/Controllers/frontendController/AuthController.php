@@ -163,4 +163,6 @@ class AuthController extends Controller
         return view('frontend.test');
     }
 
+    
+
 }
