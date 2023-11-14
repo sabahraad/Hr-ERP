@@ -22,7 +22,6 @@ class IpController extends Controller
     ];
     
     public function addIP(Request $request){
-        dd($request);
         $validator = Validator::make($request->all(), $this->validationRules);
 
         if ($validator->fails()) {

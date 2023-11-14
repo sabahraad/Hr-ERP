@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class designationsController extends Controller
@@ -14,16 +14,21 @@ class designationsController extends Controller
     }
     
     public function addDesignations(Request $request){
-
+        $dept_id = $request->dept_id;
         $validator= Validator::make($request->all(), [
-            'desigTitle' => 'required|string',
+            'desigTitle' => [
+                'required',
+                Rule::unique('designations')->where(function ($query) use ($dept_id) {
+                    return $query->where('dept_id', $dept_id);
+                })
+            ],
             'details'  => 'string',
             'dept_id' => 'required|integer'
         ]);
         
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'error' => $validator->errors(),
             ], 422);
         }
 
@@ -44,7 +49,6 @@ class designationsController extends Controller
 
     public function showDesignations($id){
         $company_id= auth()->user()->company_id;
-        // $data= Designation::where('dept_id',$id)->get();
         $data = Designation::where('designations.dept_id',$id)
                 ->join("departments","departments.dept_id","=","designations.dept_id")
                 ->get(['designations.*','departments.deptTitle']);
@@ -67,18 +71,20 @@ class designationsController extends Controller
     public function editDesignations(Request $request,$id){
 
         $validator= Validator::make($request->all(), [
-            'desigTitle' => 'required|string',
+            'desigTitle' => 'required|string|unique:designations,desigTitle'. $id . ',designation_id',
             'details'  => 'required'
         ]);
         
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'error' => $validator->errors(),
             ], 422);
         }
         
         $data = Designation::find($id);
-        
+        if($request->has('dept_id')){
+            $data->dept_id = $request->dept_id;
+        }
         $data->desigTitle = $request->desigTitle;
         $data->details = $request->details;
         
@@ -102,6 +108,7 @@ class designationsController extends Controller
         return response()->json([
             'message' => 'Designation Deleted'
         ]);
+
     }
 
     public function designationNameList($id){

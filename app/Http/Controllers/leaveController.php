@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Approvers;
+use App\Models\LeaveApprove;
 use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\leaveApplication;
@@ -17,7 +19,7 @@ class leaveController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function addleavesetting(Request $request){
+    public function addleavetype(Request $request){
 
         $company_id= auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
@@ -51,28 +53,28 @@ class leaveController extends Controller
         // $data= leaveSetting::where('leave_type',$request->leave_type)->get();
 
         return response()->json([
-            'message'=> 'Leave Setting Added',
+            'message'=> 'Leave Type Added',
             'data'=>$data
         ],201);
        
     }
 
-    public function leavesettingList(){
+    public function leaveTypeList(){
 
         $company_id = auth()->user()->company_id;
         $data= leaveSetting::where('company_id',$company_id)->get();
 
         return response()->json([
-            'message'=>'leave Setting List',
+            'message'=>'leave Type List',
             'data'=>$data
         ],200);
     }
 
-    public function updateleavesetting(Request $request,$id){
-
+    public function updateleavetype(Request $request,$id){
+        $company_id= auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
             'days' => 'required|integer',
-            'leave_type' => 'required|string|max:20',
+            'leave_type' => 'required|string|max:20|unique:leave_settings,leave_type,' . $id . ',leave_setting_id,company_id,' . $company_id,
             'status' => 'required|boolean'
         ]);
         
@@ -82,7 +84,6 @@ class leaveController extends Controller
             ], 422);
         }
 
-        $company_id= auth()->user()->company_id;
         $data = leaveSetting::find($id);
         if(!$data){
             return response()->json([
@@ -95,15 +96,15 @@ class leaveController extends Controller
         $data->company_id = $company_id;
         $data->save();
 
-        $data= leaveSetting::where('company_id',$company_id)->get();
+        // $data= leaveSetting::where('company_id',$company_id)->get();
 
         return response()->json([
-            'message'=> 'Leave Setting Updated',
+            'message'=> 'Leave Type details Updated',
             'data'=>$data
         ],200);
     }
 
-    public function deleteleavesetting($id){
+    public function deleteleaveType($id){
         leaveSetting::where('leave_setting_id',$id)->delete();        
         return response()->json([
             'message' => 'Leave Type deleted successfully'
@@ -111,7 +112,6 @@ class leaveController extends Controller
     }
 
     public function createLeaveApplications(Request $request){
-
         $validator = Validator::make($request->all(), [
             'leave_setting_id' => 'required|integer',
             'start_date' => 'required|date',
@@ -168,8 +168,19 @@ class leaveController extends Controller
 
         $dateArray=array_keys($dateListWithoutWeekend );
         $jsonData = json_encode($dateArray);
-
         $count=count($dateArray);
+        $leaveTaken = leaveApplication::where('leave_setting_id',$request->leave_setting_id)
+                             ->where('emp_id',$emp_id)
+                             ->get();
+        $leaveTakenCount = $leaveTaken->sum('count');
+        $leaveDayCount = leaveSetting::where('leave_setting_id',$request->leave_setting_id)->value('days');
+        $availableLeaveCount = $leaveDayCount - $leaveTakenCount;
+        // dd($leaveTakenCount,$leaveDayCount,$availableLeaveCount); 
+        if($count>$availableLeaveCount){
+            return response()->json([
+                'message' => 'You can apply for '.$availableLeaveCount.' days',
+            ],403);
+        }
 
         $data = new leaveApplication();
 
@@ -186,16 +197,126 @@ class leaveController extends Controller
         $data->end_date = $request->end_date;
         $data->dateArray = $jsonData;
         $data->count = $count;
-        $data->status = 1;
+        $data->status = 0;
         $data->reason = $request->reason;
         $data->approvel_date = $request->approvel_date;
         $data->approval_name = $request->approval_name;
-        $data->save();
+        if($data->save()){
+            $dept_id = Employee::where('emp_id',$data->emp_id)->value('dept_id');
+            $approvers = Approvers::where('deptId',$dept_id)->get();
+            $leave_application_id = $data->leave_application_id;
+            // dd($approvers);
+            foreach($approvers as $value){
+                $leaveApproverList = new LeaveApprove();
+                $leaveApproverList->dept_id = $dept_id;
+                $leaveApproverList->leave_application_id = $leave_application_id;
+                $leaveApproverList->approver_emp_id = $value->emp_id;
+                $leaveApproverList->approver_name = $value->approver_name;
+                $leaveApproverList->status = 0;
+                $leaveApproverList->priority = $value->priority;
+                $leaveApproverList->save();
+            }
+        }
 
         return response()->json([
             'message' => 'Your Leave Application Submitted Successfully',
             'data'=> $data
         ],201);
+    }
+
+    public function availableLeaveListforEmployee(){
+        $company_id = auth()->user()->company_id;
+        $user_id = auth()->user()->id;
+        $emp_id= Employee::where('id',$user_id)->value('emp_id');
+        $response1= leaveSetting::where('company_id',$company_id)->get();
+        $response2 = leaveApplication::where('emp_id', $emp_id)->get();
+       
+        $data1 = json_decode($response1, true);
+        $data2 = json_decode($response2, true);
+
+        $results = [];
+
+        foreach ($data1 as $item1) {
+            $leave_setting_id1 = $item1['leave_setting_id'];
+            $days1 = $item1['days'];
+            foreach ($data2 as $item2) {
+                $leave_setting_id2 = $item2['leave_setting_id'];
+                $count = $item2['count'];
+
+                if ($leave_setting_id1 === $leave_setting_id2) {
+                    $item1['days'] = $days1 - $count;
+                    $days1 = $item1['days'];
+                }
+            }
+            $results[] = $item1;
+
+        }
+
+
+        return response()->json([
+            'message' => 'Avaiable Leave List',
+            'data'=>$results
+        ],200);
+
+    }
+
+    public function leaveApplicationsList($id){
+        $data = leaveApplication::where('emp_id', $id)->get();
+        if(!$data){
+            return response()->json([
+                'message'=> 'You have not requested any leave yet'
+            ],200);
+        }
+        return response()->json([
+            'message' => 'Leave Application List',
+            'data' =>$data
+        ],200);
+    }
+
+    public function leaveApproveList(){
+        $user_id = auth()->user()->id;
+        $emp_id = Employee::where('id', $user_id)->value('emp_id');
+        $data = LeaveApprove::where('approver_emp_id',$emp_id)
+                ->where('status',0)
+                ->get();
+        if($data->isempty()){
+            return response()->json([
+                'message' => 'No leave approve pending'
+            ],404);
+        }
+        return response()->json([
+            'message' => 'Pending leave Approve List',
+            'data'=>$data
+        ],200);
+
+    }
+
+    public function approveLeave(Request $request){
+        $leave_approves_id = $request->leave_approves_id;
+        $status = $request->status;
+        if($status == 1){
+            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $status]);
+            $leave_application_id = LeaveApprove::where('leave_approves_id', $leave_approves_id)->value('leave_application_id');
+            $data = LeaveApprove::where('leave_application_id', $leave_application_id)->get();
+            
+            foreach($data as $raw){
+                if($raw->status == 0){
+                    $status = 0;
+                }else{
+                    $status = 1;
+                }
+            }
+            if($status == 1){
+                leaveApplication::where('leave_application_id', $leave_application_id)->update(['status' => $status]);
+            }
+            return response()->json([
+                'message'=>'Leave Approved'
+            ],200);
+        }else{
+            return response()->json([
+                'message' => 'Leave Not Approved'
+            ],400);
+        }
     }
 
 }

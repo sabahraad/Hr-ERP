@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use App\Models\Company;
 use Illuminate\Http\Response;
 use App\Models\Department;
@@ -17,9 +17,15 @@ class departmentController extends Controller
     }
 
     public function addDepartment(Request $request){
+        $company_id= auth()->user()->company_id;
 
         $validator= Validator::make($request->all(), [
-            'deptTitle' => 'required||unique:departments',
+            'deptTitle' => [
+                'required',
+                Rule::unique('departments')->where(function ($query) use ($company_id) {
+                    return $query->where('company_id', $company_id);
+                })
+            ],
             'details'  => 'string',
         ]);
 
@@ -28,8 +34,6 @@ class departmentController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-
-        $company_id= auth()->user()->company_id;
 
         $data= new Department;
         $data->deptTitle = $request->deptTitle;
@@ -95,8 +99,8 @@ class departmentController extends Controller
     }
 
     public function deleteDepartment($id){
-        $company_id= auth()->user()->company_id;
-        Department::find($id)->where('company_id',$company_id)->delete();
+        
+        Department::find($id)->delete();
         return response()->json([
             'message' => 'Department Deleted'
         ]);
@@ -108,5 +112,4 @@ class departmentController extends Controller
         $data = Department::where('company_id',$company_id)->pluck('deptTitle','dept_id');
         return $data;
     }
-
 }

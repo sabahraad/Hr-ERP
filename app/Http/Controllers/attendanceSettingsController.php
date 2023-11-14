@@ -12,7 +12,7 @@ class attendanceSettingsController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function createAttendanceSetting(Request $request){
+    public function createOfficeHour(Request $request){
 
         $validator = Validator::make($request->all(), [
             'office_hour_type' => 'required|string',
@@ -38,7 +38,7 @@ class attendanceSettingsController extends Controller
             $attendanceSetting->grace_time = $request->grace_time;
             $attendanceSetting->save();
             return response()->json([
-                'message'=>'Attendance Settings Updated Successfully',
+                'message'=>'Office Hour Settings Updated Successfully',
                 'data'=>$attendanceSetting
             ],200);
         }else{
@@ -52,26 +52,26 @@ class attendanceSettingsController extends Controller
             $data->save();
     
             return response()->json([
-                'message'=>'Attendance Settings Added Successfully',
+                'message'=>'Office Hour Settings Added Successfully',
                 'data'=>$data
             ],201);
         }  
     }
 
-    public function AttendanceSettingList(){
+    public function officeHourList(){
         $company_id= auth()->user()->company_id;
         $data=AttendanceSetting::where('company_id',$company_id)->get();
         return response()->json([
-            'message'=>'Attendance Settings List',
+            'message'=>'Office Hour Settings List',
             'data'=>$data
         ],200);
     }
 
-    public function deleteAttendanceSetting(){
+    public function deleteOfficeHour(){
         $company_id= auth()->user()->company_id;
         AttendanceSetting::where('company_id',$company_id)->delete();        
         return response()->json([
-            'message' => 'Attendance Settings deleted successfully'
+            'message' => 'Office Hour Settings deleted successfully'
         ]);
     }
     

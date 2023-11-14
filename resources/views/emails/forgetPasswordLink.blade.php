@@ -428,6 +428,7 @@
       supported-color-schemes: light dark;
     }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
   </head>
   <body>
@@ -451,8 +452,8 @@
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        <h1>Hi {{ $data['customerName'] }},</h1>
-                        <p>You recently requested to reset your password for your hrm account. Use the button below to reset it. </p>
+                        <h1>Hi </h1>
+                        <p>You recently requested to reset your password for your hrm account. Use the OTP below to reset it. </p>
                         <!-- Action -->
                         <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -461,7 +462,7 @@
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <a href="" class="f-fallback button button--green" target="_blank">Reset your password</a>
+                                    <button type="button" class="btn btn-primary">{{ $data['OTP'] }}</button>
                                   </td>
                                 </tr>
                               </table>
@@ -475,8 +476,6 @@
                         <table class="body-sub" role="presentation">
                           <tr>
                             <td>
-                              <p class="f-fallback sub">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
-                              <p class="f-fallback sub"></p>
                             </td>
                           </tr>
                         </table>
