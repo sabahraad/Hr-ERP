@@ -37,7 +37,6 @@ class forgetPasswordEmailController extends Controller
         }else{
             $data = OTP::find($OTPData);
             $data->OTP = $OTP;
-            $data->userId = $request->id;
             $data->status  = 2;
             $data->save();
         }
@@ -60,7 +59,7 @@ class forgetPasswordEmailController extends Controller
             ], 422);
         }
         
-        $data = OTP::where('userId',$request->id)->first();
+        $data = OTP::where('email',$request->email)->first();
         if($data){
             $otpArray = $data->toArray();
             if($data['status'] == 1){
@@ -69,7 +68,7 @@ class forgetPasswordEmailController extends Controller
                 $diffInMinutes = $currentTime->diffInMinutes($createdAt);
                 if($data['OTP'] == $request->OTP){
                     if ($diffInMinutes <= 2) {
-                        DB::table('o_t_p_s')->where('userId', $request->id)->update(['status' => 3]);
+                        DB::table('o_t_p_s')->where('email', $request->email)->update(['status' => 3]);
                         return response()->json([
                             'message'=>'OTP Verified'
                         ],202);
@@ -89,7 +88,7 @@ class forgetPasswordEmailController extends Controller
                 $diffInMinutes = $currentTime->diffInMinutes($updatedAt);
                 if($data['OTP'] == $request->OTP){
                     if ($diffInMinutes <= 2) {
-                        DB::table('o_t_p_s')->where('userId', $request->id)->update(['status' => 3]);
+                        DB::table('o_t_p_s')->where('email', $request->email)->update(['status' => 3]);
                         return response()->json([
                             'message'=>'OTP Verified'
                         ],202);

@@ -54,6 +54,7 @@
 									<li><a href="{{route('leaveList')}}">Leave Type</a></li>
 									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
 									<li><a href="{{route('holidays')}}">Holiday</a></li>
+									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
 								</ul>
 							</li>
 							

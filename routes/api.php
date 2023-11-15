@@ -111,7 +111,7 @@ Route::post('edit-notice/{id}', [App\Http\Controllers\officeNoticeController::cl
 Route::delete('/delete/notice/{id}', [App\Http\Controllers\officeNoticeController::class, 'deleteNotice']);
 
 //leave Approver
-Route::get('/approvers-list', [App\Http\Controllers\approversController::class, 'approversList']);
+Route::get('/approvers-list/{id}', [App\Http\Controllers\approversController::class, 'approversList']);
 Route::post('/add-approvers', [App\Http\Controllers\approversController::class, 'addApprovers']);
 Route::post('/edit-approvers/{id}', [App\Http\Controllers\approversController::class, 'editApprovers']);
 Route::delete('/delete-approvers/{id}', [App\Http\Controllers\approversController::class, 'deleteApprovers']);

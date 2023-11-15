@@ -37,7 +37,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/attendance-type', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceType'])->name('attendanceType');
     Route::get('/attendance-setting', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceSetting'])->name('attendanceSetting');
     Route::get('/attendance-list', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceList'])->name('attendanceList');
+    Route::get('/leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'leaveApprover'])->name('leaveApprover');
 
+    
 });
 
 

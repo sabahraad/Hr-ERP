@@ -44,10 +44,10 @@ class approversController extends Controller
         ],201);
     }
 
-    public function approversList(){
+    public function approversList($id){
 
         $company_id= auth()->user()->company_id;
-        $data = Approvers::where('company_id',$company_id)->get();
+        $data = Approvers::where('company_id',$company_id)->where('deptId',$id)->get();
         
         if($data->isEmpty()){
             return response()->json([
