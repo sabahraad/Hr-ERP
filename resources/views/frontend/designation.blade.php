@@ -205,10 +205,10 @@
                     'Authorization': 'Bearer ' + jwtToken
                 },
 			success: function(response) {
+                
                 var table = $('#desigTable').DataTable();
 				table.clear().draw();
                 var rowNum = 1;
-
                 // Iterate through the data and populate the table
                 response.data.forEach(function(item) {
                     var rowData = [

@@ -17,7 +17,7 @@
                             </ul>
                         </div>
                         <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_designation"><i class="fa-solid fa-plus"></i> Add Leave Approver</a>
+                            <a href="{{route('addLeaveApprover')}}" class="btn add-btn" ><i class="fa-solid fa-plus"></i> Add Leave Approver</a>
                         </div>
                     </div>
                 </div>
@@ -88,15 +88,19 @@
                                         @endforeach
                                     </select>
                                 </div>
+                               
                                 <div class="input-block mb-3">
                                     <label class="col-form-label">Approver #1</label>
-                                    <select name="emp_id" id="emp_id" class="select">
-                                    <option selected disabled>Open this to select Approver</option>
+                                    <select name="emp_id[]" class="select">
+                                        <option selected disabled>Open this to select Approver</option>
                                         @foreach ($employee['data'] as $employee)
                                             <option value="{{$employee['emp_id']}}">{{$employee['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <!-- Add IP button -->
+                                <button type="button" onclick="addSelectField()">Add Approver</button>
                                 <div id="ipInputsEdit">
                                         <!-- IP address input fields will be dynamically added here -->
                                 </div>
@@ -183,55 +187,11 @@
         
         </div>
         <!-- /Page Wrapper -->
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-
-function addIpInput() {
-    const ipInputs = document.getElementById('ipInputs');
-    const ipInputsEdit = document.getElementById('ipInputsEdit');
-
-    // Create a new select element
-    const select = document.createElement('select');
-    select.classList.add('form-control'); // Replace 'yourClassName' with the desired class name
-    select.name = 'ip[]';
-
-    // Add options to the select element (you can customize this part based on your requirements)
-    const option1 = document.createElement('option');
-    option1.value = 'Option1Value';
-    option1.text = 'Option 1';
-    select.add(option1);
-
-    const option2 = document.createElement('option');
-    option2.value = 'Option2Value';
-    option2.text = 'Option 2';
-    select.add(option2);
-
-    // Clone the select element for the second input
-    const selectCopy = select.cloneNode(true);
-
-    // Append the select elements to the respective containers
-    ipInputs.appendChild(select);
-    ipInputsEdit.appendChild(selectCopy);
-}
-
-function removeIpInput() {
-    const ipInputs = document.getElementById('ipInputs');
-    const ipInputsEdit = document.getElementById('ipInputsEdit');
-
-    // Check if there are any input fields to remove
-    if (ipInputs.children.length > 0) {
-        ipInputs.removeChild(ipInputs.lastChild);
-    }
-
-    if (ipInputsEdit.children.length > 0) {
-        ipInputsEdit.removeChild(ipInputsEdit.lastChild);
-    }
-}
-
 
     $(document).ready(function(){
         $('#desigTable').DataTable();

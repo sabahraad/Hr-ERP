@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Approvers;
+use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 use function PHPUnit\Framework\isEmpty;
@@ -17,10 +19,7 @@ class approversController extends Controller
 
         $validator = Validator::make($request->all(), [
             'deptId' => 'required|integer',
-            'deptName' => 'required|string',
-            'emp_id' => 'required|integer',
-            'approver_name' => 'required|string',
-            'priority' => 'required|integer'
+            'emp_id' => 'required|integer'
         ]);
         
         if ($validator->fails()) {
@@ -29,12 +28,18 @@ class approversController extends Controller
             ], 422);
         }
 
+        $deptName = Department::where('dept_id',$request->deptId)->value('deptTitle');
+        $approver_name = Employee::where('emp_id',$request->emp_id)->value('name');
+        // $priority = Approvers::where('deptId',$request->deptId)->get();
+        // $count = $priority->count();
+        // $priority = $count + 1;
         $company_id= auth()->user()->company_id;
+
         $data = new Approvers();
         $data->deptId = $request->deptId;
-        $data->deptName = $request->deptName;
+        $data->deptName = $deptName;
         $data->emp_id = $request->emp_id;
-        $data->approver_name = $request->approver_name;
+        $data->approver_name = $approver_name;
         $data->company_id = $company_id;
         $data->priority =$request->priority;
         $data->save();
@@ -94,13 +99,14 @@ class approversController extends Controller
             'message'=>'Approvers Details Updated',
             'data'=>$data
         ],200);
-
     }
 
     public function deleteApprovers($id){
+        $data = Approvers::where('approvers_id',$id)->value('deptId');
         Approvers::destroy($id);
         return response()->json([
-            'message'=>'Approvers Details deletes successfully'
-        ],204);
+            'message'=>'Approvers Details deletes successfully',
+            'data'=>$data
+        ],200);
     }
 }
