@@ -46,6 +46,7 @@ class attendanceController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
+        // dd($dataArray);
         return view('frontend.attendanceSetting',compact('dataArray'), ['jwtToken' => $access_token]);
     }
 

@@ -39,8 +39,13 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/attendance-list', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceList'])->name('attendanceList');
     Route::get('/leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'leaveApprover'])->name('leaveApprover');
     Route::get('/add-leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'addLeaveApprover'])->name('addLeaveApprover');
-
     
+    Route::get('/office-notice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'officeNotice'])->name('officeNotice');
+    Route::get('/addOfficeNotice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'addOfficeNotice'])->name('addOfficeNotice');
+    Route::post('/createOfficeNotice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'createOfficeNotice'])->name('createOfficeNotice');
+    Route::get('/showEditOfficeNotice/{id}', [App\Http\Controllers\frontendController\officeNoticeController::class, 'showEditOfficeNotice'])->name('showEditOfficeNotice');
+    Route::post('/editOfficeNotice/{id}', [App\Http\Controllers\frontendController\officeNoticeController::class, 'editOfficeNotice'])->name('editOfficeNotice');
+
 });
 
 

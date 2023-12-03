@@ -118,6 +118,10 @@ Route::delete('/delete-approvers/{id}', [App\Http\Controllers\approversControlle
 
 
 
+
+
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
+//motivationalSpeech
+Route::get('/motivationalSpeech', [App\Http\Controllers\motivationalSpeechController::class, 'motivationalSpeech']);

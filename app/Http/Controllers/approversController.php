@@ -19,7 +19,8 @@ class approversController extends Controller
 
         $validator = Validator::make($request->all(), [
             'deptId' => 'required|integer',
-            'emp_id' => 'required|integer'
+            'emp_id' => 'required|integer',
+            'priority'=> 'required'
         ]);
         
         if ($validator->fails()) {
@@ -30,29 +31,41 @@ class approversController extends Controller
 
         $deptName = Department::where('dept_id',$request->deptId)->value('deptTitle');
         $approver_name = Employee::where('emp_id',$request->emp_id)->value('name');
-        // $priority = Approvers::where('deptId',$request->deptId)->get();
-        // $count = $priority->count();
-        // $priority = $count + 1;
-        $company_id= auth()->user()->company_id;
+        $priority = Approvers::where('deptId',$request->deptId)->pluck('priority');
+        $existingApprovers = Approvers::where('emp_id',$request->emp_id)->where('deptId',$request->deptId)->pluck('emp_id');
 
-        $data = new Approvers();
-        $data->deptId = $request->deptId;
-        $data->deptName = $deptName;
-        $data->emp_id = $request->emp_id;
-        $data->approver_name = $approver_name;
-        $data->company_id = $company_id;
-        $data->priority =$request->priority;
-        $data->save();
-        return response()->json([
-            'message'=>'Approvers are Added',
-            'data'=>$data
-        ],201);
+        if ($existingApprovers->contains($request->emp_id)) {
+            return response()->json([
+                'message'=>'You Have Already Set '.$approver_name.'  '.'As a Approver For This Department'
+            ],403);
+        }
+        
+        if ($priority->contains($request->priority)) {
+            return response()->json([
+                'message'=>'You Have Already Set Someone On The Priority '.$request->priority.'  '.'Choose any other priority number for this department'
+            ],403);
+        } else {
+            $company_id= auth()->user()->company_id;
+            $data = new Approvers();
+            $data->deptId = $request->deptId;
+            $data->deptName = $deptName;
+            $data->emp_id = $request->emp_id;
+            $data->approver_name = $approver_name;
+            $data->company_id = $company_id;
+            $data->priority =$request->priority;
+            $data->save();
+            return response()->json([
+                'message'=>'Approvers are Added',
+                'data'=>$data
+            ],201);
+        }
+        
     }
 
     public function approversList($id){
 
         $company_id= auth()->user()->company_id;
-        $data = Approvers::where('company_id',$company_id)->where('deptId',$id)->get();
+        $data = Approvers::where('company_id',$company_id)->where('deptId',$id)->orderBy('priority', 'asc')->get();
         
         if($data->isEmpty()){
             return response()->json([

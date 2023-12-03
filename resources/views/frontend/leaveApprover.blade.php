@@ -163,7 +163,7 @@
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-header">
-                                <h3>Delete Designation</h3>
+                                <h3>Delete leave Approver</h3>
                                 <p>Are you sure want to delete?</p>
                             </div>
                             <div class="modal-btn delete-action">
@@ -171,9 +171,10 @@
                                     <div class="col-6">
                                     <form id="desigDelete">
                                         @csrf
-                                        <input id ="designation_id" class="form-control" name="designation_id" type="hidden">
+                                        <input id ="approvers_id" class="form-control" name="approvers_id" type="hidden">
                                         <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
-                                    </form>                                    </div>
+                                    </form>
+                                </div>
                                     <div class="col-6">
                                         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
                                     </div>
@@ -220,12 +221,13 @@
 
                 // Iterate through the data and populate the table
                 response.data.forEach(function(item) {
+
                     var rowData = [
                         rowNum,
                         '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
                         '<td data-deptid="' + item.emp_id + '">' + item.approver_name + '</td>',
                         '<td >' + item.priority + '</td>',
-                        '<div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_designation"><i class="fa-solid fa-pencil m-r-5" data-id="'+item.approvers_id+'""></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i> Delete</a></div></div>'
+                        '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
                     ];
                     table.row.add(rowData);
                     rowNum++;
@@ -250,144 +252,22 @@
 	});
 
 
-   
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desig_form').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-designations', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Designation added successful',
-                        text: 'Your Designation registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 300);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-    $(document).on('click', '.dropdown-item[data-bs-target="#edit_designation"]', function() {
-        var designation_id = $(this).find('.fa-solid.fa-pencil').data('id');
-        console.log(designation_id);
-
-        var trElement = $(this).closest('tr');
-
-        // Find the 'td' elements within the 'tr'
-        var desigTitle = trElement.find('td:eq(1)').text();
-        var details = trElement.find('td:eq(2)').text();
-
-        // Log the data to the console
-        console.log('desigTitle:', desigTitle);
-        console.log('details:', details);
-        $('#desigTitle').val(desigTitle);
-        $('#details').val(details);
-        $('#designation_id').val(designation_id);
-        // Show the modal
-        $('#edit_designation').modal('show');
-    });
-
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var designation_id = $('#designation_id').val();
-        console.log(designation_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/designations/'+designation_id, 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Designation Edited successfully',
-                        text: 'Your Designation edit was successful!',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 200);
-
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-
     $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var designation_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        console.log(designation_id);
-        $('#designation_id').val(designation_id);
-     
+        var approvers_id = $(this).find('.fa-regular.fa-trash-can').data('id');
+        // console.log(approvers_id);
+        $('#approvers_id').val(approvers_id);
     });
-
+  
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
     $('#desigDelete').submit(function(e) {
         e.preventDefault();
-        var designation_id = $('#designation_id').val();
-        console.log(designation_id);
+        var approvers_id = $('#approvers_id').val();
+        console.log(approvers_id);
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/designations/'+designation_id, 
+                url: 'https://hrm.aamarpay.dev/api/delete-approvers/'+approvers_id, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -396,15 +276,59 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
+                    var dept_id = response.data;
+                    console.log(dept_id);
+                    $('#delete_designation').modal('hide');
                     Swal.fire({
                         icon: 'success',
-                        title: 'designation successfully deleted',
-                        text: 'You have successfully deleted a designation',
-                        showConfirmButton: false, 
+                        title: 'Leave Approver successfully deleted',
+                        text: 'You have successfully deleted a Leave Approver',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
+                                type: 'GET',
+                                headers: {
+                                        'Authorization': 'Bearer ' + jwtToken
+                                    },
+                                success: function(response) {
+                                    var table = $('#desigTable').DataTable();
+                                    table.clear().draw();
+                                    var rowNum = 1;
+
+                                    // Iterate through the data and populate the table
+                                    response.data.forEach(function(item) {
+                                        var rowData = [
+                                            rowNum,
+                                            '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
+                                            '<td data-empid="' + item.emp_id + '">' + item.approver_name + '</td>',
+                                            '<td >' + item.priority + '</td>',
+                                            '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
+                                        ];
+                                        table.row.add(rowData);
+                                        rowNum++;
+                                    });
+                                    
+                                    table.draw();
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    if (xhr.status == 404) {
+                                        var table = $('#desigTable').DataTable();
+                                        table.clear().draw();
+                                        Swal.fire({
+                                                icon: 'error',
+                                                title: 'No Leave Approver Found for this Department',
+                                            });
+                                    } else {
+                                        console.log('Error in API call');
+                                    }
+                                }
+                            });
+                        }
                     });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },300);
+                    
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -425,5 +349,6 @@
             });
         });
     });
+
 
 </script>

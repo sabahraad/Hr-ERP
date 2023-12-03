@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
+use App\Models\Approvers;
 use Illuminate\Http\Request;
 
 class leaveController extends Controller
@@ -117,4 +118,5 @@ class leaveController extends Controller
         $employee = json_decode($response,true);
         return view('frontend.addLeaveApprover',compact('dataArray','employee'), ['jwtToken' => $access_token]);
     }
+
 }

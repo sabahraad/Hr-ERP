@@ -77,7 +77,7 @@ class attendanceController extends Controller
             }else{
                 return response()->json([
                     'message'=> 'You are presently away from the office premises.'
-                ],200);
+                ],403);
             }
         }
         if(in_array("wifi_based",$attendanceType)){
@@ -88,7 +88,7 @@ class attendanceController extends Controller
             }else{
                 return response()->json([
                     'message'=> 'Please connect to the office network'
-                ],200);
+                ],403);
             }
         }
         if(in_array("remote",$attendanceType)){
