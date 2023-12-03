@@ -83,11 +83,12 @@ class AuthController extends Controller
             if($data['status'] == 401){
                 return redirect('/login-form')->with('error','Invalid credentials. Please try again.'); 
             }
-            // dd($data['user']['role']);
+            // dd($data);
             $access_token = $data['access_token'];
             session([
                 'access_token' => $access_token,
-                'role' => $data['user']['role']
+                'role' => $data['user']['role'],
+                'company_id' => $data['user']['company_id']
             ]);
         }else{
             $access_token = session('access_token');
@@ -162,5 +163,7 @@ class AuthController extends Controller
     public function test(){
         return view('frontend.test');
     }
+
+    
 
 }

@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Empty_;
 
 class employeeController extends Controller
 {
@@ -92,6 +93,7 @@ class employeeController extends Controller
 
     public function updateEmployee(Request $request,$id){
         $user_id = Employee::where('emp_id',$id)->value('id');
+        
         $validator = Validator::make($request->all(), [
             'officeEmployeeID' => 'string',
             'name' => 'required|string|between:2,100',
@@ -118,15 +120,13 @@ class employeeController extends Controller
                 'message' => 'User Not Found',
             ],404);
         }
-
+        $userInfo->name = $request->name ;
+        $userInfo->email = $request->email;
         if($request->has('password')){
-            // $userInfo->update(['password' => $request->password]);
-            $userInfo->name = $request->name;
-            $userInfo->email = $request->email;
             $userInfo->password = bcrypt($request->password);
             $userInfo->company_id = $company_id;
-            $userInfo->save();
         }
+        $userInfo->save();
 
         $data=Employee::find($id);
 
@@ -163,9 +163,12 @@ class employeeController extends Controller
     }
 
     public function deleteEmployee($id){
-        User::where('id',$id)->delete();
+        $user_id = Employee::where('emp_id',$id)->value('id');
+        User::where('id',$user_id)->delete();
+        Employee::where('emp_id',$id)->delete();
         return response()->json([
             'message' => 'Employee deleted successfully'
         ]);
     }
+
 }

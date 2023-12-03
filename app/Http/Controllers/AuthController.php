@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
 use App\Models\User;
 use App\Models\Company;
@@ -124,32 +125,6 @@ class AuthController extends Controller
             
     }
 
-    public function forgetPassword(Request $request){
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|confirmed|min:6'    
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors(),
-            ], 422);
-        }
-
-        $user = User::where('email',$request->email)->first();
-        if($user){
-            $user->password = bcrypt($request->password);
-            $user->save();
-            return response()->json([
-                'message' => 'Your password has been changed'
-            ],201);
-        }else{
-            return response()->json([
-                'message' => $request->email .' '.'is not registered in the system'
-            ],404);
-        }
-    }
-  
     protected function createNewToken($token){
         return response()->json([
             'access_token' => $token,
@@ -160,4 +135,6 @@ class AuthController extends Controller
             'user' => auth()->user()
         ]);
     }
+
+   
 }

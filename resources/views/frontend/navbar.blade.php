@@ -22,9 +22,7 @@
 								<ul>
 									<li><a href="{{route('company')}}">Company Details</a></li>
 									<li><a href="{{route('officeLocation')}}">Office Location</a></li>
-									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
-									<li><a href="{{route('department')}}">Departments</a></li>
-									<li><a href="{{route('designation')}}">Designations</a></li>
+								
 								</ul>
 							</li>
 							
@@ -35,13 +33,6 @@
 								<a href="#" ><i class="la la-users"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a class="" href="{{route('employee')}}">All Employees</a></li>
-									<li><a href="{{route('holidays')}}">Holidays</a></li>
-									<li><a href="leaves.html">Leaves (Admin)</a></li>
-									<li><a href="leaves-employee.html">Leaves (Employee)</a></li>
-									<li><a href="leave-settings.html">Leave Settings</a></li>
-									<li><a href="attendance.html">Attendance (Admin)</a></li>
-									<li><a href="attendance-employee.html">Attendance (Employee)</a></li>
-									
 								</ul>
 							</li>
 
@@ -52,8 +43,8 @@
 								<a href="#"><i class="la la-ticket"></i> <span> Leave Settings </span> <span class="menu-arrow"></span></a>
 								<ul> 	
 									<li><a href="{{route('leaveList')}}">Leave Type</a></li>
-									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
-									<li><a href="{{route('holidays')}}">Holiday</a></li>
+									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
+									<li><a href="{{route('leaveList')}}">Leave Application List</a></li>
 								</ul>
 							</li>
 							
@@ -65,7 +56,28 @@
 								<ul>
 									<li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
 									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
-									<li><a href="{{route('attendance')}}">Attendance List</a></li>
+									<li><a href="{{route('attendanceList')}}">Attendance List</a></li>
+								</ul>
+							</li>
+
+							<li class="menu-title"> 
+								<span>Notice</span>
+							</li>
+							<li> 
+								<a href="{{route('officeNotice')}}"><i class="la la-bullhorn"></i> <span> Office Notice</span></a>
+							</li>
+
+							<li class="menu-title"> 
+								<span>Settings</span>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="la la-cog"></i> <span> Settings</span> <span class="menu-arrow"></span></a>
+								<ul>
+									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
+									<li><a href="{{route('department')}}">Departments</a></li>
+									<li><a href="{{route('designation')}}">Designations</a></li>
+									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
+									<li><a href="{{route('holidays')}}">Holiday</a></li>
 								</ul>
 							</li>
 							

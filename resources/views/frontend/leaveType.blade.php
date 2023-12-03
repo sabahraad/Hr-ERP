@@ -174,7 +174,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-leave-setting', 
+                url: 'https://hrm.aamarpay.dev/api/add-leave-type', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -252,7 +252,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/leave-setting/'+leaveID, 
+                url: 'https://hrm.aamarpay.dev/api/edit/leave-type/'+leaveID, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -317,8 +317,8 @@
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/leave-setting/'+leaveID, 
-                type: 'POST',
+                url: 'https://hrm.aamarpay.dev/api/delete/leave-type/'+leaveID, 
+                type: 'DELETE',
                 data: formData,
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken

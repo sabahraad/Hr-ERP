@@ -32,7 +32,7 @@ class attendanceController extends Controller
         $access_token = session('access_token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/attendance-setting-list',
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/office-hour-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -46,6 +46,7 @@ class attendanceController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
+        // dd($dataArray);
         return view('frontend.attendanceSetting',compact('dataArray'), ['jwtToken' => $access_token]);
     }
 

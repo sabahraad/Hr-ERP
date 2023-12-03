@@ -28,8 +28,8 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     </head>
-    <body class="account-page" style="  background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);">
 	
+    <body class="account-page" style="background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);">
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
 			<div class="account-content">
