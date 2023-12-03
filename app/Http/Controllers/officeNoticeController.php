@@ -57,7 +57,7 @@ class officeNoticeController extends Controller
 
     public function noticeList(){
         $company_id = auth()->user()->company_id;
-        $data = officeNotice::where('company_id',$company_id)->get();
+        $data = officeNotice::where('company_id',$company_id)->orderBy('created_at', 'desc')->get();
         return response()->json([
             'message'=>'Office Notice',
             'data'=>$data
