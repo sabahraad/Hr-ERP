@@ -321,16 +321,30 @@ class leaveController extends Controller
     public function approveLeave(Request $request){
         $leave_approves_id = $request->leave_approves_id;
         $status = $request->status;
-        if($status == 1){
-            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $status]);
+        $approve = 1;
+        $reject = 2;
+        $pending = 0;
+        if($status == $approve){
+            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $approve]);
             $leave_application_id = LeaveApprove::where('leave_approves_id', $leave_approves_id)->value('leave_application_id');
             $data = LeaveApprove::where('leave_application_id', $leave_application_id)->get();
-            $status = $data->contains(0) ? 0 : 1;
-            if($status == 1){
+            $status = $data->contains(2) ? 2 : ($data->contains(0) ? 0 : 1);
+            if($status == $approve || $status == $reject){
                 leaveApplication::where('leave_application_id', $leave_application_id)->update(['status' => $status]);
             }
             return response()->json([
                 'message'=>'Leave Approved'
+            ],200);
+        }elseif($status == $reject){
+            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $reject]);
+            $leave_application_id = LeaveApprove::where('leave_approves_id', $leave_approves_id)->value('leave_application_id');
+            $data = LeaveApprove::where('leave_application_id', $leave_application_id)->get();
+            $status = $data->contains(2) ? 2 : ($data->contains(0) ? 0 : 1);
+            if($status == $approve || $status == $reject){
+                leaveApplication::where('leave_application_id', $leave_application_id)->update(['status' => $status]);
+            }
+            return response()->json([
+                'message'=>'Leave Rejected'
             ],200);
         }else{
             return response()->json([
