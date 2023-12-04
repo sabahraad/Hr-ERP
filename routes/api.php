@@ -117,11 +117,9 @@ Route::post('/edit-approvers/{id}', [App\Http\Controllers\approversController::c
 Route::delete('/delete-approvers/{id}', [App\Http\Controllers\approversController::class, 'deleteApprovers']);
 
 
-
-
-
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
+
 //motivationalSpeech
 Route::get('/motivationalSpeech', [App\Http\Controllers\motivationalSpeechController::class, 'motivationalSpeech']);
