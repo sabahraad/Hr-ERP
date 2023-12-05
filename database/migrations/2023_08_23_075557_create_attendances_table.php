@@ -16,7 +16,7 @@ return new class extends Migration
             $table->boolean('IN');
             $table->boolean('OUT')->nullable();
             $table->string('lateINreason')->nullable();
-            $table->string('edited')->nullable();
+            $table->string('edit_reason')->nullable();
             $table->string('editedBY')->nullable();
             $table->integer('INstatus')->default(0);
             $table->integer('OUTstatus')->default(0);
