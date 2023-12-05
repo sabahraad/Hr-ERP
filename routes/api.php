@@ -127,6 +127,12 @@ Route::post('/approve-expense', [App\Http\Controllers\expensesController::class,
 Route::get('/all-expenses-list', [App\Http\Controllers\expensesController::class, 'allExpensesList']);
 Route::delete('/delete-expenses/{id}', [App\Http\Controllers\expensesController::class, 'deleteExpenses']);
 
+//attendanceAddedByHR
+Route::post('/attendance-add-by-HR', [App\Http\Controllers\attendanceController::class, 'attendanceAddedByHR']);
+Route::get('/absent-employee', [App\Http\Controllers\attendanceController::class, 'absentEmployee']);
+Route::post('/present-employee-list', [App\Http\Controllers\attendanceController::class, 'presentEmployeeList']);
+
+
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
