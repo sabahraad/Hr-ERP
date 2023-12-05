@@ -96,5 +96,7 @@ class attendanceController extends Controller
             return view('frontend.login');
         }
     }
+
+    
     
 }
