@@ -18,7 +18,11 @@ class AuthController extends Controller
     }
 
     public function loginForm(){
-        return view('frontend.login');
+        if(session()->has('access_token') && session('access_token') !== null){
+            return redirect()->route('department'); 
+        }else{
+            return view('frontend.login');
+        }
     }
 
     public function logout(Request $request){

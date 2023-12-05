@@ -28,7 +28,7 @@ class attendanceController extends Controller
         'longitude' => 'required|numeric    ',
         'action' => 'required|integer',
         'reason' => 'string', 
-        'edited' => 'boolean', 
+        'edit_reason' => 'string', 
         'editedBY' => 'string'
     ];
 
@@ -124,7 +124,7 @@ class attendanceController extends Controller
                 $data->INstatus = $status;
                 $data->emp_id = $emp_id;
                 $data->company_id = $company_id;
-                $data->edited = $request->edited;
+                $data->edit_reason = $request->edit_reason;
                 $data->editedBY = $request->editedBY;
                 $data->id = $user_id;
                 $data->save();
@@ -211,9 +211,6 @@ class attendanceController extends Controller
         $checkOut = 2;
 
         if($request->action == $checkIN){
-            // $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('id',$user_id)->first();
-            // $data->lateINreason = $request->reason;
-            // $data->save();
             DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())
                                     ->update(['lateINreason' => $request->reason]);
             return response()->json([
@@ -221,9 +218,6 @@ class attendanceController extends Controller
             ],200);
         }
         if($request->action == $checkOut){
-            // $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('id',$user_id)->first();
-            //  $data->earlyOUTreason = $request->reason;
-            // $data->save();
             DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())
                                     ->update(['earlyOUTreason' => $request->reason]);
             return response()->json([
@@ -279,4 +273,119 @@ class attendanceController extends Controller
 
     }
 
+    public function attendanceAddedByHR(Request $request){
+        $validator = Validator::make($request->all(), [
+            'emp_id' => 'required|integer',
+            'edit_reason' => 'required|string',
+            'action'  => 'required|integer|in:1,2',
+            'datetime'=>'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+        $dateOnly = Carbon::parse($request->datetime)->format('Y-m-d');
+        // dd($dateOnly);
+
+        $checkIN = 1 ;
+        $checkOUT = 2 ;
+        $on_time_checkIn = 1;
+        $on_time_check_out =1;
+        $company_id = auth()->user()->company_id;
+        $HR_id = auth()->user()->id;
+        $HR_emp_id = Employee::where('id',$HR_id)->value('emp_id');
+        $user_id = Employee::where('emp_id',$request->emp_id)->value('id');
+        if($request->action == $checkIN){
+            $attendance = Attendance::where('emp_id',$request->emp_id)->whereDate('created_at', '=', $dateOnly)->value('IN');
+            if($attendance == $checkIN){
+                return response()->json([
+                    'message'=> 'Employee already Checked IN'
+                ],400);
+            }else{
+                $data = new Attendance();
+                $data->IN = $checkIN;
+                $data->INstatus = $on_time_checkIn;
+                $data->emp_id = $request->emp_id;
+                $data->company_id = $company_id;
+                $data->edit_reason = $request->edit_reason;
+                $data->editedBY = $HR_emp_id;
+                $data->id = $user_id;
+                $data->created_at = $request->datetime;
+                $data->save();
+        
+                return response()->json([
+                    'message' => 'Attendance Accepted Successfully',
+                    'data' => $data
+                ], 201);
+            }
+        }elseif($request->action == $checkOUT){
+            $attendance = Attendance::where('emp_id',$request->emp_id)->whereDate('created_at', '=', $dateOnly)->value('OUT');
+            if($attendance == $checkOUT){
+                return response()->json([
+                    'message'=> 'Employee already Checked OUT'
+                ],400);
+            }else{
+                $data= Attendance::whereDate('created_at', '=', $dateOnly)->where('emp_id',$request->emp_id)->first();
+                    $data->OUT = $checkOUT;
+                    $data->OUTstatus = $on_time_check_out;
+                    $data->emp_id = $request->emp_id;
+                    $data->company_id = $company_id;
+                    $data->edit_reason = $request->reason;
+                    $data->editedBY = $HR_emp_id;
+                    $data->id = $user_id;
+                    $data->updated_at = $request->datetime;
+                    $data->save();
+                    return response()->json([
+                        'message' => 'Successfully Checked Out',
+                        'data'=> $data
+                    ],200);
+            }
+
+        }
+        
+    }
+
+    public function absentEmployee(){
+        $company_id = auth()->user()->company_id;
+        $currentDate = now()->toDateString();
+        $missingEmployeeIds = Employee::where('company_id', $company_id)
+            ->whereNotExists(function ($query) use ($currentDate) {
+                $query->select(DB::raw(1))
+                    ->from('attendances')
+                    ->whereRaw('attendances.emp_id = employees.emp_id')
+                    ->whereDate('attendances.created_at', $currentDate);
+            })
+            ->pluck('emp_id','name');
+
+        return response()->json([
+            'message'=>'Today Absent List',
+            'data'=>$missingEmployeeIds
+        ],200);
+    }
+
+    public function presentEmployeeList(Request $request){
+        $company_id = auth()->user()->company_id;
+        $date = $request->date;
+        $data = Attendance::select(
+                        'attendances.*',
+                        'employees.name as employee_name',
+                        'editedByEmployee.name as edited_by_name'
+                    )
+                    ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
+                    ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
+                    ->whereDate('attendances.created_at', '=', $date)
+                    ->where('attendances.company_id', $company_id)
+                    ->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Employee present for ' .' '.$date,
+                'data'=>$data
+            ],404);
+        }
+        return response()->json([
+            'message'=> 'Present Employee list for'.' ' .$date,
+            'data'=>$data
+        ],200);
+    }
 }

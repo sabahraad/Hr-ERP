@@ -277,62 +277,34 @@ class leaveController extends Controller
     public function leaveApproveList(){
         $user_id = auth()->user()->id;
         $emp_id = Employee::where('id', $user_id)->value('emp_id');
-        // $result = DB::table('leave_approves')
-        //         ->select(
-        //             'leave_approves.leave_approves_id',
-        //             'leave_approves.leave_application_id',
-        //             'leave_approves.dept_id',
-        //             'leave_approves.approver_emp_id',
-        //             'leave_approves.approver_name',
-        //             'leave_approves.status',
-        //             'leave_approves.created_at',
-        //             'leave_approves.updated_at',
-        //             'leave_approves.priority',
-        //             'temp_leave.min_priority',
-        //             'leave_applications.*'
-        //         )
-        //         ->join(DB::raw('(SELECT leave_application_id, MIN(priority) AS min_priority FROM leave_approves WHERE status = 0 AND approver_emp_id = '.$emp_id.' GROUP BY leave_application_id) AS temp_leave'), function ($join) {
-        //             $join->on('leave_approves.leave_application_id', '=', 'temp_leave.leave_application_id');
-        //         })
-        //         ->join('leave_applications', 'leave_approves.leave_application_id', '=', 'leave_applications.leave_application_id')
-        //         ->where('leave_approves.status', '=', 0)
-        //         ->whereColumn('leave_approves.priority', '=', 'temp_leave.min_priority')
-        //         ->get();
+        $result = DB::table('leave_approves')
+                ->select(
+                    'leave_approves.leave_approves_id',
+                    'leave_approves.leave_application_id',
+                    'leave_approves.dept_id',
+                    'leave_approves.approver_emp_id',
+                    'leave_approves.approver_name',
+                    'leave_approves.status',
+                    'leave_approves.created_at',
+                    'leave_approves.updated_at',
+                    'leave_approves.priority',
+                    'temp_leave.min_priority',
+                    'leave_applications.status AS application_status',
+                    'leave_applications.start_date',
+                    'leave_applications.end_date',
+                    'leave_applications.dateArray',
+                    'leave_applications.count AS total_leave_day_count',
+                    'leave_applications.reason'
+                )
+                ->join(DB::raw('(SELECT leave_application_id, MIN(priority) AS min_priority FROM leave_approves WHERE status = 0 GROUP BY leave_application_id) AS temp_leave'), function ($join) {
+                    $join->on('leave_approves.leave_application_id', '=', 'temp_leave.leave_application_id');
+                })
+                ->join('leave_applications', 'leave_approves.leave_application_id', '=', 'leave_applications.leave_application_id')
+                ->where('leave_approves.status', '=', 0)
+                ->where('approver_emp_id','=',$emp_id)
+                ->whereColumn('leave_approves.priority', '=', 'temp_leave.min_priority')
+                ->get();
         // dd($result);
-        $response = LeaveApprove::where('approver_emp_id',$emp_id)
-                ->where('status',0)
-                ->get();
-        $result = [];
-        foreach($response as $leave) {
-            $leaveApplicationId =$leave->leave_application_id;
-            $priority = $leave->priority;
-            $leaveApprovers = LeaveApprove::where('leave_application_id', $leaveApplicationId)
-                ->where('priority', '<=', $priority)
-                ->get();
-            // dd($leaveApprovers);
-            foreach ($leaveApprovers as $approver) {
-                $status = $approver->status;
-                if($status == 1){
-                    $data = LeaveApprove::where('leave_approves.leave_application_id', $leaveApplicationId)
-                            ->where('approver_emp_id', $emp_id)
-                            ->where('leave_approves.status', 0)
-                            ->join('leave_applications', 'leave_approves.leave_application_id', '=', 'leave_applications.leave_application_id')
-                            ->get(['leave_approves.*', 'leave_applications.*']); 
-                   
-                        $result[] = $data;
-                }
-                if($status == 0 && $approver->approver_emp_id == $emp_id && $approver->priority == 1){
-                    
-                    $data = LeaveApprove::where('leave_approves.leave_application_id', $leaveApplicationId)
-                            ->where('approver_emp_id', $emp_id)
-                            ->where('leave_approves.status', 0)
-                            ->join('leave_applications', 'leave_approves.leave_application_id', '=', 'leave_applications.leave_application_id')
-                            ->get(['leave_approves.*', 'leave_applications.*']); 
-                        $result[] = $data;
-                }
-            }
-        }
-        dd($result);
         if(!$result){
             return response()->json([
                 'message' => 'No Request for approvel yet',
@@ -349,16 +321,30 @@ class leaveController extends Controller
     public function approveLeave(Request $request){
         $leave_approves_id = $request->leave_approves_id;
         $status = $request->status;
-        if($status == 1){
-            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $status]);
+        $approve = 1;
+        $reject = 2;
+        $pending = 0;
+        if($status == $approve){
+            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $approve]);
             $leave_application_id = LeaveApprove::where('leave_approves_id', $leave_approves_id)->value('leave_application_id');
             $data = LeaveApprove::where('leave_application_id', $leave_application_id)->get();
-            $status = $data->contains(0) ? 0 : 1;
-            if($status == 1){
+            $status = $data->contains(2) ? 2 : ($data->contains(0) ? 0 : 1);
+            if($status == $approve || $status == $reject){
                 leaveApplication::where('leave_application_id', $leave_application_id)->update(['status' => $status]);
             }
             return response()->json([
                 'message'=>'Leave Approved'
+            ],200);
+        }elseif($status == $reject){
+            LeaveApprove::where('leave_approves_id', $leave_approves_id)->update(['status' => $reject]);
+            $leave_application_id = LeaveApprove::where('leave_approves_id', $leave_approves_id)->value('leave_application_id');
+            $data = LeaveApprove::where('leave_application_id', $leave_application_id)->get();
+            $status = $data->contains(2) ? 2 : ($data->contains(0) ? 0 : 1);
+            if($status == $approve || $status == $reject){
+                leaveApplication::where('leave_application_id', $leave_application_id)->update(['status' => $status]);
+            }
+            return response()->json([
+                'message'=>'Leave Rejected'
             ],200);
         }else{
             return response()->json([

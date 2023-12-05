@@ -11,22 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
-            $table->bigIncrements('attendance_id');
-            $table->boolean('IN');
-            $table->boolean('OUT')->nullable();
-            $table->string('lateINreason')->nullable();
-            $table->string('edit_reason')->nullable();
-            $table->string('editedBY')->nullable();
-            $table->integer('INstatus')->default(0);
-            $table->integer('OUTstatus')->default(0);
-            $table->string('earlyOUTreason')->nullable();
+        Schema::create('expenses', function (Blueprint $table) {
+            $table->bigIncrements('expenses_id');
+            $table->text('description')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->decimal('total_amount', 10, 2);
+            $table->string('attachment')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->bigInteger('emp_id')->unsigned();
             $table->foreign('emp_id')->references('emp_id')->on('employees')->onDelete('cascade');
             $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
-            $table->bigInteger('id')->unsigned();
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -37,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('expenses');
     }
 };

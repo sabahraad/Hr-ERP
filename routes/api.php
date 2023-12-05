@@ -48,6 +48,11 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::delete('/delete-attendance/{id}', [App\Http\Controllers\attendanceController::class, 'deleteAttendance']);
     Route::get('/current-day-attendance-status', [App\Http\Controllers\attendanceController::class, 'currentDayAttendanceStatus']);
     
+    //expenses or TA/DA Bill 
+    Route::get('/expenses-list', [App\Http\Controllers\expensesController::class, 'expensesList']);
+    Route::post('/create-expenses', [App\Http\Controllers\expensesController::class, 'createExpenses']);
+    Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
+        
 });
 
 Route::middleware([RoleCheck::class,SetDefaultJsonResponse::class])->group(function () {
@@ -116,12 +121,21 @@ Route::post('/add-approvers', [App\Http\Controllers\approversController::class, 
 Route::post('/edit-approvers/{id}', [App\Http\Controllers\approversController::class, 'editApprovers']);
 Route::delete('/delete-approvers/{id}', [App\Http\Controllers\approversController::class, 'deleteApprovers']);
 
+//expenses or TA/DA Bill 
 
+Route::post('/approve-expense', [App\Http\Controllers\expensesController::class, 'approveExpense']);
+Route::get('/all-expenses-list', [App\Http\Controllers\expensesController::class, 'allExpensesList']);
+Route::delete('/delete-expenses/{id}', [App\Http\Controllers\expensesController::class, 'deleteExpenses']);
 
+//attendanceAddedByHR
+Route::post('/attendance-add-by-HR', [App\Http\Controllers\attendanceController::class, 'attendanceAddedByHR']);
+Route::get('/absent-employee', [App\Http\Controllers\attendanceController::class, 'absentEmployee']);
+Route::post('/present-employee-list', [App\Http\Controllers\attendanceController::class, 'presentEmployeeList']);
 
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
+
 //motivationalSpeech
 Route::get('/motivationalSpeech', [App\Http\Controllers\motivationalSpeechController::class, 'motivationalSpeech']);
