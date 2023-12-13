@@ -131,6 +131,7 @@ Route::delete('/delete-expenses/{id}', [App\Http\Controllers\expensesController:
 Route::post('/attendance-add-by-HR', [App\Http\Controllers\attendanceController::class, 'attendanceAddedByHR']);
 Route::get('/absent-employee', [App\Http\Controllers\attendanceController::class, 'absentEmployee']);
 Route::post('/present-employee-list', [App\Http\Controllers\attendanceController::class, 'presentEmployeeList']);
+Route::post('/attendance-edited-by-HR', [App\Http\Controllers\attendanceController::class, 'attendanceEditedByHr']);
 
 
 });
