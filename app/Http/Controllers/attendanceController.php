@@ -331,7 +331,7 @@ class attendanceController extends Controller
                     $data->OUTstatus = $on_time_check_out;
                     $data->emp_id = $request->emp_id;
                     $data->company_id = $company_id;
-                    $data->edit_reason = $request->reason;
+                    $data->edit_reason = $request->edit_reason;
                     $data->editedBY = $HR_emp_id;
                     $data->id = $user_id;
                     $data->updated_at = $request->datetime;
@@ -387,5 +387,45 @@ class attendanceController extends Controller
             'message'=> 'Present Employee list for'.' ' .$date,
             'data'=>$data
         ],200);
+    }
+
+    public function attendanceEditedByHr(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'emp_id' => 'required|integer',
+            'edit_reason' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+        $Hr_user_id = auth()->user()->id;
+        $Hr_emp_id = Employee::where('id',$Hr_user_id)->value('emp_id');
+        $created_at = $request->created_at;
+        $updated_at = $request->updated_at;
+        $onTime = 1;
+        $data = Attendance::find($request->attendance_id);
+        // dd($data);
+        if($created_at != null){
+            $data->IN = $onTime;
+            $data->INstatus = $onTime;
+        }
+        if($updated_at != null){
+            $data->OUT = $onTime;
+            $data->OUTstatus = $onTime;
+        }
+        
+        $data->created_at = $created_at;
+        $data->updated_at = $updated_at;
+        $data->editedBY = $Hr_emp_id;
+        $data->edit_reason = $request->edit_reason;
+        $data->save();
+
+        return response()->json([
+            'message'=> 'Attendance Edited SUccessfully',
+            'data'=>$data
+        ],200);
+
     }
 }

@@ -91,12 +91,10 @@ class attendanceController extends Controller
                         ->where('attendances.company_id', $company_id)
                         ->get();
             
-                return view('frontend.editAttendance',compact('attendance'));
+                return view('frontend.editAttendance',compact('attendance'), ['jwtToken' => $access_token]);
         }else{
             return view('frontend.login');
         }
     }
 
-    
-    
 }

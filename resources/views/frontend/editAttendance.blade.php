@@ -41,19 +41,28 @@
                                 });
                             </script>
                         @endif
-                            <form method="post" action="" enctype="multipart/form-data">
+                            <form id="msform">
                                 @csrf
                                 @foreach ($attendance as $raw)
                                 <div class="input-block mb-3">
+                                    <input type="hidden" value="{{$raw->attendance_id}}" name="attendance_id">
+                                    <label class="col-form-label">Employee ID</label>
+                                    <input class="form-control" type="text" name= "emp_id" value="{{$raw->emp_id}}" disabled>
+                                    <input class="form-control" type="hidden" name= "emp_id" value="{{$raw->emp_id}}">
+
                                     <label class="col-form-label">Employee Name</label>
                                     <input class="form-control" type="text" name= "employeeName" value="{{$raw->employee_name}}" disabled>
                                     <label class="col-form-label">Check In Time</label>
-                                    <input class="form-control" type="text" name= "employeeName" value="{{$raw->created_at}}">
+                                    <input class="form-control" type="datetime-local" name= "created_at" value="{{$raw->created_at}}">
+                                    @php
+                                        if($raw->OUT == Null){
+                                            $raw->updated_at = Null;
+                                        }
+                                    @endphp
                                     <label class="col-form-label">Check Out Time</label>
-                                    <input class="form-control" type="text" name= "employeeName" value="{{$raw->up}}">
-                                    <!-- <input class="form-control" type="text" name="deptTitle" > -->
-                                    <label class="col-form-label">Attachment</label>
-                                    <input class="form-control" type="file" name= "attachment">
+                                    <input class="form-control" type="datetime-local" name= "updated_at" value="{{$raw->updated_at}}">
+                                    <label class="col-form-label">Reason</label>
+                                    <input class="form-control" type="text" name= "edit_reason" required>
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>
@@ -65,3 +74,61 @@
                 </div>
             </div>
             <!-- /Page Content -->
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+
+<script>
+
+    $(document).ready(function() {
+        var jwtToken = "{{ $jwtToken }}";
+    $('#msform').submit(function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/attendance-edited-by-HR', 
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Attendance Edit Successful',
+                        text: 'Your attendance edit was successful!',
+                        showConfirmButton: true, // Enable the Confirm button
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/attendance-list';
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }
+                }
+            });
+        });
+    });
+
+</script>

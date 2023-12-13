@@ -1,5 +1,13 @@
 @include('frontend.header')
 @include('frontend.navbar')
+<style>
+    .table {
+            --bs-table-bg: transparent; /* Set it to a transparent color */
+        }
+    .bg-danger td {
+            color: white; /* Set text color to white */
+        }
+</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 			
@@ -267,19 +275,29 @@
 
                 // Iterate through the data and populate the table
                 response.data.forEach(function(item) {
+                    var createdAt = new Date(item.created_at).toLocaleString();
+                    var updatedAt = item.OUT ? new Date(item.updated_at).toLocaleString() : 'N/A';
+                    console.log(item.INstatus);
+                    var rowColorClass = (item.INstatus === 2 || item.OUTstatus === 2) ? 'bg-danger' : '';
                     var editRoute = '{{ route("editAttendance", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
                     var rowData = [
                         rowNum,
-                        '<td>' + item.employee_name + '</td>',
-                        '<td>' + item.created_at + '</td>',
-                        '<td >' + item.updated_at + '</td>',
-                        '<td >' + item.lateINreason + '</td>',
-                        '<td >' + item.earlyOUTreason + '</td>',
-                        '<td >' + item.edit_reason + '</td>',
-                        '<td >' + item.edited_by_name + '</td>',
-                        '<div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="'+editRoute+'" ><i class="fa-solid fa-pencil m-r-5" data-id="'+item.attendance_id+'" ></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" id="editEmployeeButton"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.attendance_id+'" ></i>Delete</a></div></div>'
+                        '<td >' + (item.employee_name || 'N/A') + '</td>',
+                        '<td >' + (createdAt !== 'null' ? createdAt : 'N/A') + '</td>',
+                        '<td >' + (updatedAt !== 'N/A' ? updatedAt : 'N/A')  + '</td>',
+                        '<td >' + (item.lateINreason || 'N/A') + '</td>',
+                        '<td >' + (item.earlyOUTreason || 'N/A') + '</td>',
+                        '<td >' + (item.edited_by_name || 'N/A') + '</td>',
+                        '<td >' + (item.edit_reason || 'N/A') + '</td>',
+                        '<td class="' + rowColorClass + '"><div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="'+editRoute+'" ><i class="fa-solid fa-pencil m-r-5" data-id="'+item.attendance_id+'" ></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" id="editEmployeeButton"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.attendance_id+'" ></i>Delete</a></div></div></td>'
                     ];
-                    table.row.add(rowData);
+                    // table.row.add(rowData);
+                    if (rowColorClass) {
+                        table.row.add(rowData).node().classList.add(rowColorClass);
+                    } else {
+                        table.row.add(rowData);
+                    }
+                    // table.row.add(rowData).node().classList.add(rowColorClass);
                     rowNum++;
                 });
                 
@@ -291,7 +309,7 @@
 				    table.clear().draw();
                     Swal.fire({
                             icon: 'error',
-                            title: 'No Leave Approver Found for this Department',
+                            title: 'No Attendance Found For This Date',
                         });
                 } else {
                     console.log('Error in API call');
