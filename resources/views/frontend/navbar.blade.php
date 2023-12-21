@@ -44,7 +44,7 @@
 								<ul> 	
 									<li><a href="{{route('leaveList')}}">Leave Type</a></li>
 									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
-									<li><a href="{{route('leaveList')}}">Leave Application List</a></li>
+									<li><a href="{{route('allLeaveApplication')}}">Leave Application List</a></li>
 								</ul>
 							</li>
 							

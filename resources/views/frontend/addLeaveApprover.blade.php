@@ -5,7 +5,7 @@
             <!-- Page Content -->
             <div class="content container-fluid">
                 <div class="row">
-                    <div class="col-md-8 offset-md-2">
+                    <div class="col-md-12">
                         <!-- Page Header -->
                         <div class="page-header">
                             <div class="row">
@@ -17,7 +17,7 @@
                         <!-- /Page Header -->
                         <form id="msform">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Department</label>
                                         <select name="dept_id" id="dept_id" class="select">
@@ -28,7 +28,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Approver</label>
                                         <select name="emp_id[]" class="select" id="emp_id">
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Priority</label>
                                         <select name="priority" class="select" id="priority">
@@ -51,12 +51,12 @@
                                         </select>
                                     </div>
                                 </div>
-                                                            
-                                <div class="col-sm-12">
+                                <div class="col-sm-2">
                                     <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn">Save</button>
+                                        <button class="btn btn-primary submit-btn-md" style="padding-left: 56px;padding-right: 57px;padding-top: 7px;padding-bottom: 5px;">Save</button>
                                     </div>
                                 </div>
+                                                            
                             </div>
                         </form>
                     </div>
@@ -76,6 +76,7 @@
                                 </thead>
                                 <!-- $title = $data->department->deptTitle -->
                                 <tbody>
+                                  
                                 </tbody>
                             </table>
                         </div>
@@ -120,6 +121,10 @@
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
+        $(document).ready(function(){
+                $('#desigTable').DataTable();
+            });
+
         $(document).ready(function() {
             var jwtToken = "{{ $jwtToken }}";
             $('#msform').submit(function(e) {
