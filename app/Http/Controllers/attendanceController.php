@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\IP;
 use App\Models\officeLocation;
 use App\Models\User;
+use App\Models\Weekend;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -48,6 +49,21 @@ class attendanceController extends Controller
         $company_id= auth()->user()->company_id;
         $checkIN = 1;
         $checkOut = 2;
+
+        //Weekend check
+        $Weekend = Weekend::where('company_id',$company_id)->first();
+        $data=$Weekend->getAttributes();
+        $Weekend = array_keys(array_filter($data, function($value) {
+            return $value === 1;
+        }));
+        $currentDayName = Carbon::now()->format('l');
+
+        if (in_array($currentDayName, $Weekend)) {
+            return response()->json([
+                'message' => 'Attendance cannot be submitted on weekends.'
+            ],422);
+        }
+        
         //Attendance check
         $attendanceType = AttendanceType::where('company_id',$company_id)->first();
         $data=$attendanceType->getAttributes();
