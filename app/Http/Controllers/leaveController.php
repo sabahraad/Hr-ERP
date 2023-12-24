@@ -263,7 +263,10 @@ class leaveController extends Controller
     }
 
     public function leaveApplicationsList($id){
-        $data = leaveApplication::where('emp_id', $id)->get();
+        $data = leaveApplication::where('emp_id', $id)
+                    ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
+                    ->select('leave_applications.*','leave_settings.leave_type')
+                    ->get();
         if(!$data){
             return response()->json([
                 'message'=> 'You have not requested any leave yet'
@@ -355,10 +358,12 @@ class leaveController extends Controller
     }
 
     public function allLeaveApplication(){
-
-        $leaveApplications = LeaveApplication::whereHas('employee', function ($query) {
-            $query->where('company_id', '=', 10);
-        })->get();
+        $company_id = auth()->user()->company_id;
+        $leaveApplications = LeaveApplication::with('employee')
+                            ->whereHas('employee', function ($query) use ($company_id) {
+                                $query->where('company_id', $company_id);
+                            })
+                            ->get();
 
         if($leaveApplications){
             return response()->json([
@@ -451,79 +456,102 @@ class leaveController extends Controller
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
 
-
             $currentDate = Carbon::createFromDate($request->year, $request->month, $day);
             $date= "$request->year-$request->month-$day";
             // dd($date);
             $dateToCheck = Carbon::parse($date);
 
-            if($dateToCheck->isFuture()){
-                $attendanceList = null;
-                $code = 0; 
-            }else{
-                // Weekend check
-                $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
-                // hoilday check
-                $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
+            // Weekend check
+            $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
 
-                // leave check
-                $isLeave = leaveApplication::where('dateArray', 'like', "%{$currentDate->toDateString()}%")->where('status',1)->where('emp_id',$emp_id)->exists();
-                
-                if ($isWeekend) {
-                    $code = 2; // Weekend
+            // hoilday check
+            $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
+
+            // leave check
+            $isLeave = leaveApplication::where('dateArray', 'like', "%{$currentDate->toDateString()}%")->where('status',1)->where('emp_id',$emp_id)->exists();
+            
+            if ($isWeekend) {
+            // Weekend
+                $attendanceList['late'] = false;
+                $attendanceList['present'] = false;
+                $attendanceList['Absent'] = false;
+                $attendanceList['leave'] = false;
+                $attendanceList['weekend'] = true;
+                $attendanceList['holiday'] = false;
+                $attendanceList['workingDay'] = false;
+            } elseif ($isHoliday) {
+             // Holiday
+                $attendanceList['late'] = false;
+                $attendanceList['present'] = false;
+                $attendanceList['Absent'] = false;
+                $attendanceList['leave'] = false;
+                $attendanceList['weekend'] = false;
+                $attendanceList['holiday'] = true;
+                $attendanceList['workingDay'] = false;
+
+            } elseif ($isLeave) {
+            // Leave
+                $attendanceList['late'] = false;
+                $attendanceList['present'] = false;
+                $attendanceList['Absent'] = false;
+                $attendanceList['leave'] = true;
+                $attendanceList['weekend'] = false;
+                $attendanceList['holiday'] = false;
+                $attendanceList['workingDay'] = false;
+
+            } else {
+             // Working day
+                if($dateToCheck->isFuture()){
                     $attendanceList['late'] = false;
-                    $attendanceList['Absent'] = false;
-                    $attendanceList['leave'] = false;
-                    $attendanceList['weekend'] = true;
-                    $attendanceList['holiday'] = false;
-                } elseif ($isHoliday) {
-                    $code = 3; // Holiday
-                    $attendanceList['late'] = false;
+                    $attendanceList['present'] = false;
                     $attendanceList['Absent'] = false;
                     $attendanceList['leave'] = false;
                     $attendanceList['weekend'] = false;
-                    $attendanceList['holiday'] = true;
-                } elseif ($isLeave) {
-                    $code = 4; // Leave
-                    $attendanceList['late'] = false;
-                    $attendanceList['Absent'] = false;
-                    $attendanceList['leave'] = true;
-                    $attendanceList['weekend'] = false;
                     $attendanceList['holiday'] = false;
-                } else {
-                    $code = 1; // Working day
+                    $attendanceList['workingDay'] = true;
+                }else{
                     //attendance list
                     $attendanceDetails = Attendance::whereDate('created_at', $date)->where('emp_id',$emp_id)->first();
                     // dd($attendanceDetails);
                     if($attendanceDetails == null){
                         $attendanceList['late'] = false;
+                        $attendanceList['present'] = false;
                         $attendanceList['Absent'] = true;
                         $attendanceList['leave'] = false;
                         $attendanceList['weekend'] = false;
                         $attendanceList['holiday'] = false;
+                        $attendanceList['workingDay'] = true;
                     }elseif($attendanceDetails->INstatus == 2){
                         $attendanceList['late'] = true;
+                        $attendanceList['present'] = true;
                         $attendanceList['Absent'] = false;
                         $attendanceList['leave'] = false;
                         $attendanceList['weekend'] = false;
                         $attendanceList['holiday'] = false;
+                        $attendanceList['workingDay'] = true;
                     }else{
                         $attendanceList['late'] = false;
+                        $attendanceList['present'] = true;
                         $attendanceList['Absent'] = false;
                         $attendanceList['leave'] = false;
                         $attendanceList['weekend'] = false;
                         $attendanceList['holiday'] = false;
+                        $attendanceList['workingDay'] = true;
                     }
                 }
+                
             }
-            
+                
             $data[$date] = $attendanceList;
-            $dateList[$date] = $code;
         }
-        dd($data,$dateList);
+        // dd($data,$dateList);
         $absentCount = 0;
         $LateCount = 0;
-
+        $workingDays = 0;
+        $weekends = 0;
+        $hoildays = 0;
+        $leaves = 0;
+        $present = 0;
         foreach ($data as $date => $details) {
             if ($details['Absent']) {
                 $absentCount++;
@@ -531,24 +559,33 @@ class leaveController extends Controller
             if ($details['late']) {
                 $LateCount++;
             }
+            if ($details['workingDay']) {
+                $workingDays++;
+            }
+            if ($details['weekend']) {
+                $weekends++;
+            }
+            if ($details['holiday']) {
+                $hoildays++;
+            }
+            if ($details['leave']) {
+                $leaves++;
+            }
+            if ($details['present']) {
+                $present++;
+            }
         }
-        // dd($absentCount,$LateCount);
-
-        $valueCounts = array_count_values($dateList);
-
-        $workingDays = isset($valueCounts[1]) ? $valueCounts[1] : 0;
-        $weekends = isset($valueCounts[2]) ? $valueCounts[2] : 0;
-        $hoildays = isset($valueCounts[3]) ? $valueCounts[3] : 0;
-        $leaves = isset($valueCounts[4]) ? $valueCounts[4] : 0;
+        
         
         return response()->json([
             'message'=> 'Monthly Report',
-            'Total Working Days' => $workingDays,
-            'Total Weekends' => $weekends,
-            'Total Holidays' => $hoildays,
-            'Total Leave' => $leaves,
+            'Total Working Day Count' => $workingDays,
+            'Total Weekend Count' => $weekends,
+            'Total Holiday Count' => $hoildays,
+            'Total Leave Count' => $leaves,
             'Total Absent Count' => $absentCount,
             'Total Late Count' => $LateCount,
+            'Total Present Count' => $present,
             'data' => $data
         ],200);
     }

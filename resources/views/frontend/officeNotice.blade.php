@@ -87,10 +87,12 @@
                                         @endif
                                     @endif
                                 </td>
+                                
                                 <td>
                                     <div class="dropdown dropdown-action">
                                             <a class="btn btn-primary" href="{{route('showEditOfficeNotice',$officeNotice['office_notices_id'])}}"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $officeNotice['office_notices_id'] }}"></i> Edit</a>
                                             <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $officeNotice['office_notices_id'] }}"></i> Delete</a>
+                                            <!-- <a class="dropdown-item " href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $officeNotice['office_notices_id'] }}"></i> Delete</a> -->
                                     </div>
                                 </td>
                             </tr>
@@ -158,12 +160,10 @@
     });
 
     $(document).ready(function() {
-        $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
-            // Get the dept_id from the clicked element's data-id attribute
+        $('.btn.btn-primary[data-bs-target="#delete_department"]').click(function(e) {
+            e.preventDefault();
             var officeNoticeId = $(this).find('.fa-regular').data('id');
-            // Log the dept_id to the console
             console.log(officeNoticeId);
-            var trElement = $(this).closest('tr');
             $('#officeNoticeId').val(officeNoticeId);
         });
     });

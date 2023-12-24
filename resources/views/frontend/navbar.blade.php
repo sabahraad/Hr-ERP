@@ -73,6 +73,20 @@
 							<li class="submenu">
 								<a href="#"><i class="la la-cog"></i> <span> Settings</span> <span class="menu-arrow"></span></a>
 								<ul>
+									<li class="submenu">
+										<a href="#"><span>Attendance Settitng</span> <span class="menu-arrow"></span></a>
+											<ul>
+												<li><a href="{{route('attendanceSetting')}}">Office Time</a></li>
+												<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
+											</ul>
+									</li>
+									<li class="submenu">
+										<a href="#"> <span> Leave Settitngs</span> <span class="menu-arrow"></span></a>
+											<ul>
+												<li><a href="{{route('leaveList')}}">Leave Type</a></li>
+												<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
+											</ul>
+									</li>
 									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
 									<li><a href="{{route('department')}}">Departments</a></li>
 									<li><a href="{{route('designation')}}">Designations</a></li>

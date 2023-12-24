@@ -18,20 +18,20 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h3 class="page-title">Attendance</h3>
+                            <h3 class="page-title">Leave Application List</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Attendance</li>
+                                <li class="breadcrumb-item active">Leave Application List</li>
                             </ul>
                         </div>
-                        <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Attendance</a>
-                        </div>
+                        <!-- <div class="col-auto float-end ms-auto">
+                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Add Leave Application</a>
+                        </div> -->
                     </div>
                 </div>
                 <!-- /Page Header -->
 
-                <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
+                <!-- <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
                     <div class="card-body ">
                         <form id="myForm">
                             @csrf
@@ -45,7 +45,7 @@
                         </form>
 
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
                     <div class="col-md-12">
@@ -55,27 +55,42 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Employee Name</th>
-                                        <th>Leave Dates</th>
-                                        <th>Check Out Time</th>
-                                        <th>Late Reason</th>
-                                        <th>Early Out Reason</th>
-                                        <th>Attendance Edited By</th>
-                                        <th>Attendance Edit Reason</th>
+                                        <th>Strat Date</th>
+                                        <th>End Date</th>
+                                        <th>Count</th>
+                                        <th>Leave Reason</th>
+                                        <th>Status</th>
                                         <th >Action</th>
                                     </tr>
                                 </thead>
-                                @foreach ($leaveApplicationList['data'] as $raw)
+                                @foreach ($leaveApplicationList['data'] as $key => $raw)
 
                                 <tbody>
-                                        <td>r</td>
-                                        <td>r</td>
-                                        <td>r</td>
-                                        <td>r</td>
-                                        <td>r</td>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{ $raw['employee']['name'] }}</td>
+                                        <td>{{$raw['start_date']}}</td>
                                         <td>{{$raw['end_date']}}</td>
-                                        <td>r</td>
-                                        <td>r</td>
-                                        <td>r</td>
+                                        <td>{{$raw['count']}}</td>
+                                        <td>{{$raw['reason']}}</td>
+                                        <td>
+                                            @if($raw['status'] == 1)
+                                                <span style="color: green;">Approved</span>
+                                            @elseif($raw['status'] == 2)
+                                                <span style="color: red;">Declined</span>
+                                            @else
+                                                <span style="color: gray;">Pending</span>
+                                            @endif 
+                                        </td>
+                                        <td>
+                                            <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                      
                                 </tbody>
                                 @endforeach
                             </table>
@@ -127,34 +142,31 @@
             </div>
             <!-- /Add Department Modal -->
 
-            <!-- Edit Designation Modal -->
-            <div id="edit_designation" class="modal custom-modal fade" role="dialog">
+            <!-- Edit Department Modal -->
+            <div id="edit_department" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Designation</h5>
+                            <h5 class="modal-title">Edit Department</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <form id="editSubmit">
+                            @csrf
                                 <div class="input-block mb-3">
-                                    <label class="col-form-label">Designation Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="desigTitle" id="desigTitle">
-                                </div>
-                                <div class="input-block mb-3">
-                                    <label class="col-form-label">Details<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="details" id="details">
-                                </div>
-                                <div class="input-block mb-3">
-                                    <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                    <select name="dept_id" class="select">
-                                    <option selected disabled>Open this to select Department</option>
-                                        
+                                    <label class="col-form-label">Employee Name</label>
+                                    <input id ="name" class="form-control" name="name" type="text" disabled>
+                                    <label class="col-form-label">Status<span class="text-danger">*</span></label>
+                                    <select name="action" class="select">
+                                        <option selected disabled>Open this to select your action</option>
+                                        <option value="1">Approved</option>
+                                        <option value="2">Decline</option>
+                                        <option value="3">Pending</option>
                                     </select>
+                                    <input id ="leaveApplicationId" class="form-control" name="leaveApplicationId" type="hidden">
                                 </div>
-                                <input class="form-control" type="text" name="designation_id" id="designation_id" hidden>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Save</button>
                                 </div>
@@ -163,26 +175,26 @@
                     </div>
                 </div>
             </div>
-            <!-- /Edit Designation Modal -->
+            <!-- /Edit Department Modal -->
 
-            <!-- Delete Designation Modal -->
-            <div class="modal custom-modal fade" id="delete_designation" role="dialog">
+            <!-- Delete Department Modal -->
+            <div class="modal custom-modal fade" id="delete_department" role="dialog">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-header">
-                                <h3>Delete leave Approver</h3>
+                                <h3>Delete Department</h3>
                                 <p>Are you sure want to delete?</p>
                             </div>
                             <div class="modal-btn delete-action">
                                 <div class="row">
                                     <div class="col-6">
-                                    <form id="desigDelete">
+                                    <form id="deptDelete">
                                         @csrf
-                                        <input id ="attendance_id" class="form-control" name="attendance_id" type="hidden">
+                                        <input id ="dept_id" class="form-control" name="dept_id" type="hidden">
                                         <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
                                     </form>
-                                </div>
+                                    </div>
                                     <div class="col-6">
                                         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
                                     </div>
@@ -192,7 +204,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /Delete Designation Modal -->
+            <!-- /Delete Department Modal -->
         
         </div>
         <!-- /Page Wrapper -->
@@ -327,6 +339,28 @@
 		});
 	});
 
+    $(document).ready(function() {
+    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
+        // Get the dept_id from the clicked element's data-id attribute
+            var leaveApplicationId = $(this).find('.fa-pencil').data('id');
+
+            // Log the dept_id to the console
+            console.log(leaveApplicationId);
+            var trElement = $(this).closest('tr');
+
+            // Find the 'td' elements within the 'tr'
+            var name = trElement.find('td:eq(1)').text();
+            // var details = trElement.find('td:eq(2)').text();
+
+            // Log the data to the console
+            console.log('leaveApplicationId:', leaveApplicationId);
+            console.log('name:', name);
+            $('#name').val(name);
+            $('#leaveApplicationId').val(leaveApplicationId);
+            // Show the modal
+            $('#edit_department').modal('show');
+        });
+    });
 
     $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
         var attendance_id = $(this).find('.fa-regular.fa-trash-can').data('id');

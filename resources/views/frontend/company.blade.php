@@ -30,6 +30,7 @@
 											<div class="profile-img">
 												<a href="#"><img src="{{asset($company['logo'])}}" alt="User Image"></a>
 											</div>
+											
 										</div>
 										<div class="profile-basic">
 											<div class="row">
@@ -38,14 +39,11 @@
                                         
 														<h3 class="user-name m-t-0 mb-0">{{$company['companyName']}}</h3>
                                                         <h5 class="text-muted">FinTech</h5>
-														<!-- <h6 class="text-muted">UI/UX Design Team</h6>
-														<small class="text-muted">Web Designer</small>
-														<div class="staff-id">Employee ID : FT-0001</div>
-														<div class="small doj text-muted">Date of Join : 1st Jan 2013</div> -->
-														<!-- <div class="staff-msg"><a class="btn btn-custom" href="chat.html">Send Message</a></div> -->
+														
 													</div>
 												</div>
 												<div class="col-md-7" style="border-left: 2px dashed #cccccc;">
+
 													<ul class="personal-info">
 														<li>
 															<div class="title">Phone:</div>
@@ -64,7 +62,7 @@
 															<div class="text">{{$company['address']}}</div>
 														</li>
                                                     
-													</ul>
+													</ul> 
 												</div>
 											</div>
 										</div>
