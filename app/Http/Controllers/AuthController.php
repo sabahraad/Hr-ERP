@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
    
-
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register','forgetPassword']]);
     }
@@ -117,10 +116,12 @@ class AuthController extends Controller
     }
   
     public function userProfile() {
-        
+        $id = auth()->user()->id;
+        $emp_id = Employee::where('id',$id)->value('emp_id');
         return response()->json([
             'message' => 'User Deatils',
-            'data' => Auth()->user()
+            'data' => Auth()->user(),
+            'emp_id'=> $emp_id
         ],Response::HTTP_OK);
             
     }

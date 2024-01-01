@@ -303,9 +303,6 @@
     });
 
 
-
-
-
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
     $('#deptDelete').submit(function(e) {

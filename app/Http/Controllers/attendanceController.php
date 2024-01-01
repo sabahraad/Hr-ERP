@@ -152,6 +152,7 @@ class attendanceController extends Controller
             }                    
         }
         if($request->action == $checkOut){
+            
             $onTime = 1;
             $earlyLeave = 2;
             //Current date attendance check

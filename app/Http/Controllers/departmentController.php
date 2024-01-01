@@ -51,7 +51,7 @@ class departmentController extends Controller
     public function showDepartment(){
         $company_id= auth()->user()->company_id;
         $data= Department::where('company_id',$company_id)->get();
-
+        
         if (count($data) === 0) {
             return response()->json([
                 'message' => 'Please Add Department First',

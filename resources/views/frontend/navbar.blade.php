@@ -88,8 +88,14 @@
 											</ul>
 									</li>
 									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
-									<li><a href="{{route('department')}}">Departments</a></li>
-									<li><a href="{{route('designation')}}">Designations</a></li>
+									<li class="submenu">
+										<a href="#"> <span> Employee Settitngs</span> <span class="menu-arrow"></span></a>
+											<ul>
+												<li><a href="{{route('department')}}">Departments</a></li>
+												<li><a href="{{route('designation')}}">Designations</a></li>
+											</ul>
+									</li>
+									
 									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
 									<li><a href="{{route('holidays')}}">Holiday</a></li>
 								</ul>

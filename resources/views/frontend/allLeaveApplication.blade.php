@@ -159,11 +159,11 @@
                                     <label class="col-form-label">Employee Name</label>
                                     <input id ="name" class="form-control" name="name" type="text" disabled>
                                     <label class="col-form-label">Status<span class="text-danger">*</span></label>
-                                    <select name="action" class="select">
+                                    <select name="status" class="select">
                                         <option selected disabled>Open this to select your action</option>
                                         <option value="1">Approved</option>
                                         <option value="2">Decline</option>
-                                        <option value="3">Pending</option>
+                                        <option value="0">Pending</option>
                                     </select>
                                     <input id ="leaveApplicationId" class="form-control" name="leaveApplicationId" type="hidden">
                                 </div>
@@ -191,7 +191,7 @@
                                     <div class="col-6">
                                     <form id="deptDelete">
                                         @csrf
-                                        <input id ="dept_id" class="form-control" name="dept_id" type="hidden">
+                                        <input id ="leave_application_id" class="form-control" name="leave_application_id" type="hidden">
                                         <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
                                     </form>
                                     </div>
@@ -219,127 +219,6 @@
     });
 
     $(document).ready(function() {
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/attendance-add-by-HR', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance added successful',
-                        text: 'Your attendance registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422 ) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: xhr.responseJSON.message
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-    
-    $(document).ready(function() {
-		$('#myForm').submit(function(event) {
-			event.preventDefault(); // Prevent the form from submitting normally
-                
-            var formData = new FormData(this);
-
-			$.ajax({
-			url: 'https://hrm.aamarpay.dev/api/present-employee-list',
-			type: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            data: formData,
-            contentType: false,
-            processData: false,
-			success: function(response) {
-                console.log(response)
-                var table = $('#desigTable').DataTable();
-				table.clear().draw();
-                var rowNum = 1;
-
-                // Iterate through the data and populate the table
-                response.data.forEach(function(item) {
-                    var createdAt = new Date(item.created_at).toLocaleString();
-                    var updatedAt = item.OUT ? new Date(item.updated_at).toLocaleString() : 'N/A';
-                    console.log(item.INstatus);
-                    var rowColorClass = (item.INstatus === 2 || item.OUTstatus === 2) ? 'bg-danger' : '';
-                    var editRoute = '{{ route("editAttendance", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
-                    var rowData = [
-                        rowNum,
-                        '<td >' + (item.employee_name || 'N/A') + '</td>',
-                        '<td >' + (createdAt !== 'null' ? createdAt : 'N/A') + '</td>',
-                        '<td >' + (updatedAt !== 'N/A' ? updatedAt : 'N/A')  + '</td>',
-                        '<td >' + (item.lateINreason || 'N/A') + '</td>',
-                        '<td >' + (item.earlyOUTreason || 'N/A') + '</td>',
-                        '<td >' + (item.edited_by_name || 'N/A') + '</td>',
-                        '<td >' + (item.edit_reason || 'N/A') + '</td>',
-                        '<td class="' + rowColorClass + '"><div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="'+editRoute+'" ><i class="fa-solid fa-pencil m-r-5" data-id="'+item.attendance_id+'" ></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" id="editEmployeeButton"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.attendance_id+'" ></i>Delete</a></div></div></td>'
-                    ];
-                    // table.row.add(rowData);
-                    if (rowColorClass) {
-                        table.row.add(rowData).node().classList.add(rowColorClass);
-                    } else {
-                        table.row.add(rowData);
-                    }
-                    // table.row.add(rowData).node().classList.add(rowColorClass);
-                    rowNum++;
-                });
-                
-                table.draw();
-			},
-            error: function(xhr, textStatus, errorThrown) {
-                if (xhr.status == 404) {
-                    var table = $('#desigTable').DataTable();
-				    table.clear().draw();
-                    Swal.fire({
-                            icon: 'error',
-                            title: 'No Attendance Found For This Date',
-                        });
-                } else {
-                    console.log('Error in API call');
-                }
-            }
-			});
-		});
-	});
-
-    $(document).ready(function() {
     $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
         // Get the dept_id from the clicked element's data-id attribute
             var leaveApplicationId = $(this).find('.fa-pencil').data('id');
@@ -362,44 +241,64 @@
         });
     });
 
-    $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var attendance_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        console.log(attendance_id);
-        $('#attendance_id').val(attendance_id);
-    });
-  
     $(document).ready(function() {
-    $('#desigDelete').submit(function(e) {
+        var jwtToken = "{{ $jwtToken }}";
+    $('#editSubmit').submit(function(e) {
         e.preventDefault();
-        var attendance_id = $('#attendance_id').val();
-        console.log(attendance_id);
+        var leaveApplicationId = $('#leaveApplicationId').val();
+        console.log(leaveApplicationId);
+
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-attendance/'+attendance_id, 
-                type: 'DELETE',
-                data: formData,
+                url: 'https://hrm.aamarpay.dev/api/leave-approved-by-HR', 
+                type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
                 },
+                data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    // var dept_id = response.data;
-                    console.log(response);
-                    $('#delete_designation').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance successfully deleted',
-                        text: 'You have successfully deleted a Attendance',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    });
+                    if (response.data == 0) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Leave application status made pending',
+                            showConfirmButton: true,  // Set to true to show the "OK" button
+                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User clicked "OK"
+                                location.reload(); // Reload the current page
+                            }
+                        });                          
+                    } else if (response.data == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Leave application approved successfully',
+                            showConfirmButton: true,  // Set to true to show the "OK" button
+                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User clicked "OK"
+                                location.reload(); // Reload the current page
+                            }
+                        });                     
+                      } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Leave application rejected successfully',
+                            showConfirmButton: true,  // Set to true to show the "OK" button
+                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User clicked "OK"
+                                location.reload(); // Reload the current page
+                            }
+                        });     
+                    }
                     
+
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -421,5 +320,60 @@
         });
     });
 
+    $(document).ready(function() {
+        $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
+            var leave_application_id = $(this).find('.fa-regular').data('id');
+            console.log(leave_application_id);
+            $('#leave_application_id').val(leave_application_id);
+        });
+    });
+  
+    $(document).ready(function() {
+        var jwtToken = "{{ $jwtToken }}";
+    $('#deptDelete').submit(function(e) {
+        e.preventDefault();
+        var leave_application_id = $('#leave_application_id').val();
+        console.log(leave_application_id);
+        var formData = new FormData(this);
+
+        $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/delete-leave-application/'+leave_application_id, 
+                type: 'DELETE',
+                data: formData,
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Leave Application successfully deleted',
+                        text: 'You have successfully deleted a leave Application',
+                        showConfirmButton: false, 
+                    });
+                    setTimeout(function() {
+                        location.reload(); // This will refresh the current page
+                    },400);
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }
+                }
+            });
+        });
+    });
 
 </script>

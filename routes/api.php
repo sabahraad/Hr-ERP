@@ -33,7 +33,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/user-profile', [App\Http\Controllers\AuthController::class, 'userProfile']);   
 
     //Attendance
-    Route::post('/attendance', [App\Http\Controllers\attendanceController::class, 'createAttendance'])->name('attendance');
+    Route::post('/attendance', [App\Http\Controllers\attendanceController::class,'createAttendance'])->name('attendance');
     Route::get('/attendance-list', [App\Http\Controllers\attendanceController::class, 'showattendance'])->name('showattendance');
     Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
 
@@ -59,7 +59,11 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     //Per month calculation
     Route::post('/month-wise-off-day-list', [App\Http\Controllers\leaveController::class, 'monthWiseOffDayList']);
     Route::post('/month-wise-report', [App\Http\Controllers\leaveController::class, 'monthWiseReport']);
-    
+
+    //deleteLeaveApplication
+    Route::delete('/delete-leave-application/{id}', [App\Http\Controllers\leaveController::class, 'deleteLeaveApplication']);
+    Route::post('/leave-approved-by-HR', [App\Http\Controllers\leaveController::class, 'leaveApprovedByHR']);
+
 });
 
 //All the routes are only accessable for HR 

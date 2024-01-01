@@ -118,7 +118,6 @@ class leaveController extends Controller
             'leave_setting_id' => 'required|integer',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'reason' => 'required|string'
         ]);
         
@@ -186,12 +185,25 @@ class leaveController extends Controller
 
         $data = new leaveApplication();
 
-        if($request->hasFile('image')){
-            $imageName =  time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $imagePath = 'images/' . $imageName;
-            $data->image = $imagePath;
+        // if($request->hasFile('image')){
+        //     $imageName =  time() . '.' . $request->image->extension();
+        //     $request->image->move(public_path('images'), $imageName);
+        //     $imagePath = 'images/' . $imageName;
+        //     $data->image = $imagePath;
+        // }
+        if($request->has('image')){
+            $extension = $request->image->getClientOriginalExtension();
+            if ($extension === 'pdf') {
+                $pdfPath = $request->image->storeAs('pdfs', time() . '.' . $extension, 'public');
+                $data->image = 'storage/'.$pdfPath;
+            }
+        
+            if (in_array($extension, ['jpg','jpeg', 'png', 'gif', 'svg'])) {
+                    $imagePath = $request->image->storeAs('images', time() . '.' . $extension, 'public');
+                    $data->image = 'storage/'.$imagePath;
+            }
         }
+        
         
         $data->emp_id = $emp_id;
         $data->leave_setting_id = $request->leave_setting_id;
@@ -460,7 +472,7 @@ class leaveController extends Controller
             $date= "$request->year-$request->month-$day";
             // dd($date);
             $dateToCheck = Carbon::parse($date);
-
+            $dateValue = $currentDate->toDateString();
             // Weekend check
             $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
 
@@ -542,7 +554,7 @@ class leaveController extends Controller
                 
             }
                 
-            $data[$date] = $attendanceList;
+            $data[$dateValue] = $attendanceList;
         }
         // dd($data,$dateList);
         $absentCount = 0;
@@ -588,6 +600,26 @@ class leaveController extends Controller
             'Total Present Count' => $present,
             'data' => $data
         ],200);
+    }
+
+    public function deleteLeaveApplication($id){
+        leaveApplication::destroy($id);
+        return response()->json([
+
+        ],204);
+    }
+
+    public function leaveApprovedByHR(Request $request){
+
+        $leave = leaveApplication::find($request->leaveApplicationId);
+        $leave->status = $request->status;
+        $leave->save();
+
+        return response()->json([
+            'message' => 'Leave Approved Successfully',
+            'data'=>$request->status
+        ],200);
+
     }
 
 }

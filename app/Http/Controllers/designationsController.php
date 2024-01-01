@@ -69,18 +69,16 @@ class designationsController extends Controller
     }
 
     public function editDesignations(Request $request,$id){
-
         $validator= Validator::make($request->all(), [
-            'desigTitle' => 'required|string|unique:designations,desigTitle'. $id . ',designation_id',
+            'desigTitle' => 'required|string|unique:designations,desigTitle,' . $id . ',designation_id',
             'details'  => 'required'
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors(),
             ], 422);
         }
-        
         $data = Designation::find($id);
         if($request->has('dept_id')){
             $data->dept_id = $request->dept_id;
