@@ -117,11 +117,17 @@ class AuthController extends Controller
   
     public function userProfile() {
         $id = auth()->user()->id;
-        $emp_id = Employee::where('id',$id)->value('emp_id');
+        $company_id = auth()->user()->company_id;
+        $emp_details = Employee::where('employees.company_id',$company_id)->where('employees.id',$id)
+                        ->join("users", "users.id", "=", "employees.id")
+                        ->join("companies","companies.company_id","=","employees.company_id")
+                        ->join("departments","departments.dept_id","=","employees.dept_id")
+                        ->join("designations","designations.designation_id","=","employees.designation_id")
+                        ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle','companies.companyName']);
         return response()->json([
             'message' => 'User Deatils',
             'data' => Auth()->user(),
-            'emp_id'=> $emp_id
+            'emp_details'=> $emp_details
         ],Response::HTTP_OK);
             
     }
