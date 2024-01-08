@@ -278,6 +278,7 @@ class leaveController extends Controller
         $data = leaveApplication::where('emp_id', $id)
                     ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
                     ->select('leave_applications.*','leave_settings.leave_type')
+                    ->orderBy('created_at', 'desc')
                     ->get();
         if(!$data){
             return response()->json([
@@ -310,12 +311,14 @@ class leaveController extends Controller
                     'leave_applications.end_date',
                     'leave_applications.dateArray',
                     'leave_applications.count AS total_leave_day_count',
-                    'leave_applications.reason'
+                    'leave_applications.reason',
+                    'leave_settings.*'
                 )
                 ->join(DB::raw('(SELECT leave_application_id, MIN(priority) AS min_priority FROM leave_approves WHERE status = 0 GROUP BY leave_application_id) AS temp_leave'), function ($join) {
                     $join->on('leave_approves.leave_application_id', '=', 'temp_leave.leave_application_id');
                 })
                 ->join('leave_applications', 'leave_approves.leave_application_id', '=', 'leave_applications.leave_application_id')
+                ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
                 ->where('leave_approves.status', '=', 0)
                 ->where('approver_emp_id','=',$emp_id)
                 ->whereColumn('leave_approves.priority', '=', 'temp_leave.min_priority')
