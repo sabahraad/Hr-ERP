@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Empty_;
+use Psr\Http\Message\ResponseInterface;
 
 class employeeController extends Controller
 {
@@ -83,12 +84,39 @@ class employeeController extends Controller
                 ->join("users", "users.id", "=", "employees.id")
                 ->join("departments","departments.dept_id","=","employees.dept_id")
                 ->join("designations","designations.designation_id","=","employees.designation_id")
+                ->orderBy('employees.dept_id')
+                ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle'])
+                ->groupBy('dept_id');
+
+        $result = [];
+
+        foreach ($data as $deptId => $deptEmployees) {
+            $deptInfo = [
+                "dept_id" => $deptId,
+                "deptTitle" => $deptEmployees->first()->deptTitle, 
+                "employees" => $deptEmployees->toArray(),
+            ];
+
+            $result[] = $deptInfo;
+        }
+        return response()->json([
+            'message'=> 'Employee List',
+            'data'=>$result
+        ],200);
+
+    }
+
+    public function employeeListForAdminPanel(){
+        $company_id= auth()->user()->company_id;
+        $data = Employee::where('employees.company_id',$company_id)
+                ->join("users", "users.id", "=", "employees.id")
+                ->join("departments","departments.dept_id","=","employees.dept_id")
+                ->join("designations","designations.designation_id","=","employees.designation_id")
                 ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle']);
         return response()->json([
             'message'=> 'Employee List',
             'data'=>$data
         ],200);
-
     }
 
     public function updateEmployee(Request $request,$id){
@@ -162,6 +190,65 @@ class employeeController extends Controller
         ],200);
     }
 
+    public function employeeEditApp(Request $request,$id){
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|between:2,100',
+            'gender' => 'string',
+            'dob' => 'string',
+            'phone_number' => 'digits:11',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $user_id = Employee::where('emp_id',$id)->value('id');
+        if(!$user_id){
+            return response()->json([
+                'message' => 'User Not Found',
+            ],404);
+        }
+        $user = User::find($user_id);
+        if(!$user){
+            return response()->json([
+                'message' => 'User Not Found',
+            ],404);
+        }
+        $user->name = $request->name ?? $user->name;
+        $user->save();
+
+        $employee = Employee::find($id);
+        
+        if(!$employee){
+            return response()->json([
+                'message' => 'Employee Not Found',
+            ],404);
+        }
+
+        $employee->dob = $request->dob ?? $employee->dob;
+        $employee->gender = $request->gender ?? $employee->gender;
+        $employee->name = $request->name ?? $employee->name;
+        $employee->phone_number = $request->phone_number ?? $employee->phone_number;
+
+        if($request->hasFile('image')){
+            $imageName =  time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $imagePath = 'images/' . $imageName;
+            $employee->image = $imagePath;
+        }
+
+        $employee->save();
+
+        return response()->json([
+            'message'=> 'Information Updated',
+            'data'=>$employee
+        ],200);
+    }
+
     public function deleteEmployee($id){
         $user_id = Employee::where('emp_id',$id)->value('id');
         User::where('id',$user_id)->delete();
@@ -169,6 +256,21 @@ class employeeController extends Controller
         return response()->json([
             'message' => 'Employee deleted successfully'
         ]);
+    }
+
+    public function employeeDetails($id){
+        $data = Employee::where('emp_id',$id)
+                ->join("users", "users.id", "=", "employees.id")
+                ->get(['employees.*', 'users.email']);
+        if(!$data){
+            return response()->json([
+                'message'=>'No data found'
+            ],404);
+        }
+        return response()->json([
+            'message'=> 'Employee Details',
+            'data'=>$data
+        ],200);
     }
 
 }

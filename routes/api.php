@@ -64,6 +64,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::delete('/delete-leave-application/{id}', [App\Http\Controllers\leaveController::class, 'deleteLeaveApplication']);
     Route::post('/leave-approved-by-HR', [App\Http\Controllers\leaveController::class, 'leaveApprovedByHR']);
 
+    //employee 
+    
+    Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
+    Route::post('employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
+    Route::get('employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+
 });
 
 //All the routes are only accessable for HR 
@@ -101,7 +107,7 @@ Route::delete('/delete/leave-type/{id}', [App\Http\Controllers\leaveController::
 
 //Employee
 Route::post('add-employee', [App\Http\Controllers\employeeController::class, 'addEmployee'])->name('addEmployee');
-Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
+Route::get('all-employee-list', [App\Http\Controllers\employeeController::class, 'employeeListForAdminPanel'])->name('employeeListForAdminPanel');
 Route::post('/edit/employee/{id}', [App\Http\Controllers\employeeController::class, 'updateEmployee'])->name('updateEmployee');
 Route::delete('/delete/employee/{id}', [App\Http\Controllers\employeeController::class, 'deleteEmployee'])->name('deleteEmployee');
 
