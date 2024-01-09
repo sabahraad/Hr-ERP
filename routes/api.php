@@ -69,7 +69,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
     Route::post('employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
     Route::get('employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
-
+    
 });
 
 //All the routes are only accessable for HR 
@@ -165,6 +165,7 @@ Route::post('/attendance-edited-by-HR', [App\Http\Controllers\attendanceControll
 
 //Leave 
 Route::get('/all-leave-application-only-for-hr', [App\Http\Controllers\leaveController::class, 'allLeaveApplication']);
+Route::get('/leave-application-details/{id}', [App\Http\Controllers\leaveController::class, 'leaveApplicationDetails']);
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');

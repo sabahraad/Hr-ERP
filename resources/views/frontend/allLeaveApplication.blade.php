@@ -24,28 +24,9 @@
                                 <li class="breadcrumb-item active">Leave Application List</li>
                             </ul>
                         </div>
-                        <!-- <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Add Leave Application</a>
-                        </div> -->
                     </div>
                 </div>
                 <!-- /Page Header -->
-
-                <!-- <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
-                    <div class="card-body ">
-                        <form id="myForm">
-                            @csrf
-                            <div class="form-group">
-                                <label class="col-form-label" for="dateInput">Select Date:<span class="text-danger">*</span></label>
-                                <input class="form-control" type="date" id="date" name="date" required>
-                            </div>
-                            <div class="form-group" style="margin-top: 18px;">
-                                <input type="submit" name="submit" value="Search" class="btn btn-primary">
-                            </div>
-                        </form>
-
-                    </div>
-                </div> -->
 
                 <div class="row">
                     <div class="col-md-12">
@@ -83,10 +64,14 @@
                                         </td>
                                         <td>
                                             <div class="dropdown dropdown-action">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Edit</a>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Delete</a>
+                                                        <a class="dropdown-item edit-leaveApplication" href="#" data-bs-toggle="modal" data-bs-target="#edit_leaveApplication" id="editleaveApplicationButton" data-id="{{$raw['leave_application_id']}}">
+                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                        </a>
+                                                        <a class="dropdown-item delete-leaveApplication" href="#" data-bs-toggle="modal" data-bs-target="#delete_leaveApplication" data-id="{{$raw['leave_application_id']}}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                                    <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{$raw['leave_application_id']}}"></i> Delete</a> -->
                                                 </div>
                                             </div>
                                         </td>
@@ -100,54 +85,12 @@
             </div>
             <!-- /Page Content -->
 
-            <!-- Add Department Modal -->
-            <div id="add_department" class="modal custom-modal fade" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Attendance</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="msform">
-                                @csrf
-                                <div class="input-block mb-3">
-                                    <label class="col-form-label">Employee Name <span class="text-danger">*</span></label>
-                                    <select name="emp_id" class="select">
-                                    <option selected disabled>Open this to select Employee</option>
-                                       
-                                    </select>
-                                    <label class="col-form-label">Attendance<span class="text-danger">*</span></label>
-                                    <select name="action" class="select">
-                                        <option selected disabled>Open this to select your action</option>
-                                        <option value="1">Check In</option>
-                                        <option value="2">Check Out</option>
-                                    </select>
-
-                                    <label class="col-form-label" for="datetime">Select Date and Time:<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="datetime-local" id="datetime" name="datetime" required>
-                                    
-                                    <label class="col-form-label">Reason</label>
-                                    <input class="form-control" type="text" name= "edit_reason">
-                                </div>
-                                <div class="submit-section">
-                                    <button class="btn btn-primary submit-btn">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Add Department Modal -->
-
             <!-- Edit Department Modal -->
-            <div id="edit_department" class="modal custom-modal fade" role="dialog">
+            <div id="edit_leaveApplication" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Department</h5>
+                            <h5 class="modal-title">Edit Leave Application</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -158,6 +101,12 @@
                                 <div class="input-block mb-3">
                                     <label class="col-form-label">Employee Name</label>
                                     <input id ="name" class="form-control" name="name" type="text" disabled>
+                                    <label class="col-form-label">leave start date</label>
+                                    <input id ="start_date" class="form-control" name="start_date" type="text" disabled>
+                                    <label class="col-form-label">leave end date</label>
+                                    <input id ="end_date" class="form-control" name="end_date" type="text" disabled>
+                                    <label class="col-form-label">Reason</label>
+                                    <input id ="reason" class="form-control" name="reason" type="text" disabled>
                                     <label class="col-form-label">Status<span class="text-danger">*</span></label>
                                     <select name="status" class="select">
                                         <option selected disabled>Open this to select your action</option>
@@ -178,12 +127,12 @@
             <!-- /Edit Department Modal -->
 
             <!-- Delete Department Modal -->
-            <div class="modal custom-modal fade" id="delete_department" role="dialog">
+            <div class="modal custom-modal fade" id="delete_leaveApplication" role="dialog">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-header">
-                                <h3>Delete Department</h3>
+                                <h3>Delete Leave Application</h3>
                                 <p>Are you sure want to delete?</p>
                             </div>
                             <div class="modal-btn delete-action">
@@ -219,28 +168,46 @@
     });
 
     $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
-        // Get the dept_id from the clicked element's data-id attribute
-            var leaveApplicationId = $(this).find('.fa-pencil').data('id');
+        var jwtToken = "{{ $jwtToken }}";
+        $(document).on('click', '.edit-leaveApplication', function(){
+            var leaveApplicationID = $(this).data('id');
+            console.log(leaveApplicationID);
 
-            // Log the dept_id to the console
-            console.log(leaveApplicationId);
-            var trElement = $(this).closest('tr');
-
-            // Find the 'td' elements within the 'tr'
-            var name = trElement.find('td:eq(1)').text();
-            // var details = trElement.find('td:eq(2)').text();
-
-            // Log the data to the console
-            console.log('leaveApplicationId:', leaveApplicationId);
-            console.log('name:', name);
-            $('#name').val(name);
-            $('#leaveApplicationId').val(leaveApplicationId);
-            // Show the modal
-            $('#edit_department').modal('show');
+            $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/leave-application-details/'+leaveApplicationID, 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(response) {
+                    console.log(response.data[0]);
+                    $('#name').val(response.data[0].name.trim());
+                    $('#start_date').val(response.data[0].start_date);
+                    $('#end_date').val(response.data[0].end_date);
+                    $('#reason').val(response.data[0].reason);
+                    $('#leaveApplicationId').val(leaveApplicationID);
+                    $('#edit_employee').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }
+                }
+            });
         });
     });
-
+    
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
     $('#editSubmit').submit(function(e) {
@@ -321,9 +288,8 @@
     });
 
     $(document).ready(function() {
-        $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
-            var leave_application_id = $(this).find('.fa-regular').data('id');
-            console.log(leave_application_id);
+        $(document).on('click', '.delete-leaveApplication', function(){
+            var leave_application_id = $(this).data('id');
             $('#leave_application_id').val(leave_application_id);
         });
     });

@@ -625,4 +625,14 @@ class leaveController extends Controller
 
     }
 
+    public function leaveApplicationDetails($id){
+        $data = leaveApplication::where('leave_application_id',$id)
+                ->join('employees','employees.emp_id','=','leave_applications.emp_id')
+                ->get(['leave_applications.*','employees.name']);
+        return response()->json([
+            'message' => 'Leave Application Details',
+            'data'=>$data
+        ],200);
+    }
+
 }
