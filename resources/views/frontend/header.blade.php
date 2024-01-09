@@ -311,7 +311,8 @@
 						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 							<span class="user-img"><img src="{{ asset('images/favicon.png') }}" alt="User Image">
 							<span class="status online"></span></span>
-							<span>Admin</span>
+							<!-- <span>{{auth()->user()}}</span> -->
+							<span>{{ session('name') }}</span>
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="profile.html">My Profile</a>

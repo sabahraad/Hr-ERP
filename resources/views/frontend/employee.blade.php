@@ -17,7 +17,10 @@
                     </ul>
                 </div>
                 <div class="col-auto float-end ms-auto">
-                    <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee" id="addEmployeeButton"><i class="fa-solid fa-plus"></i> Add Employee</a>
+                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee" id="addEmployeeButton">
+                        <i class="fa-solid fa-plus"></i> 
+                        Add Employee
+                    </a>
                     <div class="view-icons">
                         <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a>
@@ -62,8 +65,11 @@
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $employee['emp_id'] }}" ></i> Edit</a>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $employee['emp_id'] }}" ></i> Delete</a>
+                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}">
+                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                                <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a> -->
+                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $employee['emp_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
                                 </td>
@@ -244,13 +250,14 @@
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Gender</label>
-                                                <select class="select" name="gender">
-                                                    <option selected disabled>Select Gender</option>                                   
+                                                <select class="select" name="gender" id="genderSelect">
+                                                    <option selected disabled>Select Gender</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
                                                 </select>
                                             </div>
                                         </div>
+                                        
 										<div class="col-md-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Department <span class="text-danger">*</span></label>
@@ -353,11 +360,13 @@
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
         $('#empTable').DataTable();
-        
-        $('#addEmployeeButton, #editEmployeeButton').on('click', function(e) {
-            e.preventDefault();
-            console.log('ok')
-            // Make an AJAX call
+        $(document).on('click', '.edit-employee', function(){
+            console.log('tafdvhcb');
+            
+        });
+
+        $(document).on('click', '.add-employee', function(){
+            console.log('tafdvhcb');
             $.ajax({
                 url: 'https://hrm.aamarpay.dev/api/department-name-list', 
                 type: 'GET',
@@ -409,31 +418,6 @@
         });
     });
 
-    $(document).on('change', '#selectDept1', function() {
-        var jwtToken = "{{ $jwtToken }}";
-        var dept_id = $(this).val();
-        console.log(dept_id);
-
-        $.ajax({
-            url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
-            type: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            success: function(data) {
-                console.log(data);
-                $('#desig_id1 option:not(:first-child)').remove();
-                // Handle the response from the server
-                $.each(data, function(value, text) {
-                    $('#desig_id1').append($('<option>').text(text).attr('value', value));
-                });
-                console.log(data);
-            },
-            error: function(error) {
-                console.error(error);
-            }
-        });
-    });
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
@@ -483,30 +467,118 @@
         });
     });
 
+
     $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_employee"]').click(function() {
-        // Get the emp_id from the clicked element's data-id attribute
-            var empID = $(this).find('.fa-pencil').data('id');
+        var jwtToken = "{{ $jwtToken }}";
+        $(document).on('click', '.edit-employee', function(){
+            console.log(empId,'ok');
 
-            // Log the emp_id to the console
-            console.log(empID);
-            var trElement = $(this).closest('tr');
+            $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/department-name-list', 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(data) {
+                    $('#selectDept option:not(:first-child)').remove();
+                    $('#selectDept1 option:not(:first-child)').remove();
 
-            // Find the 'td' elements within the 'tr'
-            var name = trElement.find('td:eq(1)').text();
-            var email = trElement.find('td:eq(2)').text();
-            var phoneNumber = trElement.find('td:eq(3)').text();
-            var dob = trElement.find('td:eq(4)').text();
+                    $.each(data, function(value, text) {
+                        $('#selectDept').append($('<option>').text(text).attr('value', value));
+                        $('#selectDept1').append($('<option>').text(text).attr('value', value));
+                    });
+                    console.log(data);
+                },
+                error: function(error) {
+                    // Handle any errors
+                    console.error(error);
+                }
+            });
 
-            $('#name').val(name.trim());
-            $('#email').val(email);
-            $('#phoneNumber').val(phoneNumber);
-            $('#dob').val(dob);
-            $('#empID').val(empID);
-            // Show the modal
-            $('#edit_employee').modal('show');
+            var empId = $(this).data('id');
+
+            $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/employee-details/'+empId, 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(response) {
+                    console.log(response.data[0]);
+                    $('#name').val(response.data[0].name.trim());
+                    $('#email').val(response.data[0].email);
+                    $('#phoneNumber').val(response.data[0].phone_number);
+                    $('#dob').val(response.data[0].dob);
+                    $('#empID').val(empId);
+
+                    var genderValue = response.data[0].gender;
+                    var dept_id = response.data[0].dept_id;
+                    var desig_id = response.data[0].designation_id;
+                    console.log(desig_id,'raad');
+
+                    $.ajax({
+                        url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
+                        type: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + jwtToken
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            $('#desig_id1 option:not(:first-child)').remove();
+                            // Handle the response from the server
+                            $.each(data, function(value, text) {
+                                console.log(value,'value');
+                                $('#desig_id1').append($('<option>').text(text).attr('value', value));
+                            });
+                            console.log(data);
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+
+                    // Clear previous selections
+                    $('#genderSelect option').removeAttr('selected');
+
+                    if (genderValue !== null) {
+                        $('#genderSelect option[value="' + genderValue + '"]').prop('selected', true);
+                    } else {
+                        console.log('ok');
+                        $('#genderSelect option[value=""]').prop('selected', true);
+                    }
+                    $('#selectDept1 option').removeAttr('selected');
+                    $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
+                    // $('#desig_id1 option[value="' + dept_id + '"]').prop('selected', true);
+
+                    $('#desig_id1 option').removeAttr('selected');
+                    $('#desig_id1 option[value="' + desig_id + '"]').prop('selected', true);
+
+                    $('#desig_id1').change();
+                    $('#genderSelect').change();
+                    $('#selectDept1').change();
+                    $('#edit_employee').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }
+                }
+            });
+
         });
     });
+
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
@@ -557,21 +629,13 @@
             });
         });
     });
-
+    
     $(document).ready(function() {
-        $('.dropdown-item[data-bs-target="#delete_employee"]').click(function() {
-            // Get the dept_id from the clicked element's data-id attribute
-            var emp_id = $(this).find('.fa-regular').data('id');
-            // Log the dept_id to the console
-            console.log(emp_id);
-            var trElement = $(this).closest('tr');
-            $('#emp_id').val(emp_id);
+        $(document).on('click', '.delete-employee', function(){
+            var empId = $(this).data('id');
+            $('#emp_id').val(empId);
         });
     });
-
-
-
-
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";

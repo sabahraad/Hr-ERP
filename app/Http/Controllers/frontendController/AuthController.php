@@ -45,6 +45,7 @@ class AuthController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response,true);
+     
         if($response['status'] == 200){
             $request->session()->flush();
             return redirect()->route('loginForm');
@@ -92,7 +93,8 @@ class AuthController extends Controller
             session([
                 'access_token' => $access_token,
                 'role' => $data['user']['role'],
-                'company_id' => $data['user']['company_id']
+                'company_id' => $data['user']['company_id'],
+                'name' => $data['user']['name']
             ]);
         }else{
             $access_token = session('access_token');

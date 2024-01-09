@@ -12,6 +12,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <h3 class="page-title">Attendance Settings</h3>
+                            <p><span style="color:red;font-weight: bold;">Note :</span> Coordinated Universal Time (UTC) [24-hour clock format]</p>
                         </div>
                     </div>
                 </div>

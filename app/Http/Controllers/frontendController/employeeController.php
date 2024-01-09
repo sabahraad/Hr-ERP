@@ -12,7 +12,7 @@ class employeeController extends Controller
         $access_token = session('access_token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/employee-list',
+        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/all-employee-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

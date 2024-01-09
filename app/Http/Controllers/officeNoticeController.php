@@ -107,7 +107,7 @@ class officeNoticeController extends Controller
     public function deleteNotice($id){
         officeNotice::destroy($id);
         return response()->json([
-
-        ],204);
+            'message'=>'successfully deleted'
+        ],200);
     }
 }

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
    
-
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register','forgetPassword']]);
     }
@@ -117,10 +116,18 @@ class AuthController extends Controller
     }
   
     public function userProfile() {
-        
+        $id = auth()->user()->id;
+        $company_id = auth()->user()->company_id;
+        $emp_details = Employee::where('employees.company_id',$company_id)->where('employees.id',$id)
+                        ->join("users", "users.id", "=", "employees.id")
+                        ->join("companies","companies.company_id","=","employees.company_id")
+                        ->join("departments","departments.dept_id","=","employees.dept_id")
+                        ->join("designations","designations.designation_id","=","employees.designation_id")
+                        ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle','companies.companyName']);
         return response()->json([
             'message' => 'User Deatils',
-            'data' => Auth()->user()
+            'data' => Auth()->user(),
+            'emp_details'=> $emp_details
         ],Response::HTTP_OK);
             
     }
