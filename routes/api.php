@@ -69,6 +69,10 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
     Route::post('employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
     Route::get('employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+
+    //notice
+    Route::get('/notice-list', [App\Http\Controllers\officeNoticeController::class, 'noticeList']);
+
     
 });
 
@@ -141,7 +145,6 @@ Route::delete('/delete/attendance/{id}', [App\Http\Controllers\attendanceControl
 
 //office Notice
 Route::post('add-notice', [App\Http\Controllers\officeNoticeController::class, 'addNotice']);
-Route::get('/notice-list', [App\Http\Controllers\officeNoticeController::class, 'noticeList']);
 Route::post('edit-notice/{id}', [App\Http\Controllers\officeNoticeController::class, 'editNotice']);
 Route::delete('/delete/notice/{id}', [App\Http\Controllers\officeNoticeController::class, 'deleteNotice']);
 
