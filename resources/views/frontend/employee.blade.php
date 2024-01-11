@@ -514,8 +514,8 @@
                     var genderValue = response.data[0].gender;
                     var dept_id = response.data[0].dept_id;
                     var desig_id = response.data[0].designation_id;
-                    console.log(desig_id,'raad');
-
+                    console.log(desig_id,'==============================raad');
+                    
                     $.ajax({
                         url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
                         type: 'GET',
@@ -527,8 +527,12 @@
                             $('#desig_id1 option:not(:first-child)').remove();
                             // Handle the response from the server
                             $.each(data, function(value, text) {
-                                console.log(value,'value');
-                                $('#desig_id1').append($('<option>').text(text).attr('value', value));
+                                console.log(value,'value',desig_id);
+                                if(value == desig_id){
+                                    $('#desig_id1').append($('<option>').text(text).attr('value', value).prop('selected', true));
+                                }else{
+                                    $('#desig_id1').append($('<option>').text(text).attr('value', value));
+                                }
                             });
                             console.log(data);
                         },
@@ -550,10 +554,6 @@
                     $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
                     // $('#desig_id1 option[value="' + dept_id + '"]').prop('selected', true);
 
-                    $('#desig_id1 option').removeAttr('selected');
-                    $('#desig_id1 option[value="' + desig_id + '"]').prop('selected', true);
-
-                    $('#desig_id1').change();
                     $('#genderSelect').change();
                     $('#selectDept1').change();
                     $('#edit_employee').modal('show');
