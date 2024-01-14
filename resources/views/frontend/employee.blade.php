@@ -41,7 +41,7 @@
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>DOB</th>
-                                <th>Departement</th>
+                                <th>Department</th>
                                 <th>Designation</th>
                                 <th class="text-end no-sort">Action</th>
                             </tr>
@@ -473,28 +473,6 @@
         $(document).on('click', '.edit-employee', function(){
             console.log(empId,'ok');
 
-            $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/department-name-list', 
-                type: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                success: function(data) {
-                    $('#selectDept option:not(:first-child)').remove();
-                    $('#selectDept1 option:not(:first-child)').remove();
-
-                    $.each(data, function(value, text) {
-                        $('#selectDept').append($('<option>').text(text).attr('value', value));
-                        $('#selectDept1').append($('<option>').text(text).attr('value', value));
-                    });
-                    console.log(data);
-                },
-                error: function(error) {
-                    // Handle any errors
-                    console.error(error);
-                }
-            });
-
             var empId = $(this).data('id');
 
             $.ajax({
@@ -515,6 +493,33 @@
                     var dept_id = response.data[0].dept_id;
                     var desig_id = response.data[0].designation_id;
                     console.log(desig_id,'==============================raad');
+
+                    $.ajax({
+                        url: 'https://hrm.aamarpay.dev/api/department-name-list', 
+                        type: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + jwtToken
+                        },
+                        success: function(data) {
+                            $('#selectDept option:not(:first-child)').remove();
+                            $('#selectDept1 option:not(:first-child)').remove();
+
+                            $.each(data, function(value, text) {
+                                if(value == dept_id){
+                                    $('#selectDept').append($('<option>').text(text).attr('value', value).prop('selected', true));
+                                    $('#selectDept1').append($('<option>').text(text).attr('value', value).prop('selected', true));
+                                }else{
+                                    $('#selectDept').append($('<option>').text(text).attr('value', value));
+                                    $('#selectDept1').append($('<option>').text(text).attr('value', value));
+                                }
+                            });
+                            console.log(data);
+                        },
+                        error: function(error) {
+                            // Handle any errors
+                            console.error(error);
+                        }
+                    });
                     
                     $.ajax({
                         url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
@@ -550,12 +555,12 @@
                         console.log('ok');
                         $('#genderSelect option[value=""]').prop('selected', true);
                     }
-                    $('#selectDept1 option').removeAttr('selected');
-                    $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
+                    // $('#selectDept1 option').removeAttr('selected');
+                    // $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
                     // $('#desig_id1 option[value="' + dept_id + '"]').prop('selected', true);
 
                     $('#genderSelect').change();
-                    $('#selectDept1').change();
+                    // $('#selectDept1').change();
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
