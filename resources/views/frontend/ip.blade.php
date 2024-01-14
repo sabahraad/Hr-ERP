@@ -88,6 +88,7 @@
                                     <button type="button" class="btn btn-primary btn" onclick="removeIpInput()">Cancel</button><br>
                                     <label class="col-form-label">Wifi Name</label>
                                     <input class="form-control" type="text" name= "wifiName">
+                                    <input class="form-control" type="text" name= "status" value=1 hidden>
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>
