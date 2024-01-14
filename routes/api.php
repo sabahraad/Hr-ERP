@@ -73,6 +73,9 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     //notice
     Route::get('/notice-list', [App\Http\Controllers\officeNoticeController::class, 'noticeList']);
 
+    //MOTIVATION QUOTE
+    Route::post('/saveMotivationalQuote', [App\Http\Controllers\motivationalSpeechController::class, 'saveMotivationalQuote']);
+
     
 });
 
