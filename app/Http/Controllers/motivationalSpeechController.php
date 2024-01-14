@@ -2,32 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Motivation;
 use Illuminate\Http\Request;
 
 class motivationalSpeechController extends Controller
 {
     public function motivationalSpeech(){
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.quotable.io/random',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $response = json_decode($response,true);
-        
+        $response = Motivation::inRandomOrder()->first();
         return response()->json([
             'message' =>  'Motivational Speech',
             'data'=>$response
         ],200);
+    }
+
+    public function saveMotivationalQuote(Request $request){
+            $data = new Motivation();
+            $data->quote = $request->quote;
+            $data->author = $request->author;
+            $data->save();
+
+            return response()->json([
+                'message'=>'Quote added',
+                'data'=>$data
+            ],201);
     }
 }
