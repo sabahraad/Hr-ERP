@@ -70,8 +70,6 @@ class companyController extends Controller
             $imagePath = 'images/' . $imageName;
             $data->logo = $imagePath;
         }
-
-        $data = Company::find($company_id);
         
         $data->companyName = $request->companyName;
         $data->address = $request->address;
