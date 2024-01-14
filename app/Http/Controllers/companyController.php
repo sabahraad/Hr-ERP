@@ -44,11 +44,11 @@ class companyController extends Controller
 
         $company_id= auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
-            'companyName' => 'required|unique:companies,companyName,' . $company_id . ',company_id',
-            'address' => 'required|string',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'companyDetails' => 'required',
-            'contactNumber' => 'required',    
+            'companyName' => 'unique:companies,companyName,' . $company_id . ',company_id',
+            'address' => 'string',
+            'logo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'companyDetails' => 'string',
+            'contactNumber' => 'string',    
         ]);
         Rule::unique('companies', 'companyName')->ignore($company_id, 'company_id');
         if ($validator->fails()) {
