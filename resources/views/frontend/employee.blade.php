@@ -12,7 +12,7 @@
                 <div class="col">
                     <h3 class="page-title">Employee</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                        <li class="breadcrumb-item">Dashboard</li>
                         <li class="breadcrumb-item active">Employee</li>
                     </ul>
                 </div>
@@ -22,8 +22,8 @@
                         Add Employee
                     </a>
                     <div class="view-icons">
-                        <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
-                        <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a>
+                        <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
+                        <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
                     </div>
                 </div>
             </div>

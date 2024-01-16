@@ -76,6 +76,9 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     //MOTIVATION QUOTE
     Route::post('/saveMotivationalQuote', [App\Http\Controllers\motivationalSpeechController::class, 'saveMotivationalQuote']);
 
+    //MOCK DETAILS
+    Route::post('/save-mock-person-details', [App\Http\Controllers\AuthController::class, 'saveMockPersonDetails']);
+    Route::get('/show-mock-person-details', [App\Http\Controllers\AuthController::class, 'showMockPersonDetails']);
     
 });
 

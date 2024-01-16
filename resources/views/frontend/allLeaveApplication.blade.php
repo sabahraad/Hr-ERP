@@ -44,10 +44,11 @@
                                         <th >Action</th>
                                     </tr>
                                 </thead>
+                                <tbody>
                                 @foreach ($leaveApplicationList['data'] as $key => $raw)
 
-                                <tbody>
-                                        <td>{{$key+1}}</td>
+                                    <tr>
+                                    <td>{{$key+1}}</td>
                                         <td>{{ $raw['employee']['name'] }}</td>
                                         <td>{{$raw['start_date']}}</td>
                                         <td>{{$raw['end_date']}}</td>
@@ -75,9 +76,12 @@
                                                 </div>
                                             </div>
                                         </td>
+                                    </tr>
+                                        
                                       
-                                </tbody>
+                                
                                 @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -164,6 +168,7 @@
 <script>
 
     $(document).ready(function(){
+        console.log("desigtable")
         $('#desigTable').DataTable();
     });
 

@@ -122,7 +122,7 @@ class expensesController extends Controller
                 'message'=>'No data available',
                 'data'=>$data
     
-            ],404);
+            ],200);
         }else{
             return response()->json([
                 'message'=>'Expenses List',

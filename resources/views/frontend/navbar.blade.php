@@ -10,7 +10,7 @@
 								<a href="#"><i class="la la-dashboard"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="admin-dashboard.html">Admin Dashboard</a></li>
-									<li><a href="employee-dashboard.html">Employee Dashboard</a></li>
+									<!-- <li><a href="employee-dashboard.html">Employee Dashboard</a></li> -->
 								</ul>
 							</li>
 
@@ -40,10 +40,10 @@
 								<span>Leave</span>
 							</li>
 							<li class="submenu">
-								<a href="#"><i class="la la-ticket"></i> <span> Leave Settings </span> <span class="menu-arrow"></span></a>
+								<a href="#"><i class="la la-ticket"></i> <span> Leave </span> <span class="menu-arrow"></span></a>
 								<ul> 	
-									<li><a href="{{route('leaveList')}}">Leave Type</a></li>
-									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
+									<!-- <li><a href="{{route('leaveList')}}">Leave Type</a></li>
+									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li> -->
 									<li><a href="{{route('allLeaveApplication')}}">Leave Application List</a></li>
 								</ul>
 							</li>
@@ -54,8 +54,8 @@
 							<li class="submenu">
 								<a href="#"><i class="la la-houzz"></i> <span>Attendance </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
-									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
+									<!-- <li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
+									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li> -->
 									<li><a href="{{route('attendanceList')}}">Attendance List</a></li>
 								</ul>
 							</li>
@@ -101,22 +101,22 @@
 								</ul>
 							</li>
 							
-							<li class="menu-title"> 
+							<!-- <li class="menu-title"> 
 								<span>HR</span>
-							</li>
+							</li> -->
 							
-							<li class="submenu">
+							<!-- <li class="submenu">
 								<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="salary.html"> Employee Salary </a></li>
 									<li><a href="salary-view.html"> Payslip </a></li>
 									<li><a href="payroll-items.html"> Payroll Items </a></li>
 								</ul>
-							</li>
-							<li> 
+							</li> -->
+							<!-- <li> 
 								<a href="policies.html"><i class="la la-file-pdf-o"></i> <span>Policies</span></a>
-							</li>
-							<li class="submenu">
+							</li> -->
+							<!-- <li class="submenu">
 								<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="expense-reports.html"> Expense Report </a></li>
@@ -131,7 +131,7 @@
 									<li><a href="leave-reports.html"> Leave Report </a></li>
 									<li><a href="daily-reports.html"> Daily Report </a></li>
 								</ul>
-							</li>
+							</li> -->
 							
 						</ul>
 					</div>

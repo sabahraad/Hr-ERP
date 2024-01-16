@@ -53,7 +53,7 @@
                                     <label class="col-form-label">Employee Name</label>
                                     <input class="form-control" type="text" name= "employeeName" value="{{$raw->employee_name}}" disabled>
                                     <label class="col-form-label">Check In Time</label>
-                                    <input class="form-control" type="datetime-local" name= "created_at" value="{{$raw->created_at}}">
+                                    <input id="created_at" class="form-control" type="datetime-local" name= "created_at" value="{{$raw->created_at}}">
                                     @php
                                         if($raw->OUT == Null){
                                             $raw->updated_at = Null;
@@ -85,9 +85,12 @@
         var jwtToken = "{{ $jwtToken }}";
     $('#msform').submit(function(e) {
         e.preventDefault();
+        var created_at = $('#created_at').val();
+
+        console.log(created_at);
 
         var formData = new FormData(this);
-
+        console.log(formData);
         $.ajax({
                 url: 'https://hrm.aamarpay.dev/api/attendance-edited-by-HR', 
                 type: 'POST',
