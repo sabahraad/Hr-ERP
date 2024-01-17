@@ -80,6 +80,11 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/save-mock-person-details', [App\Http\Controllers\AuthController::class, 'saveMockPersonDetails']);
     Route::get('/show-mock-person-details', [App\Http\Controllers\AuthController::class, 'showMockPersonDetails']);
     
+    //Visit
+    Route::post('/create-visit', [App\Http\Controllers\visitController::class, 'createVisit']);
+    Route::get('/visit-list', [App\Http\Controllers\visitController::class, 'visitList']);
+    
+    
 });
 
 //All the routes are only accessable for HR 
