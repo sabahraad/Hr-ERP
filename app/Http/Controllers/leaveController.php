@@ -324,6 +324,7 @@ class leaveController extends Controller
                 ->where('leave_approves.status', '=', 0)
                 ->where('approver_emp_id','=',$emp_id)
                 ->whereColumn('leave_approves.priority', '=', 'temp_leave.min_priority')
+                ->orderBy('leave_applications.created_at', 'desc')
                 ->get();
         // dd($result);
         if(!$result){
