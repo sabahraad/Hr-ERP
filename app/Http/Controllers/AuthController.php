@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
+use App\Models\Mockdetails;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -141,6 +142,28 @@ class AuthController extends Controller
             'expires_in' => Auth()->factory()->getTTL(),
             'user' => auth()->user()
         ]);
+    }
+
+    public function saveMockPersonDetails(Request $request){
+        $data = new Mockdetails();
+        $data->emp_id = $request->emp_id;
+        $data->emp_name = $request->name;
+        $data->email = $request->email;
+        $data->company_id = $request->company_id;
+        $data->save();
+        return response()->json([
+            'message'=>'Mock Person Data Has Been Stored Successfully',
+            'data'=>$data
+        ],201);
+    }
+
+    public function showMockPersonDetails(){
+        $company_id = auth()->user()->company_id;
+        $data = Mockdetails::where('company_id',$company_id)->get();
+        return response()->json([
+            'message'=>'List of People who have try to Mock',
+            'data'=>$data
+        ],200);
     }
 
    

@@ -26,7 +26,7 @@ class attendanceController extends Controller
 
     protected $validationRules = [
         'latitude' => 'required|numeric ',
-        'longitude' => 'required|numeric    ',
+        'longitude' => 'required|numeric',
         'action' => 'required|integer',
         'reason' => 'string', 
         'edit_reason' => 'string', 

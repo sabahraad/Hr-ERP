@@ -49,4 +49,8 @@ class companyController extends Controller
         $userDetails = json_decode($response,true);
         return view('frontend.company',compact('dataArray','userDetails'), ['jwtToken' => $access_token]);
     }
+
+    public function privacyPolicy(){
+        return view('privacyPolicy');
+    }
 }

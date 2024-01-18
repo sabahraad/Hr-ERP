@@ -76,6 +76,18 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     //MOTIVATION QUOTE
     Route::post('/saveMotivationalQuote', [App\Http\Controllers\motivationalSpeechController::class, 'saveMotivationalQuote']);
 
+    //MOCK DETAILS
+    Route::post('/save-mock-person-details', [App\Http\Controllers\AuthController::class, 'saveMockPersonDetails']);
+    Route::get('/show-mock-person-details', [App\Http\Controllers\AuthController::class, 'showMockPersonDetails']);
+    
+    //Visit
+    Route::post('/create-visit', [App\Http\Controllers\visitController::class, 'createVisit']);
+    Route::get('/visit-list', [App\Http\Controllers\visitController::class, 'visitList']);
+    Route::get('/individual-visit-deatils/{id}', [App\Http\Controllers\visitController::class, 'individualVisitDeatils']);
+    Route::post('/complete-visit/{id}', [App\Http\Controllers\visitController::class, 'completeVisit']);
+    Route::post('/edit-visit/{id}', [App\Http\Controllers\visitController::class, 'editVisit']);
+    Route::get('/complete-visit-list', [App\Http\Controllers\visitController::class, 'completeVisitList']);
+
     
 });
 

@@ -78,45 +78,8 @@
 				
 				<!-- Header Menu -->
 				<ul class="nav user-menu">
-				
-					<!-- Search -->
-					<li class="nav-item">
-						<div class="top-nav-search">
-							<a href="javascript:void(0);" class="responsive-search">
-								<i class="fa-solid fa-magnifying-glass"></i>
-						   </a>
-							<form action="search.html">
-								<input class="form-control" type="text" placeholder="Search here">
-								<button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-							</form>
-						</div>
-					</li>
-					<!-- /Search -->
-				
-					<!-- Flag -->
-					<li class="nav-item dropdown has-arrow flag-nav">
-						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-							<img src="{{ asset('images/favicon.png') }}" alt="Flag" height="20"> <span>English</span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-right">
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="{{ asset('images/favicon.png') }}"alt="Flag" height="16"> English
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="{{ asset('images/favicon.png') }}" alt="Flag" height="16"> French
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="{{ asset('images/favicon.png') }}" alt="Flag" height="16"> Spanish
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="{{ asset('images/favicon.png') }}" alt="Flag" height="16"> German
-							</a>
-						</div>
-					</li>
-					<!-- /Flag -->
-				
 					<!-- Notifications -->
-					<li class="nav-item dropdown">
+					<!-- <li class="nav-item dropdown">
 						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 							<i class="fa-regular fa-bell"></i> <span class="badge rounded-pill">3</span>
 						</a>
@@ -198,11 +161,11 @@
 								<a href="activities.html">View all Notifications</a>
 							</div>
 						</div>
-					</li>
+					</li> -->
 					<!-- /Notifications -->
 					
 					<!-- Message Notifications -->
-					<li class="nav-item dropdown">
+					<!-- <li class="nav-item dropdown">
 						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 							<i class="fa-regular fa-comment"></i> <span class="badge rounded-pill">8</span>
 						</a>
@@ -304,7 +267,7 @@
 								<a href="chat.html">View all Messages</a>
 							</div>
 						</div>
-					</li>
+					</li> -->
 					<!-- /Message Notifications -->
 
 					<li class="nav-item dropdown has-arrow main-drop">
@@ -315,8 +278,8 @@
 							<span>{{ session('name') }}</span>
 						</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="profile.html">My Profile</a>
-							<a class="dropdown-item" href="settings.html">Settings</a>
+							<a class="dropdown-item" href="{{route('company')}}">Profile</a>
+							<!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
 							<a class="dropdown-item" href="{{route('logout')}}">Logout</a>
 						</div>
 					</li>
@@ -327,8 +290,8 @@
 				<div class="dropdown mobile-user-menu">
 					<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a class="dropdown-item" href="profile.html">My Profile</a>
-						<a class="dropdown-item" href="settings.html">Settings</a>
+						<a class="dropdown-item" href="{{route('company')}}"> Profile</a>
+						<!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
 						<a class="dropdown-item" href="{{route('logout')}}">Logout</a>
 					</div>
 				</div>

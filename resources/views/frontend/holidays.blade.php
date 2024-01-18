@@ -33,8 +33,7 @@
                                         <th>#</th>
                                         <th>Title </th>
                                         <th>Holiday Date</th>
-                                        <th>Day</th>
-                                        <th class="text-end">Action</th>
+                                        <th >Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,8 +45,7 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$holiday['reason']}}</td>
                                         <td>{{$holiday['date']}}</td>
-                                        <td>jdnv</td>
-                                        <td class="text-end">
+                                        <td >
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
@@ -86,6 +84,7 @@
                                 </div>
                                 <div class="input-block mb-3">
                                     <label class="col-form-label">Holiday Date <span class="text-danger">*</span></label>
+                                    <!-- <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" ></div> -->
                                     <div class="cal-icon"><input class="form-control " name="date" type="date"></div>
                                 </div>
                                 <div class="submit-section">
@@ -117,7 +116,9 @@
                                 </div>
                                 <div class="input-block mb-3">
                                     <label class="col-form-label">Holiday Date <span class="text-danger">*</span></label>
-                                    <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" type="date"></div>
+                                    <div class="cal-icon"><input class="form-control " name="date" type="date"></div>
+
+                                    <!-- <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" ></div> -->
                                 </div>
                                 <input id ="holidays_id" class="form-control" name="holidays_id" type="hidden">
                                 <div class="submit-section">

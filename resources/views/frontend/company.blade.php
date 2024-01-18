@@ -78,9 +78,9 @@
 							<div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
 								<ul class="nav nav-tabs nav-tabs-bottom">
 									<li class="nav-item"><a href="#emp_profile" data-bs-toggle="tab" class="nav-link active">Profile</a></li>
-									<li class="nav-item"><a href="#emp_projects" data-bs-toggle="tab" class="nav-link">Projects</a></li>
+									<!-- <li class="nav-item"><a href="#emp_projects" data-bs-toggle="tab" class="nav-link">Projects</a></li>
 									<li class="nav-item"><a href="#bank_statutory" data-bs-toggle="tab" class="nav-link">Bank & Statutory <small class="text-danger">(Admin Only)</small></a></li>
-									<li class="nav-item"><a href="#emp_assets" data-bs-toggle="tab" class="nav-link">Assets</a></li>
+									<li class="nav-item"><a href="#emp_assets" data-bs-toggle="tab" class="nav-link">Assets</a></li> -->
 								</ul>
 							</div>
 						</div>
@@ -94,7 +94,7 @@
 								<div class="col-md-6 d-flex">
 									<div class="card profile-box flex-fill">
 										<div class="card-body">
-											<h3 class="card-title">HR Informations <a href="#" class="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i class="fa-solid fa-pencil"></i></a></h3>
+											<h3 class="card-title">HR Informations </h3>
 											<ul class="personal-info">
 												<li>
 													<div class="title">Name</div>
@@ -102,7 +102,7 @@
 													<div class="text">{{$userDetails['emp_details'][0]['name']}}</div>
 												</li>
 												<li>
-													<div class="title">email</div>
+													<div class="title">Email</div>
 													<div class="text">{{$userDetails['emp_details'][0]['email']}}</div>
 												</li>
 												<li>
@@ -110,19 +110,19 @@
 													<div class="text">{{$userDetails['emp_details'][0]['phone_number']}}</div>
 												</li>
 												<li>
-													<div class="title">deptTitle</div>
+													<div class="title">Department</div>
 													<div class="text"><a href="">{{$userDetails['emp_details'][0]['deptTitle']}}</a></div>
 												</li>
 												<li>
-													<div class="title">desigTitle</div>
+													<div class="title">Designation</div>
 													<div class="text">{{$userDetails['emp_details'][0]['desigTitle']}}</div>
 												</li>
 												<li>
-													<div class="title">gender</div>
+													<div class="title">Gender</div>
 													<div class="text">{{$userDetails['emp_details'][0]['gender']}}</div>
 												</li>
 												<li>
-													<div class="title">dob</div>
+													<div class="title">Date of Birth</div>
 													<div class="text">{{$userDetails['emp_details'][0]['dob']}}</div>
 												</li>
 											</ul>

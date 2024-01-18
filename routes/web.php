@@ -47,8 +47,11 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::post('/editOfficeNotice/{id}', [App\Http\Controllers\frontendController\officeNoticeController::class, 'editOfficeNotice'])->name('editOfficeNotice');
     Route::get('/editAttendance/{id}', [App\Http\Controllers\frontendController\attendanceController::class, 'editAttendance'])->name('editAttendance');
 
-    Route::get('/leave-application-list',[\App\Http\Controllers\FrontendController\leaveController::class,'allLeaveApplication'])->name('allLeaveApplication');
+    Route::get('/leave-application-list',[\App\Http\Controllers\frontendController\leaveController::class,'allLeaveApplication'])->name('allLeaveApplication');
 });
 
 
 Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController::class, 'resetPassword'])->name('resetPassword');
+Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyController::class, 'privacyPolicy']);
+Route::get('/pay', [App\Http\Controllers\forgetPasswordEmailController::class, 'pay']);
+Route::post('/response', [App\Http\Controllers\forgetPasswordEmailController::class, 'response'])->name('response');
