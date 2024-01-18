@@ -150,4 +150,64 @@ class forgetPasswordEmailController extends Controller
     public function resetPassword(){
         return view('resetPassword');
     }
+    
+    public function pay(){
+        $curl = curl_init();
+        // bdjobs 247b090b50e096c040a2fee230d1b8ef
+        $tran_id = rand();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://secure.aamarpay.com/jsonpost.php',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>'{
+            "store_id": "bdjobs",
+            "tran_id": "'.$tran_id .'",
+            "success_url": "'.route('response').'",
+            "fail_url": "'.route('response').'",
+            "cancel_url": "http://www.merchantdomain.com/can cellpage.html",
+            "amount": "10.0",
+            "currency": "BDT",
+            "signature_key": "247b090b50e096c040a2fee230d1b8ef",
+            "desc": "Merchant Registration Payment",
+            "cus_name": "Sabah Raad",
+            "cus_email": "raad@aamarpay.com",
+            "cus_add1": "Paradise Tower",
+            "cus_add2": "Uttora",
+            "cus_city": "Dhaka",
+            "cus_state": "Dhaka",
+            "cus_postcode": "1206",
+            "cus_country": "Bangladesh",
+            "cus_phone": "+8801782733505",
+            "type": "json"
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $responseObj = json_decode($response);
+
+        if(isset($responseObj->payment_url) && !empty($responseObj->payment_url)) {
+
+        $paymentUrl = $responseObj->payment_url;
+        return header('Location: '. $paymentUrl);
+        exit();
+            
+        }else{
+            echo $response;
+        }
+
+    }
+
+    public function response(Request $request){
+        dd($request);
+    }
 }

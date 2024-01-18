@@ -36,7 +36,7 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Employee Name</th>
-                                        <th>Strat Date</th>
+                                        <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Count</th>
                                         <th>Leave Reason</th>
