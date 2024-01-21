@@ -276,10 +276,10 @@ class leaveController extends Controller
 
     public function leaveApplicationsList($id){
         $data = leaveApplication::where('emp_id', $id)
-                    ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
-                    ->select('leave_applications.*','leave_settings.leave_type')
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+                ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
+                ->select('leave_applications.*', 'leave_settings.leave_type')
+                ->orderBy('leave_applications.created_at', 'desc')
+                ->get();
         if(!$data){
             return response()->json([
                 'message'=> 'You have not requested any leave yet'
@@ -327,6 +327,20 @@ class leaveController extends Controller
                 ->orderBy('leave_applications.created_at', 'desc')
                 ->get();
         // dd($result);
+        
+        // foreach($result as $raw){
+        //     if($raw->emp_id == $emp_id){
+        //         LeaveApprove::where('leave_approves_id', $raw->leave_approves_id)->update(['status' => $approve]);
+        //     }
+        // }
+        $result->each(function ($raw, $key) use ($emp_id, $result) {
+            $approve = 1;
+            if ($raw->emp_id == $emp_id) {
+                LeaveApprove::where('leave_approves_id', $raw->leave_approves_id)->update(['status' => $approve]);
+                // Remove the current $raw from $result
+                $result->forget($key);
+            }
+        });
         if(!$result){
             return response()->json([
                 'message' => 'No Request for approvel yet',
@@ -383,6 +397,7 @@ class leaveController extends Controller
                             ->whereHas('employee', function ($query) use ($company_id) {
                                 $query->where('company_id', $company_id);
                             })
+                            ->orderBy('created_at', 'desc')
                             ->get();
 
         if($leaveApplications){
