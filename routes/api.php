@@ -55,6 +55,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/expenses-list', [App\Http\Controllers\expensesController::class, 'expensesList']);
     Route::post('/create-expenses', [App\Http\Controllers\expensesController::class, 'createExpenses']);
     Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
+    Route::get('/catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
 
     //Per month calculation
     Route::post('/month-wise-off-day-list', [App\Http\Controllers\leaveController::class, 'monthWiseOffDayList']);
@@ -88,7 +89,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/edit-visit/{id}', [App\Http\Controllers\visitController::class, 'editVisit']);
     Route::get('/complete-visit-list', [App\Http\Controllers\visitController::class, 'completeVisitList']);
 
-    
+    //meeting
+    Route::post('/create-meeting', [App\Http\Controllers\meetingController::class, 'createMeeting']);
+    Route::get('/meeting-list', [App\Http\Controllers\meetingController::class, 'meetingList']);
+    Route::post('/edit-meeting/{id}', [App\Http\Controllers\meetingController::class, 'editMeeting']);
+    Route::get('/creator-meeitng-list', [App\Http\Controllers\meetingController::class, 'creatorMeeitngList']);
+
 });
 
 //All the routes are only accessable for HR 
