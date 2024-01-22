@@ -202,8 +202,8 @@ class visitController extends Controller
     public function completeVisitList(){
         $user_id = auth()->user()->id;
         $emp_id= Employee::where('id',$user_id)->value('emp_id');
-        $data=Visit::where('status','=','complete')
-                    ->where('emp_id',$emp_id)
+        $data=Visit::whereIn('status', ['complete', 'cancel'])
+                    ->where('emp_id', $emp_id)
                     ->get();
         if(count($data)==0){
             return response()->json([

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Expenses;
+use App\Models\ExpensesCatagory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,8 @@ class expensesController extends Controller
     public function createExpenses(Request $request){
         $validator = Validator::make($request->all(), [
             'description' => 'string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'catagory'=>'required|string',
+            'expenses_catagories_id' => 'required|integer',
             'total_amount' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
             'attachment' => 'mimes:jpg,jpeg,png,gif,svg,pdf,xlsx,xls'
         ]);
@@ -31,8 +32,8 @@ class expensesController extends Controller
         $emp_id = Employee::where('id', $user_id)->value('emp_id');
         $data = new Expenses();
         $data->description = $request->description;
-        $data->start_date = $request->start_date;
-        $data->end_date = $request->end_date;
+        $data->catagory = $request->catagory;
+        $data->expenses_catagories_id = $request->expenses_catagories_id;
         $data->total_amount = $request->total_amount;
         if($request->has('attachment')){
             
@@ -65,8 +66,8 @@ class expensesController extends Controller
     public function editExpenses(Request $request,$id){
         $validator = Validator::make($request->all(), [
             'description' => 'string',
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'catagory'=>'required|string',
+            'expenses_catagories_id' => 'required|integer',
             'total_amount' => 'regex:/^\d{1,8}(\.\d{1,2})?$/',
             'attachment' => 'mimes:jpg,jpeg,png,gif,svg,pdf,xlsx,xls'
         ]);
@@ -82,9 +83,9 @@ class expensesController extends Controller
         $emp_id = Employee::where('id', $user_id)->value('emp_id');
         $data = Expenses::find($id);
         $data->description = $request->description ?? $data->description;
-        $data->start_date = $request->start_date ?? $data->start_date;
-        $data->end_date = $request->end_date ??  $data->end_date;
         $data->total_amount = $request->total_amount ?? $data->total_amount;
+        $data->catagory = $request->catagory?? $data->catagory;
+        $data->expenses_catagories_id  = $request->expenses_catagories_id ?? $data->expenses_catagories_id ;
         if($request->has('attachment')){
             
             $extension = $request->attachment->getClientOriginalExtension();
@@ -116,7 +117,9 @@ class expensesController extends Controller
     public function expensesList(){
         $user_id = auth()->user()->id;
         $emp_id = Employee::where('id', $user_id)->value('emp_id');
-        $data = Expenses::where('emp_id',$emp_id)->get();
+        $data = Expenses::where('emp_id',$emp_id)
+                        ->orderBy('created_at','desc')
+                        ->get();
         if(count($data) == 0){
             return response()->json([
                 'message'=>'No data available',
@@ -133,9 +136,17 @@ class expensesController extends Controller
     }
 
     public function deleteExpenses($id){
-        Expenses::destroy($id);
-        return response()->json([
-        ],204);
+        $data = Expenses::where('expenses_id',$id)->value('status');
+        if($data == 'pending'){
+            Expenses::destroy($id);
+            return response()->json([
+            ],204);
+        }else{
+            return response()->json([
+                'message'=>'You can not delete expense deatils bacause it is already rejected or approved'
+            ],200);
+        }
+        
     }
 
     public function allExpensesList(){
@@ -187,5 +198,23 @@ class expensesController extends Controller
             ],400);
         }
 
+    }
+
+    public function catagoryList(){
+        $company_id = auth()->user()->company_id;
+        $data = ExpensesCatagory::where('company_id',$company_id)->get();
+        if(empty($data)){
+            return response()->json([
+                'message'=>'No Catagory is set yet',
+                'data'=>$data
+
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Catagory List',
+                'data'=>$data
+
+            ],200);
+        }
     }
 }

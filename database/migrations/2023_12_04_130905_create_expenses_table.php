@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('end_date');
             $table->decimal('total_amount', 10, 2);
             $table->string('attachment')->nullable();
+            $table->string('catagory');
+            $table->bigInteger('expenses_catagories_id')->unsigned();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->bigInteger('emp_id')->unsigned();
             $table->foreign('emp_id')->references('emp_id')->on('employees')->onDelete('cascade');
