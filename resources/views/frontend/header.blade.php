@@ -12,28 +12,28 @@
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
-<!-- Fontawesome CSS -->
-<link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
-<link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
-<!-- Lineawesome CSS -->
-<link rel="stylesheet" href="{{ asset('css/line-awesome.min.css') }}">
-<link rel="stylesheet" href="{{ asset('css/material.css') }}">
+		<!-- Lineawesome CSS -->
+		<link rel="stylesheet" href="{{ asset('css/line-awesome.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/material.css') }}">
 
-<!-- Datatable CSS -->
-<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+		<!-- Datatable CSS -->
+		<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
 
-<!-- Select2 CSS -->
-<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
-<!-- Datetimepicker CSS -->
-<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
+		<!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
 
-<!-- Main CSS -->
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <style> 
 [data-topbar=light] body .header {
   background: #ff9b44;

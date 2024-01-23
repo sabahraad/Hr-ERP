@@ -22,6 +22,7 @@ class employeeController extends Controller
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
             'dob' => 'string',
+            'joining_date' => 'date',
             'dept_id' => 'required|integer',
             'designation_id' => 'required|integer',
             'phone_number' => 'digits:11',
@@ -64,6 +65,7 @@ class employeeController extends Controller
         $data->name = $request->name;
         $data->gender = $request->gender;
         $data->dob = $request->dob;
+        $data->joining_date = $request->joining_date;
         $data->phone_number = $request->phone_number;
         $data->dept_id = $request->dept_id;
         $data->designation_id = $request->designation_id;
@@ -126,7 +128,8 @@ class employeeController extends Controller
             'officeEmployeeID' => 'string',
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
-            'dob' => 'string',
+            'dob' => 'date',
+            'joining_date' =>'date',
             'dept_id' => 'required|integer',
             'phone_number' => 'digits:11',
             'designation_id' => 'required|integer',
@@ -177,6 +180,7 @@ class employeeController extends Controller
         $data->name = $request->name;
         $data->gender = $request->gender ?? $data->gender;
         $data->dob = $request->dob ?? $data->dob;
+        $data->joining_date = $request->joining_date ?? $data->joining_date;
         $data->phone_number = $request->phone_number ?? $data->phone_number;
         $data->dept_id = $request->dept_id;
         $data->designation_id = $request->designation_id;
