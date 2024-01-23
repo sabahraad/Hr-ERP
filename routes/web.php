@@ -55,3 +55,5 @@ Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController
 Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyController::class, 'privacyPolicy']);
 Route::get('/pay', [App\Http\Controllers\forgetPasswordEmailController::class, 'pay']);
 Route::post('/response', [App\Http\Controllers\forgetPasswordEmailController::class, 'response'])->name('response');
+
+Route::get('/Time-Wise', [App\Http\Controllers\frontendController\timeWiseController::class, 'timeWise']);
