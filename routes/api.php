@@ -191,6 +191,12 @@ Route::post('/attendance-edited-by-HR', [App\Http\Controllers\attendanceControll
 Route::get('/all-leave-application-only-for-hr', [App\Http\Controllers\leaveController::class, 'allLeaveApplication']);
 Route::get('/leave-application-details/{id}', [App\Http\Controllers\leaveController::class, 'leaveApplicationDetails']);
 
+//salary setting
+Route::post('/create-salary-setting', [App\Http\Controllers\salarySettingController::class, 'createSalarySetting']);
+Route::get('/show-salary-setting', [App\Http\Controllers\salarySettingController::class, 'showSalarySetting']);
+Route::post('/edit-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'editSalarySetting']);
+Route::delete('/delete-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'deleteSalarySetting']);
+
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');

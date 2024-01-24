@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->bigIncrements('emp_id');
             $table->string('officeEmployeeID')->nullable();
+            $table->date('joining_date');
             $table->string('name');
             $table->string('gender')->nullable();
-            $table->string('dob')->nullable();
+            $table->date('dob')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('image')->nullable();
             $table->boolean('status')->default(1);
