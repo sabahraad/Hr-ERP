@@ -43,10 +43,6 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        # DB_DATABASE=hrmdb
-        # DB_USERNAME=hrmuser
-        # DB_PASSWORD=dFaXC2YSrPTy4F8m
-
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
