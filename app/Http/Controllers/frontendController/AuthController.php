@@ -131,6 +131,7 @@ class AuthController extends Controller
         $data->companyName = $request->companyName;
         $data->logo = $imagePath;
         $data->address = $request->address;
+        $data->company_status = 'pending';
         $data->contactNumber = $request->contactNumber;
         $data->companyDetails = $request->companyDetails;
         $data->save();

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\Payslip;
 use App\Models\PreviousSalaryHistroy;
 use App\Models\Salary;
+use App\Models\SalarySetting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -15,10 +17,10 @@ class SalaryController extends Controller
     }
 
     public function employeeSalaryDetails($id){
-        $data = Salary::where('emp_id', $id)
-                        ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
-                        ->select('salaries.*', 'employees.*')
-                        ->get();
+        $data =Salary::where('salaries.emp_id', $id)
+                    ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
+                    ->select('salaries.*', 'employees.*')
+                    ->get();
         if(count($data) == 0){
             return response()->json([
                 'message'=>'No Salary Details Found For This Employee',
@@ -26,7 +28,7 @@ class SalaryController extends Controller
             ],200);
         }else{
             return response()->json([
-                'message'=>'No Salary Details Found For This Employee',
+                'message'=>'Salary Details',
                 'data'=>$data
             ],200);
         }
@@ -84,8 +86,13 @@ class SalaryController extends Controller
         $year = $request->year;
         $company_id = auth()->user()->company_id;
         $salary = Salary::where('company_id',$company_id)->get();
+        if(count($salary) == 0){
+            return response()->json([
+                'message'=>'Please set salary for employee first'
+            ],200);
+        }
         foreach($salary as $sal){
-            if (!$this->payslipExists($sal->emp_id, $sal->company_id)) {
+            if (!$this->payslipExists($sal->emp_id, $sal->company_id,$month,$year)) {
                 $data = new Payslip();
                 $data->salary = $sal->salary;
                 $data->month = $request->month;
@@ -101,29 +108,98 @@ class SalaryController extends Controller
                             ->get();
 
         return response()->json([
-            'message'=>'Payslip List for'.$request->month,
+            'message'=>'Payslip List for'.' '.$request->month,
             'data'=>$payslip
         ],201);
     }
 
-    private function payslipExists($empId, $companyId)
+    private function payslipExists($empId, $companyId,$month,$year)
     {
         return Payslip::where('emp_id', $empId)
             ->where('company_id', $companyId)
-            ->where('month', now()->format('m'))
-            ->where('year', now()->format('Y'))
+            ->where('month', $month)
+            ->where('year', $year)
             ->exists();
     }
 
     public function adjustPayslip(Request $request,$id){
         $data = Payslip::find($id);
-        $data->salary = $request->salary;
+        $data->deducted_amount = $request->deducted_amount;
         $data->adjustment_reason = $request->adjustment_reason;
         $data->save();
         return response()->json([
             'message'=>'Payslip adjusted successfully',
             'data'=>$data
         ],200);
+    }
+
+    public function employeeSalaryHistory($id){
+        $data = PreviousSalaryHistroy::where('emp_id',$id)->get();
+        if(count($data)==0){
+            return response()->json([
+                'message'=>'no data found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Previous Salary History',
+                'data'=>$data
+            ],200);
+        }
+    }
+
+    public function payslipList(){
+        $user_id = auth()->user()->id;
+        $emp_id = Employee::where('id',$user_id)->value('emp_id');
+        $data = Payslip::where('emp_id',$emp_id)->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Payslip List',
+                'data'=>$data
+            ],200);
+        }
+    }
+
+    public function payslipDetails($id){
+        $company_id = auth()->user()->company_id;
+        $data = Payslip::find($id);
+        $salary_setting = SalarySetting::where('company_id',$company_id)->first();
+        $salaryComponents = $salary_setting->components;
+        $deducted_amount = $data->deducted_amount;
+        $salary = $data->salary; 
+        $adjustment_reason = $data->adjustment_reason;
+        $salaryDistribution = [];
+        foreach ($salaryComponents as $component) {
+            $componentName = $component['name'];
+            $componentPercentage = $component['percentage'];
+            $componentAmount = ($componentPercentage / 100) * $salary;
+            $salaryDistribution[$componentName] =  [
+                'amount' => $componentAmount,
+                'percentage' => $componentPercentage,
+            ];
+        }
+
+        $employeeDetails = Employee::where('employees.emp_id', $data->emp_id)
+                                    ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
+                                    ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
+                                    ->get(['employees.*','departments.deptTitle', 'designations.desigTitle']);
+
+        return response()->json([
+            'message'=>'Payslip Details',
+            'data'=>
+                [
+                    'employee details' => $employeeDetails,
+                    'salaryDistribution' => $salaryDistribution,
+                    'Salary'=>$salary,
+                    'deducted_amount' => $deducted_amount,
+                    'adjustment_reason'=> $adjustment_reason
+                ]
+            ],200);
     }
 
 }
