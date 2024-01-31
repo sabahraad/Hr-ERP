@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Smart HR</title>
+        <meta name="robots" content="noindex">
+        <title>Time Wise</title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Icon-512x512.png') }}">
 
         <!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
@@ -28,7 +27,7 @@
         <!-- Header-->
 
         <!-- Desktop Header -->
-        <div class="smarthrlanding " >
+        <div class="smarthrlanding" >
             <div class="desktop-heading-page">
                 <header id="header" class="site-header header-landing">
                     <div class="container">
@@ -37,7 +36,7 @@
                             <div class="main-header-top" data-aos="fade-down" data-aos-duration="2000">
                                 <div class="menu-header">
                                     <div class="logo">
-                                        <img src="{{asset('images/195x47.png')}}" alt="logo">
+                                        <img src="{{asset('images/TimeWise-Logo.png')}}" style="width: 117px;" alt="logo">
                                     </div>
 
                                     <div class="menu">
@@ -51,16 +50,14 @@
                                             <li>
                                                 <a href="#reviews" class="scrollTo">Reviews</a>
                                             </li>
-                                            <li>
-                                                <a href="#blog" class="scrollTo">Blog</a>
-                                            </li>
+                                            
                                             <li>
                                                 <a href="#contactus" class="scrollTo">Contact Us</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="try-free-link">
-                                        <a class="btn btn-primary right-header-button" href="https://themeforest.net/item/smarthr-bootstrap-admin-panel-template/21153150" target="_blank"  role="button">Try It Free</a>
+                                        <a class="btn btn-primary right-header-button" href="https://themeforest.net/item/smarthr-bootstrap-admin-panel-template/21153150" target="_blank"  role="button">Registration Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +124,7 @@
 
             <div class="landing-page-content" data-aos="fade-up" data-aos-duration="2000">
                 <div class="container">
-                    <h2>The Processes more <span> important from SmartHR Here! </span></h2>
+                    <h2>The Processes more <span> important from TimeWise Here! </span></h2>
                     <p>Manage all your people in one place.</p>
                     <a class="btn btn-primary starting-free scrollTo" href="#contactus" role="button">Get Started For Free</a>
                 </div>
@@ -139,10 +136,10 @@
                         <div class="col-lg-10 col-sm-10 col-9" data-aos="fade-up" data-aos-duration="2000">
                             <div class="admin-slider">
                                 <div class="owl-carousel my-carousel bannercar">
-                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/slider-01.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/slider-02.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/slider-03.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
                                 </div>
                             </div>
                         </div>
@@ -153,8 +150,8 @@
         <!-- / Header -->
 
         <!-- Feature -->
-        <div class="choosing">
-            <div class="container">
+        <div class="choosing mt-5" id="features">
+            <div class="container mt-5"  >
                 <div class="choosing-content-section" >
                     <div class="row" data-aos="fade-up" data-aos-duration="1000">
                         <div class="commom-title-header d-flex justify-content-center">
@@ -162,10 +159,10 @@
                         </div>
                     </div>
                     <div class="smarthr-features justify-content-center" data-aos="fade-up" data-aos-duration="1000">
-                        <h2 class="common-content-header">SmartHR Providing You <span> Best Features</span></h2>
+                        <h2 class="common-content-header">TimeWise Providing You <span> Best Features</span></h2>
                     </div>
                     <div class="feature-detail-content" data-aos="fade-up" data-aos-duration="1000">
-                        <p>Looking to automate HR management template? SmartHR is for you. This is a project management and HR automation template that can be used for the HRMS system.</p>
+                        <p>Looking to automate HR management System? TimeWise is for you. This is a HR automation system that can be used for the HRMS system.</p>
                     </div>
                     <div class="d-flex justify-content-around feature-list">
                         <div class="col-lg-3 col-md-3 col-12">
@@ -223,56 +220,6 @@
         </div>
         <!-- / Feature -->
 
-        <!-- Core Features -->
-        <div class="core-features " id="features" data-aos="fade-up" data-aos-duration="2000">
-            <div class="container">
-                <div class="row">
-                    <div class="core-feature-section col-12">
-                        <div class="commom-title-header-bg-white d-flex justify-content-center">
-                            <h2>Features</h2>
-                        </div>
-                        <h3>Our Core Features</h3>
-                        <p>Looking to automate HR management template? SmartHR is for you. This is a project management and HR automation template that can be used for the HRMS system.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- / Core Features -->
-
-        <!-- Tab Section -->
-        <div class="tabs list-detail" data-aos="fade-up" data-aos-duration="2000">
-            <div class="container">
-                <ul class="nav nav-pills features-list mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-client" type="button" role="tab" aria-controls="pills-client" aria-selected="true">Client Management</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-employee" type="button" role="tab" aria-controls="pills-employee" aria-selected="false">Employee Management</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-project-tab" data-bs-toggle="pill" data-bs-target="#pills-project" type="button" role="tab" aria-controls="pills-project" aria-selected="false">Project Management</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-video-tab" data-bs-toggle="pill" data-bs-target="#pills-video" type="button" role="tab" aria-controls="pills-video" aria-selected="false">Video Management</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-audio-tab" data-bs-toggle="pill" data-bs-target="#pills-audio" type="button" role="tab" aria-controls="pills-audio" aria-selected="false">Audio Management</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">			
-                    <div class="tab-pane fade show active" id="pills-client" role="tabpanel" aria-labelledby="pills-home-tab">
-						<img src="{{asset('images/corefeatures.png')}}" alt="core-features">
-					</div>
-                    <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-profile-tab">
-						<img src="{{asset('images/feature-02.png')}}" alt="core-features">
-					</div>
-                    <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab"><img src="{{asset('images/feature-03.png')}}" alt="core-features"></div>
-                    <div class="tab-pane fade" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab"><img src="{{asset('images/feature-05.png')}}" alt="core-features"></div>
-                    <div class="tab-pane fade" id="pills-audio" role="tabpanel" aria-labelledby="pills-audio-tab"><img src="{{asset('images/feature-04.png')}}" alt="core-features"></div>
-                </div>
-            </div>
-        </div>
-        <!-- / Tab Section -->
 
         <!-- Feature List -->
         <div class="feature-list-feature" >
@@ -282,8 +229,7 @@
                         <div class="commom-title-header d-flex justify-content-center" >
                             <h2>Feature List</h2>
                         </div>
-                        <h3 class="common-content-header">Features that Help you <span>build better.</span></h3>
-                        <p>Looking to automate HR management template? SmartHR is for you. This is a project management<br> and HR automation template that can be used for the HRMS system.</p>
+                        <h3 class="common-content-header">Features that Help you <span>manage better.</span></h3>
                     </div>
                     <div class="feature-sections">
                         <div class="row" data-aos="fade-up" data-aos-duration="2000">
@@ -390,9 +336,9 @@
                         </div>
 
                         <h3 class="common-content-header">Simple, Fair and Affordable<span>Prices for all.</span></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ad minim veniam.</p>
+                        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ad minim veniam.</p> -->
                     </div>
-                    <div class="pricing-monthly" data-aos="fade-up" data-aos-duration="2000">
+                    <!-- <div class="pricing-monthly" data-aos="fade-up" data-aos-duration="2000">
                         <div class="price-month">
                             <p>Monthly</p>
                         </div>
@@ -410,11 +356,11 @@
                         <div class="price-discount">
                             <a class="btn btn-primary" href="#" role="button" id="discount">Save 30%</a>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="plan-list" data-aos="fade-up" data-aos-duration="2000">
                         <div class="row">
-                            <div class="col-lg-4 col-md-4" >
+                            <div class="col-lg-3 col-md-3" >
                                 <div class="free-plan card">
                                     <div class="card-body price-plans">
                                         <div class="planimagebackground">
@@ -430,16 +376,21 @@
                                             <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
                                         </div>
 
-                                        <small>Free Plan</small>
-                                        <h3>$ 0</h3>
-                                        <em> Free Forever </em>
-                                        <p class="project-plan">For Individuals and small Projects</p>
-                                        <a class="btn btn-primary price-plan" href="#" role="button">Get Started Free</a>
+                                        <small>Package 1</small>
+                                        <h3>BDT 2000</h3>
+                                        <em>100 BDT per user </em>
+                                        
+                                        <ul class="project-plan">
+                                            <li> 1 - 20 Users</li>
+                                            <li>Excluding VAT & Tax</li>
+                                            <li>No Installation Charge*</li>
+                                        </ul>
+                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
                                         <p class="plancharges">No hidden Charges</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4" >
+                            <div class="col-lg-3 col-md-3" >
                                 <div class="free-plan card">
                                     <div class="card-body price-plans">
                                         <div class="planimagebackground">
@@ -455,16 +406,49 @@
                                             <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
                                         </div>
 
-                                        <small>Plus Plan</small>
-                                        <h3>$ 10</h3>
-                                        <em> User / Month </em>
-                                        <p class="project-plan">For Individuals and small Projects</p>
-                                        <a class="btn btn-primary price-plan" href="javascript:void(0)" role="button">Choose Plan</a>
+                                        <small>Package 2</small>
+                                        <h3>BDT 4000 </h3>
+                                        <em> BDT 80 per user</em>
+                                        <ul class="project-plan">
+                                            <li> 1 - 50 Users</li>
+                                            <li>Excluding VAT & Tax</li>
+                                            <li>No Installation Charge*</li>
+                                        </ul>
+                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
                                         <p class="plancharges">No hidden Charges</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 "  >
+                            <div class="col-lg-3 col-md-3" >
+                                <div class="free-plan card">
+                                    <div class="card-body price-plans">
+                                        <div class="planimagebackground">
+                                            <img src="{{asset('images/plan-Intersect.png')}}" alt="img">
+                                        </div>
+                                        <div class="planimagebackground-hidden">
+                                            <img src="{{asset('images/hidden-intersect.png')}}" alt="img">
+                                        </div>
+                                        <div class="planimagecircleleft">
+                                            <img src="{{asset('images/plan-circle-top.png')}}" alt="img">
+                                        </div>
+                                        <div class="planimagecircleright">
+                                            <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
+                                        </div>
+
+                                        <small>Package 3</small>
+                                        <h3>BDT 6000</h3>
+                                        <em> BDT 60 per user</em>
+                                        <ul class="project-plan">
+                                            <li> 1 - 100 Users</li>
+                                            <li>Excluding VAT & Tax</li>
+                                            <li>No Installation Charge*</li>
+                                        </ul>
+                                        <a class="btn btn-primary price-plan" href="javascript:void(0)" role="button">Registration Now</a>
+                                        <p class="plancharges">No hidden Charges</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 "  >
                                 <div class="free-plan card">
                                     <div class="card-body price-plans">
                                         <div class="planimagebackground">
@@ -480,11 +464,15 @@
                                             <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
                                         </div>
                                         <div class="recommended-price">Recommended</div>
-                                        <small>Advance Plan</small>
-                                        <h3>$ 50</h3>
-                                        <em> User / Month </em>
-                                        <p class="project-plan">For Individuals and small Projects</p>
-                                        <a class="btn btn-primary price-plan" href="#" role="button">Choose Plan</a>
+                                        <small>Package 4</small>
+                                        <h3>BDT 0000</h3>
+                                        <em> Price Negotiable </em>
+                                        <ul class="project-plan">
+                                            <li> 1 - 100 ++ Users</li>
+                                            <li>Excluding VAT & Tax</li>
+                                            <li>No Installation Charge*</li>
+                                        </ul>
+                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
                                         <p class="plancharges">No hidden Charges</p>
                                     </div>
                                 </div>
@@ -504,7 +492,7 @@
                         <h2>Our Reviews</h2>
                     </div>
                     <h3 class="common-content-header">What Our Customers Are<span> Talking About</span></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ad minim veniam.</p>
+                    <p>Exceptional HRM system! It has significantly simplified our workforce management, providing intuitive tools and real-time insights. The user-friendly interface and robust features make it a game-changer for our organization, promoting efficiency and employee satisfaction.</p>
                 </div>
             </div>
         </div>
@@ -527,9 +515,9 @@
                                             <div class="customer-quote-one"><img src="{{asset('images/quote-left.png')}}" alt="img"></div>
                                             <div class="ratings text-center">
                                                 <div class="customer-name">
-                                                    <b>L</b>
+                                                    <b>M</b>
                                                 </div>
-                                                <h4>leeibrah</h4>
+                                                <h4>Monir Hossain</h4>
                                                 <div class="rate-me">
                                                     <span class="fa fa-star checked"></span>
                                                     <span class="fa fa-star checked"></span>
@@ -537,7 +525,7 @@
                                                     <span class="fa fa-star checked"></span>
                                                     <span class="fa fa-star checked"></span>
                                                 </div>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                <p>Exceptional HRM system! It has significantly simplified our workforce management, providing intuitive tools and real-time insights. The user-friendly interface and robust features make it a game-changer for our organization, promoting efficiency and employee satisfaction.</p>
                                             </div>
                                         </div>
                                         <div class="list-item text-center item ratings-slider">
@@ -545,9 +533,9 @@
                                             <div class="customer-quote-one"><img src="{{asset('images/quote-left.png')}}" alt="img"></div>
                                             <div class="ratings text-center">
                                                 <div class="customer-name">
-                                                    <b>L</b>
+                                                    <b>N</b>
                                                 </div>
-                                                <h4>Gadgetfix</h4>
+                                                <h4>Nagib Mahfuz Plabon</h4>
                                                 <div class="rate-me">
                                                     <span class="fa fa-star checked"></span>
                                                     <span class="fa fa-star checked"></span>
@@ -555,7 +543,7 @@
                                                     <span class="fa fa-star checked"></span>
                                                     <span class="fa fa-star checked"></span>
                                                 </div>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                <p>Outstanding HRM solution! Our team has experienced a transformative shift in HR operations. The system's seamless integration, comprehensive features, and user-friendly design have not only saved time but also elevated our overall HR processes. Highly recommended for a modern and efficient workplace.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -568,96 +556,19 @@
         </div>
         <!--/ Review Slider -->
 
-        <!-- News & Events -->
-        <div class="news" id="blog">
-            <div class="container">
-                <div class="row" data-aos="fade-up" data-aos-duration="2000">
-                    <div class="commom-title-header d-flex justify-content-center">
-                        <h2>Latest News & Articles</h2>
-                    </div>
-
-                    <h3 class="common-content-header">Checkout What’s Going <span>on in Our Blog</span></h3>
-                    <p class="news-and-event-content">Looking to automate HR management template? SmartHR is for you. This is a project management and HR automation template that can be used for the HRMS system.</p>
-                </div>
-
-                <div class="news-section justify-content-center" data-aos="fade-up" data-aos-duration="2000">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 d-flex">
-                            <div class="list-news card flex-fill">
-                                <div class="card-body news-events">
-                                    <div class="event-news">
-                                        <div class="news-content">
-                                            <div class="news-content-image">
-                                                <button type="button" class="btn btn-info-news-event-bg">05 Sep</button>
-                                                <a href="javascript:void(0)"><img src="{{asset('images/news-people.jpg')}}" alt="news-img"></a>
-                                            </div>
-                                            <h4><a href="javascript:void(0)">Why Web App Maintain Should Be More</a></h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                            <a class="btn btn-secondary news-read-more" href="javascript:void(0)">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 d-flex">
-                            <div class="list-news card flex-fill">
-                                <div class="card-body news-events">
-                                    <div class="event-news">
-                                        <div class="news-content">
-                                            <div class="news-content-image">
-                                                <button type="button" class="btn btn-info-news-event-bg">05 Sep</button>
-                                                <a href="javascript:void(0)"><img src="{{asset('images/news-meeting.jpg')}}" alt="news-img"></a>
-                                            </div>
-                                            <h4><a href="javascript:void(0)">The Right Thinking Biggest Job Picking </a></h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                            <a  class="btn btn-secondary news-read-more" href="javascript:void(0)">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 d-flex">
-                            <div class="list-news card flex-fill">
-                                <div class="card-body news-events">
-                                    <div class="event-news">
-                                        <div class="news-content">
-                                            <div class="news-content-image">
-                                                <button type="button" class="btn btn-info-news-event-bg">05 Sep</button>
-                                                <a href="javascript:void(0)"><img src="{{asset('images/news-customer.jpg')}}" alt="news-img"></a>
-                                            </div>
-                                            <h4><a href="javascript:void(0)">Keeping Your Business And Clients Safe With </a></h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                            <a class="btn btn-secondary news-read-more" href="javascript:void(0)">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="javascript:void(0)" class="btn btn-secondary discover">Discover More</a>
-                </div>
-            </div>
-        </div>
-        <!--/ News & Events -->		
-		
-
         <!-- Subscribe-->
-        <div class="subscribe pt-0" id="contactus">
+        <div class="subscribe pt-0 mt-5" id="contactus">
             <div class="container">
                 <div class="row">
                     <div class="subscribe-content" data-aos="fade-up" data-aos-duration="2000">
                         <div class="commom-title-header-bg-white d-flex justify-content-center">
                             <h2>Stay Tuned</h2>
                         </div>
-                        <h3>Subscribe Our Newsletter</h3>
-                        <p>subscribe to our newsletter and never miss our designs, latest news, etc.,</p>
-						<form method="post">
-							<div class="input-group mb-3 mb-3 email-address">
-								<span class="input-group-text"><img src="{{asset('images/email.png')}}" alt="email-icon"></span>
-								<input type="text" class="form-control" placeholder="Enter your email address" aria-label="Recipient's username" aria-describedby="button-addon2">
-								<button class="btn btn-success border-rad" id="button-addon2">Subscribe</button>
-							</div>
-						</form>
+                        <h3>Corporate Address</h3>
+                        <p>Here's how you can contact us, depending on your needs.</p>
+						<p>Plot 11, Road 2, Sector 3, Paradise Tower, Level-9, Jashimuddin Avenue, Uttara Dhaka-1230</p>
+                        <p>timewise@aamar.digital</p>
+                        <p>09643250250</p>
                     </div>
                 </div>
             </div>
@@ -670,12 +581,12 @@
                 <div class="row align-items-center justify-content-center" >
                     <div class="col-lg-6">
                         <div class="copy-rights">
-                            <p>Copyrights © 2023. All Rights Reserved By TimeWise</p>
+                            <p>Copyrights © 2024. All Rights Reserved By TimeWise</p>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="company-logo">
-                            <p>a product of <img src="{{asset('images/189x55.png')}}" alt="Company-logo"></p>
+                            <p>a product of <img src="{{asset('images/aamarDigital.png')}}" style="width: 226px;" alt="Company-logo"></p>
                         </div>
                     </div>
                 </div>

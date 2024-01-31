@@ -94,6 +94,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/meeting-list', [App\Http\Controllers\meetingController::class, 'meetingList']);
     Route::post('/edit-meeting/{id}', [App\Http\Controllers\meetingController::class, 'editMeeting']);
     Route::get('/creator-meeitng-list', [App\Http\Controllers\meetingController::class, 'creatorMeeitngList']);
+    Route::get('/meeitng-histroy', [App\Http\Controllers\meetingController::class, 'meetingHistroy']);
+
+
+    //payslip user end
+    Route::get('/payslip-list', [App\Http\Controllers\SalaryController::class, 'payslipList']);
+    Route::get('/payslip-details/{id}', [App\Http\Controllers\SalaryController::class, 'payslipDetails']);
 
 });
 
@@ -196,6 +202,21 @@ Route::post('/create-salary-setting', [App\Http\Controllers\salarySettingControl
 Route::get('/show-salary-setting', [App\Http\Controllers\salarySettingController::class, 'showSalarySetting']);
 Route::post('/edit-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'editSalarySetting']);
 Route::delete('/delete-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'deleteSalarySetting']);
+
+//Salary increment 
+Route::get('/employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::post('/change-employee-salary/{id}', [App\Http\Controllers\SalaryController::class, 'changeEmployeeSalary']);
+Route::get('/salary-list', [App\Http\Controllers\SalaryController::class, 'salaryList']);
+Route::get('/employee-salary-history/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryHistory']);
+
+
+//Payslip 
+Route::post('/create-payslip', [App\Http\Controllers\SalaryController::class, 'createPayslip']);
+Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::class, 'adjustPayslip']);
+
+
+
+
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');

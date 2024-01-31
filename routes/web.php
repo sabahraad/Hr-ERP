@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/',[App\Http\Controllers\frontendController\AuthController::class, 'loginForm']);
+Route::get('/', [App\Http\Controllers\frontendController\timeWiseController::class, 'timeWise']);
+// Route::get('/',[App\Http\Controllers\frontendController\AuthController::class, 'loginForm']);
 Route::get('/login', [App\Http\Controllers\frontendController\AuthController::class, 'loginForm'])->name('loginForm');
 Route::get('/login-form', [App\Http\Controllers\frontendController\AuthController::class, 'loginForm'])->name('loginForm');
 
@@ -56,4 +56,3 @@ Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyCo
 Route::get('/pay', [App\Http\Controllers\forgetPasswordEmailController::class, 'pay']);
 Route::post('/response', [App\Http\Controllers\forgetPasswordEmailController::class, 'response'])->name('response');
 
-Route::get('/Time-Wise', [App\Http\Controllers\frontendController\timeWiseController::class, 'timeWise']);
