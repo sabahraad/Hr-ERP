@@ -67,9 +67,10 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
 
     //employee 
     
-    Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
-    Route::post('employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
-    Route::get('employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+    Route::get('/employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
+    Route::post('/employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
+    Route::get('/employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+    Route::get('/emp-list', [App\Http\Controllers\employeeController::class, 'empList']);
 
     //notice
     Route::get('/notice-list', [App\Http\Controllers\officeNoticeController::class, 'noticeList']);
@@ -215,7 +216,8 @@ Route::post('/create-payslip', [App\Http\Controllers\SalaryController::class, 'c
 Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::class, 'adjustPayslip']);
 
 
-
+//Report
+Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
 
 
 });
