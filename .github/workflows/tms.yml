@@ -1,0 +1,45 @@
+name: 🚀 aamarPay Checkout Frontend (Tms task creation)
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+    name: 🎉 Task Creation
+    runs-on: ubuntu-latest
+    env:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+    steps:
+      - name: 🚀 Call Login API to Get Access Token
+        id: get_access_token
+        run: |
+          access_token=$(curl -X POST -H "Content-Type: application/json" -d '{"username": "Raad", "password": "raad@1998"}' https://tmsv2-backend.aamarpay.dev/auth/login/ | jq -r '.response_data.access')
+          echo "ACCESS_TOKEN=$access_token" >> $GITHUB_ENV
+
+      - name: 📝 Get Commit Message
+        id: get_commit_message
+        run: echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
+
+      - name: 🗒️ Get Current Date
+        id: get_current_date
+        run: echo "CURRENT_DATE=$(date -u +"%Y-%m-%dT18:00:00.000Z")" >> $GITHUB_ENV
+
+      - name: 🎲 Generate Random Priority
+        id: get_random_priority
+        run: echo "RANDOM_PRIORITY=$(shuf -e 'URG' 'HGH' 'NRM' -n 1)" >> $GITHUB_ENV
+
+      - name: print the envs
+        run: echo "$COMMIT_MESSAGE $CURRENT_DATE $RANDOM_PRIORITY"
+
+      - name: 📜 Create and Self-Assign Task
+        run: |
+          curl -X POST -H "Authorization: Bearer $ACCESS_TOKEN" -H "Content-Type: application/json" -d '{
+            "task": {
+              "title": "'"$COMMIT_MESSAGE"'",
+              "description": "",
+              "last_date": "'"$CURRENT_DATE"'",
+              "priority": "'"$RANDOM_PRIORITY"'"
+            }
+          }' https://tmsv2-backend.aamarpay.dev/tasks/create-and-self-assign
