@@ -17,6 +17,8 @@ class meetingController extends Controller
     public function createMeeting(Request $request){
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:meeting,appointment',
+            'title' =>'required|string',
+            'description' => 'string',
             'guest_company_name' => 'required_if:type,appointment',
             'meeting_datetime' => 'required|date_format:Y-m-d H:i:s',
             'attendee_id' =>'required_if:type,meeting'
@@ -34,6 +36,8 @@ class meetingController extends Controller
         
         $data = new Meeting();
         $data->type = $request->type;
+        $data->title = $request->title;
+        $data->description = $request->description;
         $data->meeting_datetime = $request->meeting_datetime;
         $data->guest_company_name = $request->guest_company_name;
         $data->creator_id = $creator_id;
@@ -52,6 +56,8 @@ class meetingController extends Controller
     public function editMeeting(Request $request,$id){
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:meeting,appointment',
+            'title' =>'required|string',
+            'description' => 'string',
             'guest_company_name' => 'required_if:type,appointment',
             'meeting_datetime' => 'required|date_format:Y-m-d H:i:s',
             'attendee_id' =>'required_if:type,meeting',
@@ -91,6 +97,8 @@ class meetingController extends Controller
                     ],200);
                 }else{
                     $data->type = $request->type ?? $data->type;
+                    $data->title = $request->title ?? $data->title;
+                    $data->description = $request->description ?? $data->description;
                     $data->meeting_datetime = $request->meeting_datetime??$data->meeting_datetime;
                     $data->guest_company_name = $request->guest_company_name ?? $data->guest_company_name;
                     $data->attendee_id = $request->attendee_id ?? $data->attedee_id;
