@@ -52,7 +52,6 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //bulk employee add 
     Route::get('/uploadexcel', [App\Http\Controllers\reportController::class, 'uploadexcel']);
-    Route::post('/upload-employees',[App\Http\Controllers\reportController::class, 'uploadEmployees']);
 });
 
 

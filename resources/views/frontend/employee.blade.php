@@ -21,6 +21,12 @@
                         <i class="fa-solid fa-plus"></i> 
                         Add Employee
                     </a>
+
+                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_bulk" id="addEmployeeButton" style="margin-right: 19px;">
+                        <i class="fa-solid fa-plus"></i> 
+                        Add Employee in bulk
+                    </a>
+
                     <div class="view-icons">
                         <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
@@ -191,6 +197,55 @@
     </div>
 </div>
 <!-- /Add Employee Modal -->
+
+
+<!-- Add Employee in bulk Modal -->
+<div id="add_employee_bulk" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Employee Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="excelForm">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-block mb-12">
+                                <a class="btn btn-primary" href="{{ url('/') . '/' . 'storage/excels/testraad.xlsx' }}" download>Download Sample Excel</a>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="input-block mb-3">
+                                <label class="col-form-label">Upload Excel <span class="text-danger">*</span></label>
+                                <input class="form-control" type="file" name="file">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Submit</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Employee in bulk Modal -->
+
+
+
+
+
+
+
+
+
+
 <!-- Edit Employee Modal -->
 <div id="edit_employee" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -467,6 +522,65 @@
         });
     });
 
+    $(document).ready(function() {
+        var jwtToken = "{{ $jwtToken }}";
+    $('#excelForm').submit(function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/upload-employees', 
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Employees are added successful',
+                        text: 'Your BUlk Employee Registration Was Successful!',
+                        showConfirmButton: false, // Hide the OK button
+                        }); 
+                        setTimeout(function() {
+                            location.reload(); // This will refresh the current page
+                        }, 100);
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+
+                        for (var i = 0; i < errors.errors.length; i++) {
+                            var errorDetails = errors.errors[i];
+
+                            for (var field in errorDetails.errors) {
+                                var fieldErrors = errorDetails.errors[field];
+
+                                for (var j = 0; j < fieldErrors.length; j++) {
+                                    var fieldValue = errorDetails.row[field];
+                                    errorMessage += "<li>" + field + ": " + fieldValue + " - " + fieldErrors[j] + "</li>";
+                                }
+                            }
+                        }
+
+
+                        errorMessage += "</ul>";
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }
+                }
+            });
+        });
+    });
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";

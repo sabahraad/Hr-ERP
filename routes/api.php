@@ -219,6 +219,9 @@ Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::clas
 //Report
 Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
 
+//bulk employee add 
+Route::post('/upload-employees',[App\Http\Controllers\employeeController::class, 'uploadEmployees']);
+
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
