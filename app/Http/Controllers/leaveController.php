@@ -133,10 +133,18 @@ class leaveController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         //leave Date List
-        while ($startDate <= $endDate) {
-            $dateList[] = $startDate->toDateString();
-            $startDate->addDay();
+        if(($startDate <= $endDate) == true){
+            while ($startDate <= $endDate) {
+                $dateList[] = $startDate->toDateString();
+                $startDate->addDay();
+            }
+        }else{
+            return response()->json([
+                'message'=> 'Leave End Date Can Not Be Smaller Then The Start Date'
+            ],403);
         }
+        
+
         //delete holiday from the list
         $holiday=Holiday::where('company_id',$company_id)->get();
         foreach($holiday as $raw){
@@ -152,7 +160,7 @@ class leaveController extends Controller
             $dayNames[] = $carbonDate->format('l'); // 'l' format gives the full day name
         }
         $keyValueDateList = array_combine( $dateListWithoutHoliday,$dayNames);
-        
+
         $weekend=Weekend::where('company_id',$company_id)->first();
         $data=$weekend->getAttributes();
         $weekendDayNames = array_keys(array_filter($data, function($value) {
@@ -166,10 +174,29 @@ class leaveController extends Controller
             });
             $keyValueDateList = $dateListWithoutWeekend ;
         }
-
         $dateArray=array_keys($dateListWithoutWeekend );
         $jsonData = json_encode($dateArray);
         $count=count($dateArray);
+
+        //Same Date already leave apply check
+        $statusArray = [0, 1]; // 0 = pending , 1 = approved 
+        $alreadyAppliedLeave = LeaveApplication::where('emp_id', $emp_id)
+                                            ->whereIn('status', $statusArray)
+                                            ->where(function ($query) use ($dateArray) {
+                                                foreach ($dateArray as $date) {
+                                                    $query->orWhereJsonContains('dateArray', $date);
+                                                }
+                                            })
+                                            ->pluck('dateArray')
+                                            ->all();
+        if(count($alreadyAppliedLeave) != 0){
+            $alreadyAppliedLeaveDate = implode(', ', $alreadyAppliedLeave);
+            return response()->json([
+                'message'=>'You can not apply for this dates' .$alreadyAppliedLeaveDate . ' '.'Because You have already applied for those date',
+                'data'=>$alreadyAppliedLeave
+            ],403);
+        }
+
         $leaveTaken = leaveApplication::where('leave_setting_id',$request->leave_setting_id)
                              ->where('emp_id',$emp_id)
                              ->get();
@@ -183,14 +210,9 @@ class leaveController extends Controller
             ],403);
         }
 
-        $data = new leaveApplication();
 
-        // if($request->hasFile('image')){
-        //     $imageName =  time() . '.' . $request->image->extension();
-        //     $request->image->move(public_path('images'), $imageName);
-        //     $imagePath = 'images/' . $imageName;
-        //     $data->image = $imagePath;
-        // }
+
+        $data = new leaveApplication();
         if($request->has('image')){
             $extension = $request->image->getClientOriginalExtension();
             if ($extension === 'pdf') {
@@ -243,7 +265,7 @@ class leaveController extends Controller
         $user_id = auth()->user()->id;
         $emp_id= Employee::where('id',$user_id)->value('emp_id');
         $response1= leaveSetting::where('company_id',$company_id)->get();
-        $response2 = leaveApplication::where('emp_id', $emp_id)->get();
+        $response2 = leaveApplication::where('emp_id', $emp_id)->where('status',1)->get();
        
         $data1 = json_decode($response1, true);
         $data2 = json_decode($response2, true);
