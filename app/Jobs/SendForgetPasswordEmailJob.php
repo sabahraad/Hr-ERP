@@ -48,22 +48,21 @@ class SendForgetPasswordEmailJob implements ShouldQueue
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array(
-            'subject' => 'Important Notification from MUTHOFUN Regarding SMS Circulation',
-            'body' => 'Dear Partner,
+            'subject' => 'OTP Email',
+            'body' => 'Dear User,
         <br><br>
-        <h1>'.$this->OTP.'</h1>
-        Greetings from MUTHOFUN!
-        <br><br>
-        We hope this message finds you well. We would like to inform you that starting from May 9, 2023, our MUTHOFUN SMS platform has been successfully integrated with the MNP Dipping System. This integration is now mandatory for all our masking and non-masking services. As a result, there will be a price increase of 0.06 BDT per SMS, including VAT and tax, effective from May 16, 2023, at 00:00:01.
-        <br><br>
-        Please note that this price increase is in accordance with the BTRC Guideline and will apply to all our customers. The additional charge of 0.06 BDT per SMS will be paid to the MNP Dipping Service provider.
-        <br><br>
-        We appreciate your continued support. If you have any questions or concerns, please don\'t hesitate to reach out to us at support@muthofun.com.
-        <br><br>
+        Greetings from Time Wise!
+        <br>
+        <p>Your One-Time Password (OTP) is: <strong>'.$this->OTP.'</strong></p>
+        <br>
+        <p>This OTP is valid for<strong> 2 minutes</strong></p>
+        <br>
+        We appreciate your continued support. If you have any questions or concerns, please don\'t hesitate to reach out to us at support@timewise.com.
+        <br>
         Best regards,
         <br>
-        MUTHOFUN Support Team',
-        'from_email' => 'aamarPay <no-reply@aamarpay.com>',
+        Time Wise Support Team',
+        'from_email' => 'aamarPay <no-reply@aamarPay.com>',
         'to' => $this->customerEmail,
         'template' => '8'
     ),

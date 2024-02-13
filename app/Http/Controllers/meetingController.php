@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Meeting;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,8 @@ class meetingController extends Controller
     public function createMeeting(Request $request){
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:meeting,appointment',
+            'title' =>'required|string',
+            'description' => 'string',
             'guest_company_name' => 'required_if:type,appointment',
             'meeting_datetime' => 'required|date_format:Y-m-d H:i:s',
             'attendee_id' =>'required_if:type,meeting'
@@ -33,6 +36,8 @@ class meetingController extends Controller
         
         $data = new Meeting();
         $data->type = $request->type;
+        $data->title = $request->title;
+        $data->description = $request->description;
         $data->meeting_datetime = $request->meeting_datetime;
         $data->guest_company_name = $request->guest_company_name;
         $data->creator_id = $creator_id;
@@ -51,6 +56,8 @@ class meetingController extends Controller
     public function editMeeting(Request $request,$id){
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:meeting,appointment',
+            'title' =>'required|string',
+            'description' => 'string',
             'guest_company_name' => 'required_if:type,appointment',
             'meeting_datetime' => 'required|date_format:Y-m-d H:i:s',
             'attendee_id' =>'required_if:type,meeting',
@@ -90,6 +97,8 @@ class meetingController extends Controller
                     ],200);
                 }else{
                     $data->type = $request->type ?? $data->type;
+                    $data->title = $request->title ?? $data->title;
+                    $data->description = $request->description ?? $data->description;
                     $data->meeting_datetime = $request->meeting_datetime??$data->meeting_datetime;
                     $data->guest_company_name = $request->guest_company_name ?? $data->guest_company_name;
                     $data->attendee_id = $request->attendee_id ?? $data->attedee_id;
@@ -132,12 +141,14 @@ class meetingController extends Controller
     }
 
     public function meetingList(){
+        $now = Carbon::now();
         $user_id = auth()->user()->id;
         $emp_id = Employee::where('id',$user_id)->value('emp_id');
         $data = Meeting::where(function ($query) use ($emp_id) {
                             $query->where('creator_id', $emp_id)
                                 ->orWhere('attendee_id', $emp_id);
                         })
+                        ->where('meeting_datetime', '>=', $now)
                         ->orderBy('meeting_datetime', 'desc')
                         ->take(5)
                         ->get();
@@ -159,4 +170,26 @@ class meetingController extends Controller
 
     }
     
+    public function meetingHistroy(){
+        $user_id = auth()->user()->id;
+        $emp_id = Employee::where('id',$user_id)->value('emp_id');
+        $data = Meeting::where(function ($query) use ($emp_id) {
+                            $query->where('creator_id', $emp_id)
+                                ->orWhere('attendee_id', $emp_id);
+                        })
+                        ->orderBy('meeting_datetime', 'desc')
+                        ->get();
+
+        if(empty($data)){
+            return response()->json([
+                'message'=>'No Meeting Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Meeting List',
+                'data'=>$data
+            ],200);
+        }
+    }
 }

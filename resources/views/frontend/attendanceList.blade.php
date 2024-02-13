@@ -1,5 +1,8 @@
 @include('frontend.header')
 @include('frontend.navbar')
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"> -->
+
 <style>
     .table {
             --bs-table-bg: transparent; /* Set it to a transparent color */
@@ -7,6 +10,19 @@
     .bg-danger td {
             color: white; /* Set text color to white */
         }
+    .dt-button{
+      color: white !important;
+      background-color: #ff9b44 !important;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      /* margin: 4px 2px; */
+    }
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -35,14 +51,19 @@
                     <div class="card-body ">
                         <form id="myForm">
                             @csrf
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-form-label" for="dateInput">Select Date:<span class="text-danger">*</span></label>
                                 <input class="form-control" type="date" id="date" name="date" required>
-                            </div>
+                            </div> -->
+                            <br>
+                                <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
+                                <input type="text"  id="date_range" class="form-control" name="date_range">
+                            <br>
                             <div class="form-group" style="margin-top: 18px;">
                                 <input type="submit" name="submit" value="Search" class="btn btn-primary">
                             </div>
                         </form>
+                        
 
                     </div>
                 </div>
@@ -186,14 +207,41 @@
         
         </div>
         <!-- /Page Wrapper -->
+
+
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
 
-    $(document).ready(function(){
-        $('#desigTable').DataTable();
+    // $(document).ready(function(){
+    //     $('#desigTable').DataTable();
+    // });
+    $(document).ready(function() {
+        $('#desigTable').DataTable({
+        dom: 'Bfrtip', 
+        buttons: [
+            'excel'
+            ]
+        });
+    });
+
+    $(function() {
+    $('input[name="date_range"]').daterangepicker({
+        // opens: 'left',
+        // autoApply: true,
+        locale: {
+        format: 'YYYY-MM-DD'
+    }
+    }, function(start, end, label) {
+        console.log("A date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
     });
 
     $(document).ready(function() {

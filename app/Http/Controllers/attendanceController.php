@@ -383,7 +383,10 @@ class attendanceController extends Controller
 
     public function presentEmployeeList(Request $request){
         $company_id = auth()->user()->company_id;
-        $date = $request->date;
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
         $data = Attendance::select(
                         'attendances.*',
                         'employees.name as employee_name',
@@ -391,8 +394,10 @@ class attendanceController extends Controller
                     )
                     ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
                     ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
-                    ->whereDate('attendances.created_at', '=', $date)
+                    ->whereDate('attendances.created_at', '>=', $startDate)
+                    ->whereDate('attendances.created_at', '<=', $endDate)
                     ->where('attendances.company_id', $company_id)
+                    ->orderBy('attendances.emp_id')
                     ->get();
         if(count($data) == 0){
             return response()->json([

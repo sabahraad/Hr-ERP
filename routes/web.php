@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/',[App\Http\Controllers\frontendController\AuthController::class, 'loginForm']);
+Route::get('/', [App\Http\Controllers\frontendController\timeWiseController::class, 'timeWise']);
 Route::get('/login', [App\Http\Controllers\frontendController\AuthController::class, 'loginForm'])->name('loginForm');
 Route::get('/login-form', [App\Http\Controllers\frontendController\AuthController::class, 'loginForm'])->name('loginForm');
 
@@ -40,20 +39,22 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'leaveApprover'])->name('leaveApprover');
     Route::get('/add-leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'addLeaveApprover'])->name('addLeaveApprover');
     
+    //Office Notice
     Route::get('/office-notice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'officeNotice'])->name('officeNotice');
     Route::get('/addOfficeNotice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'addOfficeNotice'])->name('addOfficeNotice');
     Route::post('/createOfficeNotice', [App\Http\Controllers\frontendController\officeNoticeController::class, 'createOfficeNotice'])->name('createOfficeNotice');
     Route::get('/showEditOfficeNotice/{id}', [App\Http\Controllers\frontendController\officeNoticeController::class, 'showEditOfficeNotice'])->name('showEditOfficeNotice');
     Route::post('/editOfficeNotice/{id}', [App\Http\Controllers\frontendController\officeNoticeController::class, 'editOfficeNotice'])->name('editOfficeNotice');
+    
     Route::get('/editAttendance/{id}', [App\Http\Controllers\frontendController\attendanceController::class, 'editAttendance'])->name('editAttendance');
 
     Route::get('/leave-application-list',[\App\Http\Controllers\frontendController\leaveController::class,'allLeaveApplication'])->name('allLeaveApplication');
+
+    //bulk employee add 
+    Route::get('/uploadexcel', [App\Http\Controllers\reportController::class, 'uploadexcel']);
 });
 
 
 Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController::class, 'resetPassword'])->name('resetPassword');
 Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyController::class, 'privacyPolicy']);
-Route::get('/pay', [App\Http\Controllers\forgetPasswordEmailController::class, 'pay']);
-Route::post('/response', [App\Http\Controllers\forgetPasswordEmailController::class, 'response'])->name('response');
 
-Route::get('/Time-Wise', [App\Http\Controllers\frontendController\timeWiseController::class, 'timeWise']);

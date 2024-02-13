@@ -67,9 +67,10 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
 
     //employee 
     
-    Route::get('employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
-    Route::post('employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
-    Route::get('employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+    Route::get('/employee-list', [App\Http\Controllers\employeeController::class, 'employeeList'])->name('employeeList');
+    Route::post('/employee-edit/{id}', [App\Http\Controllers\employeeController::class, 'employeeEditApp']);
+    Route::get('/employee-details/{id}', [App\Http\Controllers\employeeController::class, 'employeeDetails']);
+    Route::get('/emp-list', [App\Http\Controllers\employeeController::class, 'empList']);
 
     //notice
     Route::get('/notice-list', [App\Http\Controllers\officeNoticeController::class, 'noticeList']);
@@ -94,6 +95,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/meeting-list', [App\Http\Controllers\meetingController::class, 'meetingList']);
     Route::post('/edit-meeting/{id}', [App\Http\Controllers\meetingController::class, 'editMeeting']);
     Route::get('/creator-meeitng-list', [App\Http\Controllers\meetingController::class, 'creatorMeeitngList']);
+    Route::get('/meeitng-histroy', [App\Http\Controllers\meetingController::class, 'meetingHistroy']);
+
+
+    //payslip user end
+    Route::get('/payslip-list', [App\Http\Controllers\SalaryController::class, 'payslipList']);
+    Route::get('/payslip-details/{id}', [App\Http\Controllers\SalaryController::class, 'payslipDetails']);
 
 });
 
@@ -196,6 +203,25 @@ Route::post('/create-salary-setting', [App\Http\Controllers\salarySettingControl
 Route::get('/show-salary-setting', [App\Http\Controllers\salarySettingController::class, 'showSalarySetting']);
 Route::post('/edit-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'editSalarySetting']);
 Route::delete('/delete-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'deleteSalarySetting']);
+
+//Salary increment 
+Route::get('/employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::post('/change-employee-salary/{id}', [App\Http\Controllers\SalaryController::class, 'changeEmployeeSalary']);
+Route::get('/salary-list', [App\Http\Controllers\SalaryController::class, 'salaryList']);
+Route::get('/employee-salary-history/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryHistory']);
+
+
+//Payslip 
+Route::post('/create-payslip', [App\Http\Controllers\SalaryController::class, 'createPayslip']);
+Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::class, 'adjustPayslip']);
+
+
+//Report
+Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
+
+//bulk employee add 
+Route::post('/upload-employees',[App\Http\Controllers\employeeController::class, 'uploadEmployees']);
+
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');

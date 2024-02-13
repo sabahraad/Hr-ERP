@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\EmployeesImport;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\Empty_;
-use Psr\Http\Message\ResponseInterface;
+use Illuminate\Validation\ValidationException;
+
 
 class employeeController extends Controller
 {
@@ -106,6 +107,15 @@ class employeeController extends Controller
             'data'=>$result
         ],200);
 
+    }
+
+    public function empList(){
+        $company_id = auth()->user()->company_id;
+        $data = Employee::where('company_id',$company_id)->get();
+        return response()->json([
+            'message'=>'employee list',
+            'data'=>$data
+        ],200);
     }
 
     public function employeeListForAdminPanel(){
@@ -275,6 +285,43 @@ class employeeController extends Controller
             'message'=> 'Employee Details',
             'data'=>$data
         ],200);
+    }
+
+    public function uploadEmployees(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $file = $request->file('file');
+
+        try {
+            // ... your existing code
+    
+            $import = new EmployeesImport();
+            Excel::import($import, $file);
+    
+            // ... your existing code to return success response
+        } catch (ValidationException $e) {
+            $validationErrors = $e->errors();
+    
+            return response()->json([
+                'error' => $validationErrors,
+            ], 422);
+        }
+
+        // Excel::import(new EmployeesImport, $file);
+
+        return response()->json([
+            'message'=> 'Employee Added Successfully'
+        ],201);
     }
 
 }

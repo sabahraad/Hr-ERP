@@ -326,13 +326,7 @@ class leaveController extends Controller
                 ->whereColumn('leave_approves.priority', '=', 'temp_leave.min_priority')
                 ->orderBy('leave_applications.created_at', 'desc')
                 ->get();
-        // dd($result);
-        
-        // foreach($result as $raw){
-        //     if($raw->emp_id == $emp_id){
-        //         LeaveApprove::where('leave_approves_id', $raw->leave_approves_id)->update(['status' => $approve]);
-        //     }
-        // }
+       
         $result->each(function ($raw, $key) use ($emp_id, $result) {
             $approve = 1;
             if ($raw->emp_id == $emp_id) {
@@ -532,7 +526,7 @@ class leaveController extends Controller
                 $attendanceList['leave'] = true;
                 $attendanceList['weekend'] = false;
                 $attendanceList['holiday'] = false;
-                $attendanceList['workingDay'] = false;
+                $attendanceList['workingDay'] = true;
 
             } else {
              // Working day
