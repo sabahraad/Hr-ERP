@@ -23,10 +23,19 @@
                     </a>
 
                     <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_bulk" id="addEmployeeButton" style="margin-right: 19px;">
-                        <i class="fa-solid fa-plus"></i> 
+                        <i class="fa-solid fa-upload"></i>
                         Add Employee in bulk
                     </a>
 
+                    <a href="{{route('downloadDeptExcel')}}" class="btn add-btn add-employee"  style="margin-right: 19px;">
+                        <i class="fa-solid fa-download"></i>
+                        Export Department Details
+                    </a>
+
+                    <a href="{{route('downloadDesigExcel')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
+                        <i class="fa-solid fa-download"></i>
+                        Export Designation Details
+                    </a>
                     <div class="view-icons">
                         <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
@@ -567,7 +576,6 @@
                                 }
                             }
                         }
-
 
                         errorMessage += "</ul>";
 

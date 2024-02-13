@@ -79,7 +79,7 @@ class meetingController extends Controller
                 return response()->json([
                     'message'=> 'Complete or canceled meeting can not be edited',
                     'data'=>$data
-                ],200);
+                ],403);
             }else{
                 if($request->status == 'complete'){
                     $data->status = 'complete';
@@ -113,7 +113,7 @@ class meetingController extends Controller
         }else{
             return response()->json([
                 'message'=> 'You can not edit this meeting,only meeting creator can change'
-            ],200);
+            ],403);
         }
 
 
