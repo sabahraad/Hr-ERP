@@ -52,8 +52,13 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //bulk employee add 
     Route::get('/uploadexcel', [App\Http\Controllers\reportController::class, 'uploadexcel']);
-});
 
+});
+ //dept excel download
+ Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
+
+//designation excel download
+Route::get('/export-desig-data', [App\Http\Controllers\frontendController\designationController::class, 'exportDesigData'])->name('downloadDesigExcel');
 
 Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController::class, 'resetPassword'])->name('resetPassword');
 Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyController::class, 'privacyPolicy']);
