@@ -5,7 +5,6 @@ use Illuminate\Validation\Rule;
 use App\Models\Company;
 use Illuminate\Http\Response;
 use App\Models\Department;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -112,4 +111,6 @@ class departmentController extends Controller
         $data = Department::where('company_id',$company_id)->pluck('deptTitle','dept_id');
         return $data;
     }
+
+    
 }

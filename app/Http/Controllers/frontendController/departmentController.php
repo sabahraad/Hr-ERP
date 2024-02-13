@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\frontendController;
 use App\Models\Department;
-use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DeptExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,14 @@ class departmentController extends Controller
         curl_close($curl);
         $dataArray = json_decode($response,true);
         return view('frontend.department',compact('dataArray'), ['jwtToken' => $access_token]);   
+    }
+
+
+    public function exportDeptData()
+    {
+        $company_id = session('company_id');
+        $data = Department::where('company_id', $company_id)->select('dept_id', 'deptTitle', 'details')->get();
+        return Excel::download(new DeptExport($data), 'dept_data.xlsx');
     }
 
     
