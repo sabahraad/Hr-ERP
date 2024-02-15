@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DesigExport;
 use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use Illuminate\Http\Request;
@@ -32,5 +33,15 @@ class designationController extends Controller
         $dataArray = json_decode($response,true);
         return view('frontend.designation',compact('dataArray'), ['jwtToken' => $access_token]);
    
+    }
+
+    public function exportDesigData()
+    {
+        $company_id = session('company_id');
+        $data = Designation::join('departments', 'designations.dept_id', '=', 'departments.dept_id')
+                            ->where('departments.company_id', $company_id)
+                            ->select('designations.designation_id', 'designations.desigTitle', 'designations.dept_id', 'departments.deptTitle')
+                            ->get();
+        return Excel::download(new DesigExport($data), 'designation_data.xlsx');
     }
 }

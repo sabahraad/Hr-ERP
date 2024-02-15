@@ -96,7 +96,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/edit-meeting/{id}', [App\Http\Controllers\meetingController::class, 'editMeeting']);
     Route::get('/creator-meeitng-list', [App\Http\Controllers\meetingController::class, 'creatorMeeitngList']);
     Route::get('/meeitng-histroy', [App\Http\Controllers\meetingController::class, 'meetingHistroy']);
-
+    Route::get('/meeitng-details/{id}', [App\Http\Controllers\meetingController::class, 'meetingDetails']);
 
     //payslip user end
     Route::get('/payslip-list', [App\Http\Controllers\SalaryController::class, 'payslipList']);
@@ -221,6 +221,11 @@ Route::post('/custom-attendance-report', [App\Http\Controllers\reportController:
 
 //bulk employee add 
 Route::post('/upload-employees',[App\Http\Controllers\employeeController::class, 'uploadEmployees']);
+
+//temp salary setting 
+Route::post('/temp-salary-setting',[App\Http\Controllers\salarySettingController::class, 'tempSalarySetting']);
+Route::get('/temp-salary-setting-list',[App\Http\Controllers\salarySettingController::class, 'tempSalarySettingList']);
+Route::delete('/delete-temp-salary-setting/{id}',[App\Http\Controllers\salarySettingController::class, 'deletetempSalarySetting']);
 
 
 });

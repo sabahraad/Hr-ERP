@@ -70,7 +70,7 @@ class designationsController extends Controller
 
     public function editDesignations(Request $request,$id){
         $validator= Validator::make($request->all(), [
-            'desigTitle' => 'required|string|unique:designations,desigTitle,' . $id . ',designation_id',
+            'desigTitle' => 'required|string',
             'details'  => 'required'
         ]);
 

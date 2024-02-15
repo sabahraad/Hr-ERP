@@ -57,7 +57,7 @@
                                         </ul>
                                     </div>
                                     <div class="try-free-link">
-                                        <a class="btn btn-primary right-header-button" href="https://themeforest.net/item/smarthr-bootstrap-admin-panel-template/21153150" target="_blank"  role="button">Registration Now</a>
+                                        <a class="btn btn-primary right-header-button" href="{{route('registrationForm')}}" target="_blank"  role="button">Registration Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -137,9 +137,9 @@
                             <div class="admin-slider">
                                 <div class="owl-carousel my-carousel bannercar">
                                     <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
-                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623-02.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623-03.png')}}" alt=""></div>
+                                    <div class="my-carousel-item"><img src="{{asset('images/App-Banner-995x623-04.png')}}" alt=""></div>
                                 </div>
                             </div>
                         </div>
@@ -465,7 +465,7 @@
                                         </div>
                                         <div class="recommended-price">Recommended</div>
                                         <small>Package 4</small>
-                                        <h3>BDT 0000</h3>
+                                        <h3 style="font-size: 40px;margin-bottom: 36px;">Call For Price</h3>
                                         <em> Price Negotiable </em>
                                         <ul class="project-plan">
                                             <li> 1 - 100 ++ Users</li>

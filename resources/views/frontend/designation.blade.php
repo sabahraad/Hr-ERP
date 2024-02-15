@@ -1,5 +1,21 @@
 @include('frontend.header')
 @include('frontend.navbar')
+
+<style>
+    .dt-button{
+      color: white !important;
+      background-color: #ff9b44 !important;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      /* margin: 4px 2px; */
+    }
+</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 			
@@ -179,16 +195,32 @@
         
         </div>
         <!-- /Page Wrapper -->
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-    $(document).ready(function(){
-        $('#desigTable').DataTable();
+    // $(document).ready(function(){
+    //     $('#desigTable').DataTable();
+    // });
+    $(document).ready(function() {
+        $('#desigTable').DataTable({
+        dom: 'Bfrtip', 
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Download Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3] 
+                }
+            }
+        ]
+        });
     });
-
     
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";

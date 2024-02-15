@@ -1,8 +1,6 @@
 @include('frontend.header')
 @include('frontend.navbar')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"> -->
-
 <style>
     .table {
             --bs-table-bg: transparent; /* Set it to a transparent color */
