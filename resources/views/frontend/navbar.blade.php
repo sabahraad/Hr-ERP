@@ -101,18 +101,18 @@
 								</ul>
 							</li>
 							
-							<!-- <li class="menu-title"> 
+							<li class="menu-title"> 
 								<span>HR</span>
-							</li> -->
+							</li>
 							
-							<!-- <li class="submenu">
+							<li class="submenu">
 								<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="salary.html"> Employee Salary </a></li>
+									<li><a href="{{route('salarySetting')}}">Salary Setting</a></li>
 									<li><a href="salary-view.html"> Payslip </a></li>
 									<li><a href="payroll-items.html"> Payroll Items </a></li>
 								</ul>
-							</li> -->
+							</li>
 							<!-- <li> 
 								<a href="policies.html"><i class="la la-file-pdf-o"></i> <span>Policies</span></a>
 							</li> -->

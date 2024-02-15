@@ -192,4 +192,36 @@ class meetingController extends Controller
             ],200);
         }
     }
+
+    public function meetingDetails($id){
+      $meetingDetails = Meeting::select(
+                                        'meetings.*',
+                                        'creator.name as creator_name',
+                                        'creator.image as creator_image',
+                                        'creator_dept.deptTitle as creator_department',
+                                        'creator_desig.desigTitle as creator_designation',
+                                        'attendee.name as attendee_name',
+                                        'attendee.image as attendee_image',
+                                        'attendee_dept.deptTitle as attendee_department',
+                                        'attendee_desig.desigTitle as attendee_designation'
+                                    )
+                                    ->join('employees as creator', 'meetings.creator_id', '=', 'creator.emp_id')
+                                    ->leftJoin('employees as attendee', 'meetings.attendee_id', '=', 'attendee.emp_id')
+                                    ->leftJoin('departments as creator_dept', 'creator.dept_id', '=', 'creator_dept.dept_id')
+                                    ->leftJoin('designations as creator_desig', 'creator.designation_id', '=', 'creator_desig.designation_id')
+                                    ->leftJoin('departments as attendee_dept', 'attendee.dept_id', '=', 'attendee_dept.dept_id')
+                                    ->leftJoin('designations as attendee_desig', 'attendee.designation_id', '=', 'attendee_desig.designation_id')
+                                    ->where('meetings.meetings_id', $id)
+                                    ->first();
+        if(!$meetingDetails){
+            return response()->json([
+                'message'=>'No data found'
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Meeting Details',
+                'data'=>$meetingDetails
+            ],200);
+        }
+    }
 }
