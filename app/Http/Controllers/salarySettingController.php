@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\SalarySetting;
+use App\Models\tempSalarySetting;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -35,6 +36,12 @@ class salarySettingController extends Controller
         }
 
         $company_id = auth()->user()->company_id;
+
+        if (SalarySetting::where('company_id', $company_id)->exists()) {
+            return response()->json([
+                'message' => 'A salary setting already exists for this company.',
+            ], 400);
+        }    
         
         $data = new SalarySetting();
         $data->company_id = $company_id;
@@ -107,6 +114,50 @@ class salarySettingController extends Controller
         SalarySetting::destroy($id);
         return response()->json([
             'message'=>'deleted successfully'
+        ],204);
+    }
+
+    public function tempSalarySetting(Request $request){
+        $company_id = auth()->user()->company_id;
+        $name = $request->name;
+        $percentage = $request->percentage;
+
+        $result = tempSalarySetting::where('company_id', $company_id)->sum('percentage');
+        $totalpercentage = $result+ $percentage;
+
+        if($totalpercentage >= 100){
+            return response()->json([
+                'message'=> 'Total Percentage Can Not Be More Then 100'
+            ],422);
+        }else{
+                $data = new tempSalarySetting();
+                $data->name = $name;
+                $data->percentage = $percentage;
+                $data->company_id = $company_id;
+                $data->save();
+                
+                $data = tempSalarySetting::where('company_id',$company_id)->get();
+                return response()->json([
+                    'message'=>'Salary Setting Updated',
+                    'data'=>$data
+                ],201);
+            }
+    }
+
+    public function tempSalarySettingList(){
+        $company_id = auth()->user()->company_id;
+        $data = tempSalarySetting::where('company_id',$company_id)->get();
+
+        return response()->json([
+            'message'=>'Salary Breakdown list',
+            'data'=>$data
+        ],200);
+    }
+
+    public function deletetempSalarySetting($id){
+        tempSalarySetting::destroy($id);
+        return response()->json([
+            'message'=>'successfully deleted'
         ],204);
     }
 }
