@@ -52,6 +52,8 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //bulk employee add 
     Route::get('/uploadexcel', [App\Http\Controllers\reportController::class, 'uploadexcel']);
+    Route::get('/salary-setting', [App\Http\Controllers\frontendController\salarySettingController::class, 'salarySetting'])->name('salarySetting');
+    Route::post('/create-salary-setting', [App\Http\Controllers\frontendController\salarySettingController::class, 'createSalarySetting'])->name('createSalarySetting');
 
 });
  //dept excel download
