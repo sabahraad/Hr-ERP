@@ -204,4 +204,23 @@ class SalaryController extends Controller
             ],200);
     }
 
+    public function payslipListCompanyWise($month,$year){
+        $company_id = auth()->user()->company_id;
+        $data = Payslip::where('company_id',$company_id)
+                        ->where('month',$month)
+                        ->where('year',$year)
+                        ->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Payslip List',
+                'data'=>$data
+            ],200);
+        }
+    }
+
 }
