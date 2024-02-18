@@ -55,6 +55,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/salary-setting', [App\Http\Controllers\frontendController\salarySettingController::class, 'salarySetting'])->name('salarySetting');
     Route::post('/create-salary-setting', [App\Http\Controllers\frontendController\salarySettingController::class, 'createSalarySetting'])->name('createSalarySetting');
 
+    //payslip 
+    Route::get('/payslip', [App\Http\Controllers\frontendController\payslipController::class, 'payslip']);
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');

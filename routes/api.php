@@ -101,6 +101,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     //payslip user end
     Route::get('/payslip-list', [App\Http\Controllers\SalaryController::class, 'payslipList']);
     Route::get('/payslip-details/{id}', [App\Http\Controllers\SalaryController::class, 'payslipDetails']);
+    Route::get('/payslip-list-companywise/{month}/{year}', [App\Http\Controllers\SalaryController::class, 'payslipListCompanyWise']);
 
 });
 
