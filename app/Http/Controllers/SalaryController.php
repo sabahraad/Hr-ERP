@@ -178,10 +178,12 @@ class SalaryController extends Controller
             $componentName = $component['name'];
             $componentPercentage = $component['percentage'];
             $componentAmount = ($componentPercentage / 100) * $salary;
-            $salaryDistribution[$componentName] =  [
+            $details =  [
+                'componentName' =>$componentName,
                 'amount' => $componentAmount,
                 'percentage' => $componentPercentage,
             ];
+            $salaryDistribution[]= $details;
         }
 
         $employeeDetails = Employee::where('employees.emp_id', $data->emp_id)
