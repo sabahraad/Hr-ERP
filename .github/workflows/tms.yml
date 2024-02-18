@@ -3,7 +3,8 @@ name: 🚀 aamarPay Checkout Frontend (Tms task creation)
 on:
   push:
     branches:
-      - dev
+      - 'dev'
+      - 'refs/heads/dev'
 
 jobs:
   build:
