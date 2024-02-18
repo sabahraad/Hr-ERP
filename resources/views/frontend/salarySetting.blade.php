@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="submit-section">
-                                        <button class="btn btn-info submit-btn-md" style="padding-left: 56px;padding-right: 57px;padding-top: 7px;padding-bottom: 5px;">add more</button>
+                                        <button class="btn btn-info submit-btn-md" >Add More</button>
                                     </div>
                                 </div>  
                             </div>
@@ -81,7 +81,7 @@
                             </table>
                         </div>
                         <div class="d-flex justify-content-center mt-3">
-                            <a href="#" class="btn btn-primary btn-lg">Save All</a>
+                            <a id ="saveAll" class="btn btn-primary btn-lg">Save Salary Breakdown</a>
                         </div>
 
                     </div>
@@ -290,7 +290,7 @@
                                     var table = $('#desigTable').DataTable();
                                     table.clear().draw();
                                     var rowNum = 1;
-
+                                    var totalPercentage = 0;
                                     // Iterate through the data and populate the table
                                     response.data.forEach(function(item) {
                                         var rowData = [
@@ -300,9 +300,17 @@
                                             '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.temp_salary_settings_id+'"></i></a></div></div>'
                                         ];
                                         table.row.add(rowData);
+                                        totalPercentage += parseFloat(item.percentage);
                                         rowNum++;
                                     });
                                     table.draw();
+
+                                    var totalRowData = [
+                                                '<td colspan="2"><b>Total:</b></td>',
+                                                '<td><b>' + totalPercentage.toFixed(2) + '</b></td>',
+                                                '<td></td>'
+                                            ];
+                                    $('#desigTable tbody').append('<tr>' + totalRowData.join('') + '</tr>');
                                 },
                                 error: function(xhr, textStatus, errorThrown) {
                                     console.log('ok');
@@ -336,6 +344,108 @@
                             icon: 'error',
                             title: 'Validation Error',
                             html: errorMessage
+                        });
+                    }
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        var jwtToken = "{{ $jwtToken }}";
+    $('#saveAll').click(function(e) {
+        e.preventDefault();
+        console.log('ok');
+       
+        $.ajax({
+                url: 'https://hrm.aamarpay.dev/api/create-salary-setting', 
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log('ok')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Salary Breakdown successfully added',
+                        text: 'You have successfully added a Salary Breakdown',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: 'https://hrm.aamarpay.dev/api/temp-salary-setting-list',
+                                type: 'GET',
+                                headers: {
+                                        'Authorization': 'Bearer ' + jwtToken
+                                    },
+                                success: function(response) {
+                                    console.log(response);
+                                    var table = $('#desigTable').DataTable();
+                                    table.clear().draw();
+                                    var rowNum = 1;
+                                    var totalPercentage = 0;
+                                    // Iterate through the data and populate the table
+                                    response.data.forEach(function(item) {
+                                        var rowData = [
+                                            rowNum,
+                                            item.name, 
+                                            item.percentage, 
+                                            '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.temp_salary_settings_id+'"></i></a></div></div>'
+                                        ];
+                                        table.row.add(rowData);
+                                        totalPercentage += parseFloat(item.percentage);
+                                        rowNum++;
+                                    });
+                                    table.draw();
+                                    var totalRowData = [
+                                                '<td colspan="2"><b>Total:</b></td>',
+                                                '<td><b>' + totalPercentage.toFixed(2) + '</b></td>',
+                                                '<td></td>'
+                                            ];
+                                    $('#desigTable tbody').append('<tr>' + totalRowData.join('') + '</tr>');
+                                    
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    console.log('ok');
+                                    if (xhr.status == 404) {
+                                        var table = $('#desigTable').DataTable();
+                                        table.clear().draw();
+                                        Swal.fire({
+                                                icon: 'error',
+                                                title: 'Total Salary Break Down Can Not Be More Then 100%',
+                                            });
+                                    } else {
+                                        console.log('Error in API call');
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    });
+                    
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }else if (xhr.status === 403) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: 'Total Percentage Have To Be 100.'
                         });
                     }
                 }

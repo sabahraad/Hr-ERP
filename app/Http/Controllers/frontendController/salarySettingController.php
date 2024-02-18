@@ -14,6 +14,4 @@ class salarySettingController extends Controller
         $data = tempSalarySetting::where('company_id',$company_id)->get();
         return view('frontend.salarySetting',compact('data'), ['jwtToken' => $access_token]);
     }
-
-    
 }
