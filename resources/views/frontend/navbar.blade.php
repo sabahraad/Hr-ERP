@@ -109,7 +109,7 @@
 								<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="{{route('salarySetting')}}">Salary Setting</a></li>
-									<li><a href="salary-view.html"> Payslip </a></li>
+									<li><a href="{{route('payslip')}}"> Salary List </a></li>
 									<li><a href="payroll-items.html"> Payroll Items </a></li>
 								</ul>
 							</li>

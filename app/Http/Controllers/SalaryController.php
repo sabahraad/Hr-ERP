@@ -206,9 +206,24 @@ class SalaryController extends Controller
 
     public function payslipListCompanyWise($month,$year){
         $company_id = auth()->user()->company_id;
-        $data = Payslip::where('company_id',$company_id)
-                        ->where('month',$month)
-                        ->where('year',$year)
+        $data = Payslip::where('payslips.company_id', $company_id)
+                        ->where('payslips.month', $month)
+                        ->where('payslips.year', $year)
+                        ->join('employees', 'payslips.emp_id', '=', 'employees.emp_id')
+                        ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
+                        ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
+                        ->select(
+                            'employees.*',
+                            'departments.deptTitle',
+                            'designations.desigTitle',
+                            'payslips.salary', 
+                            'payslips.deducted_amount',
+                            'payslips.adjustment_reason', 
+                            'payslips.status as payslips_status',
+                            'payslips.month',
+                            'payslips.year',
+                            'payslips.payslips_id',
+                        )
                         ->get();
         if(count($data) == 0){
             return response()->json([
@@ -222,5 +237,6 @@ class SalaryController extends Controller
             ],200);
         }
     }
+
 
 }
