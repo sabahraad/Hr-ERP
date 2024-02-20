@@ -124,7 +124,15 @@ class SalaryController extends Controller
 
     public function adjustPayslip(Request $request,$id){
         $data = Payslip::find($id);
-        $data->deducted_amount = $request->deducted_amount;
+        if($request->adjustment_type == "addition"){
+            $after_adjustment_salary = $data->salary + $request->adjusted_amount;
+        }else{
+            $after_adjustment_salary = $data->salary - $request->adjusted_amount;
+        }
+        $data->adjustment_type = $request->adjustment_type;
+        $data->adjustment_reason = $request->adjustment_reason;
+        $data->after_adjustment_salary = $after_adjustment_salary;
+        $data->adjusted_amount = $request->adjusted_amount;
         $data->adjustment_reason = $request->adjustment_reason;
         $data->save();
         return response()->json([
@@ -170,8 +178,10 @@ class SalaryController extends Controller
         $data = Payslip::find($id);
         $salary_setting = SalarySetting::where('company_id',$company_id)->first();
         $salaryComponents = $salary_setting->components;
-        $deducted_amount = $data->deducted_amount;
         $salary = $data->salary; 
+        $adjustment_type = $data->adjustment_type;
+        $adjusted_amount = $data->adjusted_amount;
+        $after_adjustment_salary = $data->after_adjustment_salary;
         $adjustment_reason = $data->adjustment_reason;
         $salaryDistribution = [];
         foreach ($salaryComponents as $component) {
@@ -198,7 +208,9 @@ class SalaryController extends Controller
                     'employee details' => $employeeDetails,
                     'salaryDistribution' => $salaryDistribution,
                     'Salary'=>$salary,
-                    'deducted_amount' => $deducted_amount,
+                    'adjustment_type' => $adjustment_type,
+                    'adjusted_amount' => $adjusted_amount,
+                    'Payable Amount' => $after_adjustment_salary,
                     'adjustment_reason'=> $adjustment_reason
                 ]
             ],200);
@@ -217,8 +229,10 @@ class SalaryController extends Controller
                             'departments.deptTitle',
                             'designations.desigTitle',
                             'payslips.salary', 
-                            'payslips.deducted_amount',
-                            'payslips.adjustment_reason', 
+                            'payslips.adjustment_type',
+                            'payslips.after_adjustment_salary',
+                            'payslips.adjustment_reason',
+                            'payslips.adjusted_amount',
                             'payslips.status as payslips_status',
                             'payslips.month',
                             'payslips.year',

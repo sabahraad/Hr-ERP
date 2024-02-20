@@ -75,10 +75,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            <a id ="saveAll" class="btn btn-primary btn-lg">Save Salary Breakdown</a>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -105,10 +101,14 @@
                                     <input id ="emp_id" class="form-control" name="emp_id" type="text" disabled>
                                     <label class="col-form-label">Employee Name</label>
                                     <input id ="name" class="form-control" name="name" type="text" disabled>
-                                    <label class="col-form-label">Salary</label>
-                                    <input id ="salary" class="form-control" name="salary" type="text" disabled>
+                                    <label for="inputText4" class="col-form-label">Select Adjustment Type</label>
+                                    <select name="adjustment_type" id="adjustment_type" class="select">
+                                        <option selected disabled>Open this to select adjustment type</option>
+                                        <option value="addition">Addition</option>
+                                        <option value="deduction">Deduction</option>
+                                    </select>
                                     <label class="col-form-label">Adjustment Amount</label>
-                                    <input id ="deducted_amount" class="form-control" name="deducted_amount" type="text" >
+                                    <input id ="adjusted_amount" class="form-control" name="adjusted_amount" type="text" >
                                     <label class="col-form-label">Reason</label>
                                     <input id ="adjustment_reason" class="form-control" name="adjustment_reason" type="text" >                                    
                                     
@@ -201,8 +201,12 @@
                                         var rowData = [
                                             rowNum,
                                             item.name, 
-                                            item.phone_number, 
-                                            item.emp_id,                                            item.salary,
+                                            item.phone_number,
+                                            item.emp_id,
+                                            item.salary,
+                                            item.adjusted_amount,
+                                            item.adjustment_reason,
+                                            item.after_adjustment_salary,
                                             item.payslips_status,
                                             '<button class="btn btn-primary adjustment" data-bs-toggle="modal" data-bs-target="#adjustment" data-id="'+item.payslips_id+'">Adjustment</button>'
                                         ];
@@ -273,7 +277,7 @@
                     $('#emp_id').val(response.data['employee details'][0].emp_id);
                     $('#name').val(response.data['employee details'][0].name);
                     $('#salary').val(response.data.Salary);
-                    $('#deducted_amount').val(response.data.deducted_amount);
+                    $('#adjusted_amount').val(response.data.adjusted_amount);
                     $('#adjustment_reason').val(response.data.adjustment_reason);
                     $('#payslips_id').val(payslips_id)
                     console.log(payslips_id);
@@ -343,9 +347,12 @@
                                                 var rowData = [
                                                     rowNum,
                                                     item.name, 
-                                                    item.phone_number, 
+                                                    item.phone_number,
                                                     item.emp_id,
                                                     item.salary,
+                                                    item.adjusted_amount,
+                                                    item.adjustment_reason,
+                                                    item.after_adjustment_salary,
                                                     item.payslips_status,
                                                     '<button class="btn btn-primary adjustment" data-bs-toggle="modal" data-bs-target="#adjustment" data-id="'+item.payslips_id+'">Adjustment</button>'
                                                 ];
