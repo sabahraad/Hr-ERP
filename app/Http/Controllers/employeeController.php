@@ -175,6 +175,7 @@ class employeeController extends Controller
         }
         $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
+        $joining_date = Carbon::createFromFormat('d-m-Y', $request->joining_date)->format('Y-m-d');
         if(!$userInfo){
             return response()->json([
                 'message' => 'User Not Found',
@@ -209,7 +210,7 @@ class employeeController extends Controller
         $data->name = $request->name;
         $data->gender = $request->gender ?? $data->gender;
         $data->dob = $request->dob ?? $data->dob;
-        $data->joining_date = $request->joining_date ?? $data->joining_date;
+        $data->joining_date = $joining_date ?? $data->joining_date;
         $data->phone_number = $request->phone_number ?? $data->phone_number;
         $data->dept_id = $request->dept_id;
         $data->designation_id = $request->designation_id;
@@ -220,7 +221,7 @@ class employeeController extends Controller
         if($request->has('salary')){
             $sal = Salary::where('emp_id',$data->emp_id)->first();
             $sal->salary = $request->salary ?? $sal->salary;
-            $sal->joining_date = $data->joining_date; 
+            $sal->joining_date = $joining_date; 
             $sal->save();
         }
 

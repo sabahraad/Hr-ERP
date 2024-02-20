@@ -61,9 +61,9 @@ class EmployeesImport implements ToCollection, WithHeadingRow
     
                 $user_id = User::where('email',$row['email'])->value('id');
                 $joiningDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['joining_date']);
-                $joiningDateOnly = $joiningDate->format('d-m-Y');
+                $joiningDateOnly = $joiningDate->format('Y-m-d');
                 $dob = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['joining_date']);
-                $dobOnly = $dob->format('d-m-Y');
+                $dobOnly = $dob->format('Y-m-d');
                 $data=new Employee();
                 $data->id = $user_id;
                 $data->officeEmployeeID = $row['officeemployeeid'];
