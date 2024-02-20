@@ -228,6 +228,11 @@ Route::post('/temp-salary-setting',[App\Http\Controllers\salarySettingController
 Route::get('/temp-salary-setting-list',[App\Http\Controllers\salarySettingController::class, 'tempSalarySettingList']);
 Route::delete('/delete-temp-salary-setting/{id}',[App\Http\Controllers\salarySettingController::class, 'deletetempSalarySetting']);
 
+//Timeline Setting
+Route::post('/add-timeline', [App\Http\Controllers\timelineController::class, 'addTimeline']);
+Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 'timelineList']);
+Route::post('/edit-timeine/{id}', [App\Http\Controllers\timelineController::class, 'editTimeline']);
+Route::delete('/delete-timeline/{id}', [App\Http\Controllers\timelineController::class, 'deleteTimeline']);
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');

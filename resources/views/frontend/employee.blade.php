@@ -160,6 +160,20 @@
 
                         <div class="col-sm-6">
                             <div class="input-block mb-3">
+                                <label class="col-form-label">Salary</label>
+                                <input class="form-control" type="number" name="salary">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">  
+                            <div class="input-block mb-3">
+                                <label class="col-form-label">Joining Date</label>
+                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="joining_date"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="input-block mb-3">
                                 <label class="col-form-label">Profile picture</label>
                                 <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg, image/jpg" name="image">
                             </div>
@@ -303,7 +317,22 @@
                                                 <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="dob" id="dob"></div>
                                             </div>
                                         </div>
-                                        
+
+                                        <div class="col-sm-6">
+                                            <div class="input-block mb-3">
+                                                <label class="col-form-label">salary</label>
+                                                <input class="form-control" type="number" name="salary" id="salary">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">  
+                                            <div class="input-block mb-3">
+                                                <label class="col-form-label">Joining Date</label>
+                                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="joining_date" id="joining_date"></div>
+                                            </div>
+                                        </div>
+
+
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Profile picture</label>
@@ -509,7 +538,7 @@
                         }); 
                         setTimeout(function() {
                             location.reload(); // This will refresh the current page
-                        }, 100);
+                        }, 100000);
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -524,6 +553,12 @@
                             icon: 'error',
                             title: 'Validation Error',
                             html: errorMessage
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something Went Wrong',
+                            html: xhr.responseJSON.message
                         });
                     }
                 }
@@ -609,6 +644,8 @@
                     $('#email').val(response.data[0].email);
                     $('#phoneNumber').val(response.data[0].phone_number);
                     $('#dob').val(response.data[0].dob);
+                    $('#salary').val(response.data[0].salary);
+                    $('#joining_date').val(response.data[0].joining_date);
                     $('#empID').val(empId);
 
                     var genderValue = response.data[0].gender;
