@@ -206,7 +206,8 @@ Route::post('/edit-salary-setting/{id}', [App\Http\Controllers\salarySettingCont
 Route::delete('/delete-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'deleteSalarySetting']);
 
 //Salary increment 
-Route::get('/employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::get('/employee-salary-details', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::get('/individual-employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'individualEmployeeSalaryDetails']);
 Route::post('/change-employee-salary/{id}', [App\Http\Controllers\SalaryController::class, 'changeEmployeeSalary']);
 Route::get('/salary-list', [App\Http\Controllers\SalaryController::class, 'salaryList']);
 Route::get('/employee-salary-history/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryHistory']);

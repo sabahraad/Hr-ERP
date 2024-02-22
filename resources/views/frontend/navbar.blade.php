@@ -110,7 +110,8 @@
 								<ul>
 									<li><a href="{{route('salarySetting')}}">Salary Setting</a></li>
 									<li><a href="{{route('payslip')}}"> Salary List </a></li>
-									<li><a href="payroll-items.html"> Payroll Items </a></li>
+									<li><a href="{{route('increment')}}"> Increment </a></li>
+									<li><a href="{{route('incrementHistory')}}"> Increment History</a></li>
 								</ul>
 							</li>
 							<!-- <li> 

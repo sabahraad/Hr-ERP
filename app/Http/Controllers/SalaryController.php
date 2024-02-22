@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Carbon;
 use App\Models\Employee;
 use App\Models\Payslip;
 use App\Models\PreviousSalaryHistroy;
@@ -16,14 +16,42 @@ class SalaryController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function employeeSalaryDetails($id){
-        $data =Salary::where('salaries.emp_id', $id)
-                    ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
-                    ->select('salaries.*', 'employees.*')
-                    ->get();
+    public function employeeSalaryDetails(){
+        $company_id = auth()->user()->company_id;
+
+        $data = Salary::where('salaries.company_id', $company_id)
+                        ->join('employees', function ($join) use ($company_id) {
+                            $join->on('salaries.emp_id', '=', 'employees.emp_id')
+                                ->where('salaries.company_id', '=', $company_id)
+                                ->where('employees.company_id', '=', $company_id);
+                        })
+                        ->join('users', 'employees.id', '=', 'users.id')
+                        ->select('salaries.*', 'employees.*','users.email')
+                        ->get();
+
         if(count($data) == 0){
             return response()->json([
-                'message'=>'No Salary Details Found For This Employee',
+                'message'=>'No Salary Details Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Salary Details',
+                'data'=>$data
+            ],200);
+        }
+    }
+
+    public function individualEmployeeSalaryDetails($id){
+        $data = Salary::where('salaries.emp_id', $id)
+                        ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
+                        ->join('users', 'users.id', '=', 'employees.id')
+                        ->select('salaries.*', 'employees.*', 'users.email')
+                        ->get();
+
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Salary Details Found',
                 'data'=>$data
             ],200);
         }else{
@@ -36,8 +64,7 @@ class SalaryController extends Controller
 
     public function changeEmployeeSalary(Request $request,$id){
         $validator = Validator::make($request->all(), [
-            'salary' => 'required|integer',
-            'last_increment_date' => 'required|date'
+            'salary' => 'required|integer'
         ]);
 
         if($validator->fails()) {
@@ -45,6 +72,7 @@ class SalaryController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
+        $increment_date = Carbon::now()->format('Y-m-d');
         $privouseSalaryDetails = Salary::find($id);
 
         $savePrivouseSalaryDetails = new PreviousSalaryHistroy();
@@ -56,7 +84,7 @@ class SalaryController extends Controller
         $savePrivouseSalaryDetails->save();
 
         $privouseSalaryDetails->salary = $request->salary;
-        $privouseSalaryDetails->last_increment_date = $request->last_increment_date;
+        $privouseSalaryDetails->last_increment_date = $increment_date;
         $privouseSalaryDetails->save();
 
         return response()->json([
@@ -142,12 +170,16 @@ class SalaryController extends Controller
     }
 
     public function employeeSalaryHistory($id){
-        $data = PreviousSalaryHistroy::where('emp_id',$id)->get();
+        $data = PreviousSalaryHistroy::where('previous_salary_histroys.emp_id', $id)
+                                    ->join('employees', 'previous_salary_histroys.emp_id', '=', 'employees.emp_id')
+                                    ->select('previous_salary_histroys.*', 'employees.*')
+                                    ->orderBy('previous_salary_histroys.salary_update_date', 'desc') 
+                                    ->get();
         if(count($data)==0){
             return response()->json([
                 'message'=>'no data found',
                 'data'=>$data
-            ],200);
+            ],404);
         }else{
             return response()->json([
                 'message'=>'Previous Salary History',
@@ -224,6 +256,7 @@ class SalaryController extends Controller
                         ->join('employees', 'payslips.emp_id', '=', 'employees.emp_id')
                         ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
                         ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
+                        ->where('employees.company_id', $company_id)
                         ->select(
                             'employees.*',
                             'departments.deptTitle',
