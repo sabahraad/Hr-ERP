@@ -60,7 +60,6 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Name</th>
-                                        <th>Number</th>
                                         <th>Employee ID</th>
                                         <th>Salary</th>
                                         <th>Adjustment Amount</th>
@@ -201,7 +200,6 @@
                                         var rowData = [
                                             rowNum,
                                             item.name, 
-                                            item.phone_number,
                                             item.emp_id,
                                             item.salary,
                                             item.adjusted_amount,
@@ -347,7 +345,6 @@
                                                 var rowData = [
                                                     rowNum,
                                                     item.name, 
-                                                    item.phone_number,
                                                     item.emp_id,
                                                     item.salary,
                                                     item.adjusted_amount,
