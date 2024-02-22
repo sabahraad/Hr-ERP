@@ -57,7 +57,11 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //payslip 
     Route::get('/payslip', [App\Http\Controllers\frontendController\payslipController::class, 'payslip'])->name('payslip');
-
+    
+    //increment
+    Route::get('/increment', [App\Http\Controllers\frontendController\incrementController::class, 'increment'])->name('increment');
+    Route::get('/increment-history', [App\Http\Controllers\frontendController\incrementController::class, 'incrementHistory'])->name('incrementHistory');
+    
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
