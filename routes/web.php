@@ -62,6 +62,10 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/increment', [App\Http\Controllers\frontendController\incrementController::class, 'increment'])->name('increment');
     Route::get('/increment-history', [App\Http\Controllers\frontendController\incrementController::class, 'incrementHistory'])->name('incrementHistory');
     
+    //timeline 
+    Route::get('/timeline-setting', [App\Http\Controllers\frontendController\timelineController::class, 'timelineSetting'])->name('increment');
+
+    
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');

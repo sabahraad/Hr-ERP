@@ -235,6 +235,10 @@ Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 't
 Route::post('/edit-timeine/{id}', [App\Http\Controllers\timelineController::class, 'editTimeline']);
 Route::delete('/delete-timeline/{id}', [App\Http\Controllers\timelineController::class, 'deleteTimeline']);
 
+//Timeline Track
+Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
+Route::post('/date-wise-track-of-employee', [App\Http\Controllers\timelineController::class, 'dateWiseTrackOfEmployee']);
+
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
 Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsController::class, 'designationNameList'])->name('designationNameList');
