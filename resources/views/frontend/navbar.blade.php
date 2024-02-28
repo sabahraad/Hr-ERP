@@ -114,9 +114,9 @@
 									<li><a href="{{route('incrementHistory')}}"> Increment History</a></li>
 								</ul>
 							</li>
-							<!-- <li> 
-								<a href="policies.html"><i class="la la-file-pdf-o"></i> <span>Policies</span></a>
-							</li> -->
+							<li> 
+								<a href="{{route('timelineSetting')}}"><i class="fas fa-clock"></i> <span>Timeline</span></a>
+							</li>
 							<!-- <li class="submenu">
 								<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 								<ul>
