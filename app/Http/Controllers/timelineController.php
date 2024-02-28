@@ -47,12 +47,63 @@ class timelineController extends Controller
         $company_id = auth()->user()->company_id;
         $data = TimelineSetting::where('timeline_settings.company_id',$company_id)
                                 ->join('employees','employees.emp_id','=','timeline_settings.emp_id')
+                                ->orderby('timeline_settings.updated_at','desc')
                                 ->get();
         if(count($data) == 0){
             return response()->json([
                 'message'=>'No data found',
                 'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Timeline List',
+                'data'=>$data
             ],200);
+        }
+    }
+
+    public function individualTimelineList($id){
+        $data = TimelineSetting::where('timeline_settings.timeline_settings_id',$id)
+                                ->join('employees','employees.emp_id','=','timeline_settings.emp_id')
+                                ->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Timeline List',
+                'data'=>$data
+            ],200);
+        }
+    }
+
+    public function employeeWiseTimelineList(Request $request){
+        $validator = Validator::make($request->all(), [
+            'date_range' => 'required',
+            'emp_id' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
+        $data = TimelineTrack::where('timeline_tracks.emp_id',$request->emp_id)
+                                ->join('employees','employees.emp_id','=','timeline_tracks.emp_id')
+                                ->whereDate('timeline_tracks.track_date', '>=', $startDate)
+                                ->whereDate('timeline_tracks.track_date', '<=', $endDate)
+                                ->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],404);
         }else{
             return response()->json([
                 'message'=>'Timeline List',
@@ -83,7 +134,8 @@ class timelineController extends Controller
         $validator = Validator::make($request->all(), [
             'track_date' => 'required|date_format:Y-m-d',
             'latitude' => 'required|numeric ',
-            'longitude' => 'required|numeric'
+            'longitude' => 'required|numeric',
+            'name' => 'required|string'
         ]);
         
         if ($validator->fails()) {
@@ -105,7 +157,8 @@ class timelineController extends Controller
             $newLocationData = [
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'time' => $currentTime
+                'time' => $currentTime,
+                'name' => $request->name
             ];
             $existingLocationData[] = $newLocationData;
             $existingRecord->location = json_encode($existingLocationData);
@@ -121,7 +174,8 @@ class timelineController extends Controller
             $newLocationData = [
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'time' => $currentTime
+                'time' => $currentTime,
+                'name' => $request->name
             ];
             $data->location = json_encode([$newLocationData]);
             $data->emp_id = $emp_id;

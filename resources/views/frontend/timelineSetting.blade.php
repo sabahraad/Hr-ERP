@@ -1,9 +1,9 @@
 @include('frontend.header')
 @include('frontend.navbar')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css">
 <style>
     .select2-container {
         width: 100% !important;
+        z-index: 9999 !important;
     }
 
     .select2-selection {
@@ -44,6 +44,7 @@
             </div>
         </div>
         <!-- /Page Header -->
+       
         <!-- table start -->
         <div class="row">
             <div class="col-md-12">
@@ -54,7 +55,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Employee ID</th>
-                                <th>fatch Time</th>
+                                <th>fetch Time</th>
                                 <th>Mobile</th>
                                 <th class="text-end no-sort">Action</th>
                             </tr>
@@ -70,17 +71,27 @@
                                     </h2>
                                 </td>
                                 <td>{{$timeline['emp_id']}}</td>
-                                <td>{{$timeline['fetch_time'] ?? 'N/A'}}</td>
+                                <?php
+                                    $fetch_time = $timeline['fetch_time'];
+                                    if($fetch_time == "60 mins"){
+                                        $fetch_time = "1 hour";
+                                    }elseif($fetch_time == "120 mins"){
+                                        $fetch_time = "2 hour";
+                                    }elseif($fetch_time == "180 mins"){
+                                        $fetch_time = "3 hour";
+                                    }
+                                ?>
+                                <td>{{$fetch_time ?? 'N/A'}}</td>
                                 <td>{{$timeline['phone_number'] ?? 'N/A'}}</td>
                                 <td class="text-end">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $timeline['emp_id'] }}">
+                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $timeline['timeline_settings_id'] }}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
                                                 <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $timeline['emp_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a> -->
-                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $timeline['emp_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $timeline['timeline_settings_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
                                 </td>
@@ -98,7 +109,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Employee</h5>
+                <h5 class="modal-title">Add Employee Timeline</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -106,23 +117,27 @@
             <div class="modal-body">
                 <form id="msform">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Employee <span class="text-danger">*</span></label>
-                                <select class="select" id="selectEmployee" name="emp_id">
-                                <option selected disabled>Select Employee</option>                                   
-                                    @foreach ($employee['data'] as $emp)
-                                        <option value="{{$emp['emp_id']}}">{{$emp['name']}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="inputText4" class="col-form-label">Select Employee</label>
+                            <select name="emp_id" id="emp_id_add" class="select2" required>
+                                <option selected disabled>Open this to select Employee</option>
+                                @foreach ($employee['data'] as $emp)
+                                    <option value="{{$emp['emp_id']}}">{{$emp['name']}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                    
-
                         <div class="col-sm-12">
                             <div class="input-block mb-3">
-                                <label class="col-form-label">fatch Time <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="fatch_time">
+                                <label class="col-form-label">fetch Time <span class="text-danger">*</span></label>
+                                <select name="fetch_time" id="fetch_time" class="form-select" required>
+                                    <option selected disabled>Open this to select fetch Time</option>
+                                    <option value="10 mins">10 minute</option>
+                                    <option value="15 mins">15 minute</option>
+                                    <option value="30 mins">30 minute</option>
+                                    <option value="60 mins">1 hour</option>
+                                    <option value="120 mins">2 hour</option>
+                                    <option value="180 mins">3 hour</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -130,7 +145,6 @@
                         <button class="btn btn-primary submit-btn">Submit</button>
                     </div>
                 </form>
-                
             </div>
         </div>
     </div>
@@ -154,84 +168,32 @@
                                         <div class="col-sm-12">  
 											<div class="input-block mb-3">
 												<label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
-												<input type="text" name="emp_id" id="empID" readonly class="form-control floating">
+												<input type="text" name="emp_id" id="emp_id" readonly class="form-control floating">
 											</div>
 										</div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Name <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="name" id="name">
-                                            </div>
-                                        </div>
 
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="email" id="email">
-                                            </div>
-                                        </div>
+                                        <div class="col-sm-12">  
+											<div class="input-block mb-3">
+												<label class="col-form-label">Employee Name <span class="text-danger">*</span></label>
+												<input type="text" name="name" id="name" readonly class="form-control floating">
+											</div>
+										</div>
 
-                                        
-
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12"> 
                                             <div class="input-block mb-3">
-                                                <label class="col-form-label">Phone Number</label>
-                                                <input class="form-control" type="number" name="phone_number" id="phoneNumber">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">  
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Date of Birth</label>
-                                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="dob" id="dob"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">salary</label>
-                                                <input class="form-control" type="number" name="salary" id="salary">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">  
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Joining Date</label>
-                                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="joining_date" id="joining_date"></div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Profile picture</label>
-                                                <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg, image/jpg" name="image">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Gender</label>
-                                                <select class="select" name="gender" id="genderSelect">
-                                                    <option selected disabled>Select Gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        
-										
-										
-                                        <div class="col-md-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Designation <span class="text-danger">*</span></label>
-                                                <select class="select" id="desig_id1" name="designation_id">
-                                                    <option selected disabled>Select Designation</option>                                   
+                                                <label class="col-form-label">fetch Time <span class="text-danger">*</span></label>
+                                                <select name="fetch_time" id="fetch_time" class="form-select" required>
+                                                    <option value="10 mins">10 minute</option>
+                                                    <option value="15 mins">15 minute</option>
+                                                    <option value="30 mins">30 minute</option>
+                                                    <option value="60 mins">1 hour</option>
+                                                    <option value="120 mins">2 hour</option>
+                                                    <option value="180 mins">3 hour</option>
                                                 </select>
                                             </div>
                                         </div>
 									</div>
-									
+                                    <input class="form-control" type="text" name="timeline_settings_id" id="timeline_settings_id" hidden>
 									<div class="submit-section">
 										<button class="btn btn-primary submit-btn">Save</button>
 									</div>
@@ -256,7 +218,7 @@
 										<div class="col-6">
                                         <form id="deptDelete">
                                             @csrf
-                                            <input id ="emp_id" class="form-control" name="emp_id" type="hidden">
+                                            <input id ="timeline_settings_id" class="form-control" name="timeline_settings_id" type="hidden">
                                             <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
                                         </form>										
                                     </div>
@@ -276,70 +238,21 @@
 			
         </div>
 		<!-- /Main Wrapper -->
-
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    
     $(document).ready(function() {
-        $('#selectEmployee').select2();
         var jwtToken = "{{ $jwtToken }}";
         $('#empTable').DataTable();
 
         $(document).on('click', '.add-employee', function(){
-            console.log('wswssss');
-            // $.ajax({
-            //     url: 'https://hrm.aamarpay.dev/api/emp-list', 
-            //     type: 'GET',
-            //     headers: {
-            //         'Authorization': 'Bearer ' + jwtToken
-            //     },
-            //     success: function(jsonResponse) {
-            //         console.log(jsonResponse);
-            //         var select = $('#selectEmployee');
-            
-            //         $.each(jsonResponse.data, function(index, employee) {
-            //             select.append('<option value="' + employee.emp_id + '">' + employee.name + '</option>');
-            //         });
-
-            //     },
-            //     error: function(error) {
-            //         console.error(error);
-            //     }
-            // });
-        });
-    });
-
-    $(document).on('change', '#selectDept', function() {
-        console.log('okllll');
-        var jwtToken = "{{ $jwtToken }}";
-        var dept_id = $(this).val();
-        console.log(dept_id);
-
-        $.ajax({
-            url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
-            type: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            success: function(data) {
-                console.log(data);
-                $('#desig_id option:not(:first-child)').remove();
-                // Handle the response from the server
-                $.each(data, function(value, text) {
-                    $('#desig_id').append($('<option>').text(text).attr('value', value));
+            $('.select2').each(function () {
+                $(this).select2({
+                    dropdownParent: $(this).parent(),
                 });
-                console.log(data);
-            },
-            error: function(error) {
-                console.error(error);
-            }
+            });
         });
     });
-
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
@@ -349,7 +262,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-employee', 
+                url: 'https://hrm.aamarpay.dev/api/add-timeline', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -359,15 +272,33 @@
                 processData: false,
                 success: function(response) {
                     console.log(response);
+                    $('#add_employee').modal('hide');
                     Swal.fire({
                         icon: 'success',
-                        title: 'Employee added successful',
-                        text: 'Your Employee registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100000);
+                        title: 'Employee added to timeline successfully',
+                        text: 'Your Employee successfully added into timeline!',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Loading...',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                allowEnterKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    setTimeout(() => {
+                                        try {
+                                            location.reload(true); // Force a hard reload from the server
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+                                    }, 2000); // Set the time you want the loading icon to be visible (in milliseconds)
+                                }
+                            });
+                        }
+                    });
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -397,158 +328,29 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#excelForm').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/upload-employees', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Employees are added successful',
-                        text: 'Your BUlk Employee Registration Was Successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-
-                        for (var i = 0; i < errors.errors.length; i++) {
-                            var errorDetails = errors.errors[i];
-
-                            for (var field in errorDetails.errors) {
-                                var fieldErrors = errorDetails.errors[field];
-
-                                for (var j = 0; j < fieldErrors.length; j++) {
-                                    var fieldValue = errorDetails.row[field];
-                                    errorMessage += "<li>" + field + ": " + fieldValue + " - " + fieldErrors[j] + "</li>";
-                                }
-                            }
-                        }
-
-                        errorMessage += "</ul>";
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
         $(document).on('click', '.edit-employee', function(){
-            console.log(empId,'ok');
-
-            var empId = $(this).data('id');
-
+            var timeline_settings_id = $(this).data('id');
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/employee-details/'+empId, 
+                url: 'https://hrm.aamarpay.dev/api/individual-timeline-list/'+timeline_settings_id, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
                 },
                 success: function(response) {
                     console.log(response.data[0]);
-                    $('#name').val(response.data[0].name.trim());
-                    $('#email').val(response.data[0].email);
-                    $('#phoneNumber').val(response.data[0].phone_number);
-                    $('#dob').val(response.data[0].dob);
-                    $('#salary').val(response.data[0].salary);
-                    $('#joining_date').val(response.data[0].joining_date);
-                    $('#empID').val(empId);
+                    $('#emp_id').val(response.data[0].emp_id);
+                    $('#name').val(response.data[0].name);
+                    $('#timeline_settings_id').val(timeline_settings_id);
 
-                    var genderValue = response.data[0].gender;
-                    var dept_id = response.data[0].dept_id;
-                    var desig_id = response.data[0].designation_id;
-                    console.log(desig_id,'==============================raad');
+                    var selectedFetchTime = response.data[0].fetch_time;
 
-                    $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/department-name-list', 
-                        type: 'GET',
-                        headers: {
-                            'Authorization': 'Bearer ' + jwtToken
-                        },
-                        success: function(data) {
-                            $('#selectDept option:not(:first-child)').remove();
-                            $('#selectDept1 option:not(:first-child)').remove();
-
-                            $.each(data, function(value, text) {
-                                if(value == dept_id){
-                                    $('#selectDept').append($('<option>').text(text).attr('value', value).prop('selected', true));
-                                    $('#selectDept1').append($('<option>').text(text).attr('value', value).prop('selected', true));
-                                }else{
-                                    $('#selectDept').append($('<option>').text(text).attr('value', value));
-                                    $('#selectDept1').append($('<option>').text(text).attr('value', value));
-                                }
-                            });
-                            console.log(data);
-                        },
-                        error: function(error) {
-                            // Handle any errors
-                            console.error(error);
+                    $('#fetch_time option').each(function() {
+                        if ($(this).val() === selectedFetchTime) {
+                            $(this).prop('selected', true);
+                        } else {
+                            $(this).prop('selected', false);
                         }
                     });
-                    
-                    $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
-                        type: 'GET',
-                        headers: {
-                            'Authorization': 'Bearer ' + jwtToken
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            $('#desig_id1 option:not(:first-child)').remove();
-                            // Handle the response from the server
-                            $.each(data, function(value, text) {
-                                console.log(value,'value',desig_id);
-                                if(value == desig_id){
-                                    $('#desig_id1').append($('<option>').text(text).attr('value', value).prop('selected', true));
-                                }else{
-                                    $('#desig_id1').append($('<option>').text(text).attr('value', value));
-                                }
-                            });
-                            console.log(data);
-                        },
-                        error: function(error) {
-                            console.error(error);
-                        }
-                    });
-
-                    // Clear previous selections
-                    $('#genderSelect option').removeAttr('selected');
-
-                    if (genderValue !== null) {
-                        $('#genderSelect option[value="' + genderValue + '"]').prop('selected', true);
-                    } else {
-                        console.log('ok');
-                        $('#genderSelect option[value=""]').prop('selected', true);
-                    }
-                    // $('#selectDept1 option').removeAttr('selected');
-                    // $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
-                    // $('#desig_id1 option[value="' + dept_id + '"]').prop('selected', true);
-
-                    $('#genderSelect').change();
-                    // $('#selectDept1').change();
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
@@ -577,13 +379,13 @@
         var jwtToken = "{{ $jwtToken }}";
     $('#editSubmit').submit(function(e) {
         e.preventDefault();
-        var emp_id = $('#empID').val();
-        console.log(emp_id);
+        var timeline_settings_id = $('#timeline_settings_id').val();
+        console.log(timeline_settings_id);
 
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/employee/'+emp_id, 
+                url: 'https://hrm.aamarpay.dev/api/edit-timeine/'+timeline_settings_id, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -592,16 +394,33 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
+                    $('#edit_employee').modal('hide');
                     Swal.fire({
                         icon: 'success',
-                        title: 'Employee Edited successfully',
-                        text: 'Your Employee edit was successful!',
-                        showConfirmButton: false, 
+                        title: 'Employee Timeline Details Edited Successfully',
+                        text: 'Your Employee Timeline Details Edit Was Successful!',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Loading...',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                allowEnterKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    setTimeout(() => {
+                                        try {
+                                            location.reload(true); 
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+                                    }, 2000); 
+                                }
+                            });
+                        }
                     });
-                    setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 200);
-
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -625,8 +444,8 @@
     
     $(document).ready(function() {
         $(document).on('click', '.delete-employee', function(){
-            var empId = $(this).data('id');
-            $('#emp_id').val(empId);
+            var timeline_settings_id = $(this).data('id');
+            $('#timeline_settings_id').val(timeline_settings_id);
         });
     });
 
@@ -634,12 +453,12 @@
         var jwtToken = "{{ $jwtToken }}";
     $('#deptDelete').submit(function(e) {
         e.preventDefault();
-        var emp_id = $('#emp_id').val();
-        console.log(emp_id);
+        var timeline_settings_id = $('#timeline_settings_id').val();
+        console.log(timeline_settings_id);
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/employee/'+emp_id, 
+                url: 'https://hrm.aamarpay.dev/api/delete-timeline/'+timeline_settings_id, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -648,15 +467,33 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
+                    $('#delete_employee').modal('hide');
                     Swal.fire({
                         icon: 'success',
-                        title: 'Employee successfully deleted',
-                        text: 'You have successfully deleted a employee',
-                        showConfirmButton: false, 
+                        title: 'Employee Timeline Successfully Deleted',
+                        text: 'You have successfully deleted a employee timeline',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Loading...',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                allowEnterKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    setTimeout(() => {
+                                        try {
+                                            location.reload(true); // Force a hard reload from the server
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+                                    }, 2000); // Set the time you want the loading icon to be visible (in milliseconds)
+                                }
+                            }); 
+                        }
                     });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },200);
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
