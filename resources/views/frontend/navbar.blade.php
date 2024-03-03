@@ -117,22 +117,22 @@
 							<li> 
 								<a href="{{route('timelineSetting')}}"><i class="fas fa-clock"></i> <span>Timeline</span></a>
 							</li>
-							<!-- <li class="submenu">
+							<li class="submenu">
 								<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="expense-reports.html"> Expense Report </a></li>
+									<!-- <li><a href="expense-reports.html"> Expense Report </a></li>
 									<li><a href="invoice-reports.html"> Invoice Report </a></li>
 									<li><a href="payments-reports.html"> Payments Report </a></li>
 									<li><a href="project-reports.html"> Project Report </a></li>
 									<li><a href="task-reports.html"> Task Report </a></li>
 									<li><a href="user-reports.html"> User Report </a></li>
 									<li><a href="employee-reports.html"> Employee Report </a></li>
-									<li><a href="payslip-reports.html"> Payslip Report </a></li>
-									<li><a href="attendance-reports.html"> Attendance Report </a></li>
-									<li><a href="leave-reports.html"> Leave Report </a></li>
-									<li><a href="daily-reports.html"> Daily Report </a></li>
+									<li><a href="payslip-reports.html"> Payslip Report </a></li> -->
+									<li><a href="{{route('customReport')}}"> Attendance Report </a></li>
+									<!-- <li><a href="leave-reports.html"> Leave Report </a></li>
+									<li><a href="daily-reports.html"> Daily Report </a></li> -->
 								</ul>
-							</li> -->
+							</li>
 							
 						</ul>
 					</div>

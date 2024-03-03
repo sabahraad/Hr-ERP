@@ -66,6 +66,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/timeline-setting', [App\Http\Controllers\frontendController\timelineController::class, 'timelineSetting'])->name('timelineSetting');
     Route::get('/employee-wise-timeline', [App\Http\Controllers\frontendController\timelineController::class, 'employeeWiseTimeline'])->name('employeeWiseTimeline');
 
+    //custom report 
+    Route::get('/custom-report', [App\Http\Controllers\frontendController\timelineController::class, 'customReport'])->name('customReport');
+
     
 });
  //dept excel download
