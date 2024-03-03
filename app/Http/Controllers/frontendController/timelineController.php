@@ -65,4 +65,8 @@ class timelineController extends Controller
         $employee = json_decode($response,true);
         return view('frontend.employeeTimeline',compact('employee'), ['jwtToken' => $access_token]);
     }
+    public function customReport(){
+        $access_token = session('access_token');
+        return view('frontend.customReport', ['jwtToken' => $access_token]);
+    }
 }

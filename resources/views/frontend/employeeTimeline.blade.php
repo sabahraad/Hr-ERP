@@ -51,7 +51,7 @@
                             </ul>
                         </div>
                         <div class="col-auto float-end ms-auto">
-                            <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Attendance</a>
+                            <a href="{{route('timelineSetting')}}" class="btn add-btn"><i class="fas fa-cog"></i> Timeline Setting</a>
                         </div>
                     </div>
                 </div>
@@ -87,11 +87,8 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Employee Name</th>
-                                        <th>Location Name</th>
-                                        <th>latitude</th>
-                                        <th>longitude</th>
                                         <th>Date</th>
-                                        <th >Action</th>
+                                        <th>Location Data</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -328,29 +325,22 @@
 			success: function(response) {
                 var table = $('#desigTable').DataTable();
                 table.clear().draw();
+
                 response.data.forEach(function(item) {
                     var locations = JSON.parse(item.location);
                     var locationData = '';
 
-                    // Process the location data
                     locations.forEach(function(location) {
-                        locationData += '<b>Latitude:</b> ' + location.latitude +
-                                        ' <b>Longitude:</b> ' + location.longitude +
-                                        ' <b>Time:</b> ' + location.time +
-                                        ' <b>Name:</b> ' + (location.name || 'N/A') + '<br>';
-                        table.row.add([
-                            item.timeline_tracks_id,
-                            item.name,
-                            locationData
-                        ]).draw();
+                        locationData += ' <b>Name:</b> ' + (location.name || 'N/A') + '&nbsp;&nbsp;&nbsp;' +
+                                        '<b>Time:</b> ' + location.time + '&nbsp;&nbsp;&nbsp;' + '<br>';
                     });
-
-                    // Add the row to the DataTable
-                    // table.row.add([
-                    //     item.timeline_tracks_id,
-                    //     item.track_date,
-                    //     locationData
-                    // ]).draw();
+                    key = 0;
+                    table.row.add([
+                        key+1,
+                        item.name,
+                        item.track_date,
+                        locationData
+                    ]).draw();
                 });
             },
             error: function(xhr, textStatus, errorThrown) {

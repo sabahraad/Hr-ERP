@@ -36,6 +36,11 @@
                         Add Employee into Timeline
                     </a>
 
+                    <a style="margin-right: 10px;" href="{{route('employeeWiseTimeline')}}" class="btn add-btn add-employee">
+                        <i class="fas fa-clock"></i>
+                        Employee Timeline
+                    </a>
+
                     <div class="view-icons">
                         <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->

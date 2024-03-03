@@ -57,7 +57,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
     Route::get('/catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
 
-    //Per month calculation
+    //Per month calculation for App
     Route::post('/month-wise-off-day-list', [App\Http\Controllers\leaveController::class, 'monthWiseOffDayList']);
     Route::post('/month-wise-report', [App\Http\Controllers\leaveController::class, 'monthWiseReport']);
 
@@ -218,7 +218,7 @@ Route::post('/create-payslip', [App\Http\Controllers\SalaryController::class, 'c
 Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::class, 'adjustPayslip']);
 
 
-//Report
+//Report for admin panel
 Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
 
 //bulk employee add 
