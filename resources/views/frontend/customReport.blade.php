@@ -86,6 +86,7 @@
                                         <th>Late CheckIN Days</th>
                                         <th>Ontime Checkout Days</th>
                                         <th>Early Checkout Days</th>
+                                        <th>leave</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -150,6 +151,7 @@
                 success: function(response) {
                     var table = $('#desigTable').DataTable();
                     table.clear().draw();
+                    console.log(response.data);
                     var key = 0;
                     response.data.forEach(function(item) {
                         table.row.add([
@@ -157,11 +159,12 @@
                             item.name,
                             item.deptTitle,
                             item.desigTitle,
-                            item.total__present_days,
+                            item.total_present_days,
                             item.ontime_checkIN_days,
                             item.late_checkIN_days,
                             item.ontime_checkout_days,
-                            item.early_checkout_days
+                            item.early_checkout_days,
+                            item.total_leave_days
                         ]).draw(false);
                         key++;
                     });
