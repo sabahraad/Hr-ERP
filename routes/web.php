@@ -69,7 +69,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     //custom report 
     Route::get('/custom-report', [App\Http\Controllers\frontendController\timelineController::class, 'customReport'])->name('customReport');
 
-    
+    //dashboard
+    Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
