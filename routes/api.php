@@ -220,6 +220,8 @@ Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::clas
 
 //Report for admin panel
 Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
+Route::get('/chart-details', [App\Http\Controllers\frontendController\timeWiseController::class, 'chartDetails']);
+
 
 //bulk employee add 
 Route::post('/upload-employees',[App\Http\Controllers\employeeController::class, 'uploadEmployees']);
@@ -241,7 +243,6 @@ Route::get('/individual-timeline-list/{id}', [App\Http\Controllers\timelineContr
 Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
 Route::post('/date-wise-track-of-employee', [App\Http\Controllers\timelineController::class, 'dateWiseTrackOfEmployee']);
 Route::post('/employee-wise-timeline-list', [App\Http\Controllers\timelineController::class, 'employeeWiseTimelineList']);
-
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');
