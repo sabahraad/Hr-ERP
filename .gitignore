@@ -18,3 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 public 
+app/Http/Controllers/shiftController.php
+app/Models/Timeline.php
+database/migrations/2024_02_20_135144_create_timelines_table.php
+database/migrations/2024_02_20_140235_create_timeline_tracks_table.php
