@@ -72,6 +72,14 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     //dashboard
     Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
 
+    //Shift
+    Route::get('/shift-list', [App\Http\Controllers\frontendController\shiftController::class, 'ShiftList'])->name('ShiftList');
+    Route::get('/add-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addShift'])->name('addShift');
+    Route::post('/create-shift', [App\Http\Controllers\frontendController\shiftController::class, 'createShift'])->name('createShift');
+    Route::get('/edit-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'showEditShift'])->name('showEditShift');
+    Route::post('/edit-shift', [App\Http\Controllers\frontendController\shiftController::class, 'editShift'])->name('editShift');
+    Route::get('/delete-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'deleteShift'])->name('deleteShift');
+    
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');

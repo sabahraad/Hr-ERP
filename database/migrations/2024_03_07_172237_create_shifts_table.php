@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('shifts_title');
             $table->time('shifts_start_time');
             $table->time('shifts_end_time');
+            $table->time('shifts_grace_time');
             $table->enum('shifts_status', ['active', 'deactive'])->default('active');
             $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
