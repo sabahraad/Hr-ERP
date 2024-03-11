@@ -57,6 +57,8 @@
                                             <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                         </a>
                                             <a class="dropdown-item delete-employee" href="{{ route('deleteShift', ['id' => $shift->shifts_id]) }}" ><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                            <a class="dropdown-item delete-employee" href="{{ route('showAddEmployeeInShift', ['id' => $shift->shifts_id]) }}" ><i class="fas fa-plus-circle m-r-5"></i> Add Employee To This Shift</a>
+
                                         </div>
                                     </div>
                                 </td>

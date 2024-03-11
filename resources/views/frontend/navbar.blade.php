@@ -96,7 +96,6 @@
 												<li><a href="{{route('designation')}}">Designations</a></li>
 											</ul>
 									</li>
-									
 									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
 									<li><a href="{{route('holidays')}}">Holiday</a></li>
 								</ul>

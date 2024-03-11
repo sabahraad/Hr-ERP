@@ -80,6 +80,10 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::post('/edit-shift', [App\Http\Controllers\frontendController\shiftController::class, 'editShift'])->name('editShift');
     Route::get('/delete-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'deleteShift'])->name('deleteShift');
     
+    Route::get('/show-add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'showAddEmployeeInShift'])->name('showAddEmployeeInShift');
+    
+    Route::post('/add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addEmployeeInShift'])->name('addEmployeeInShift');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
