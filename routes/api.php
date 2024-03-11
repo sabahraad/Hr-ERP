@@ -57,7 +57,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
     Route::get('/catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
 
-    //Per month calculation
+    //Per month calculation for App
     Route::post('/month-wise-off-day-list', [App\Http\Controllers\leaveController::class, 'monthWiseOffDayList']);
     Route::post('/month-wise-report', [App\Http\Controllers\leaveController::class, 'monthWiseReport']);
 
@@ -206,7 +206,8 @@ Route::post('/edit-salary-setting/{id}', [App\Http\Controllers\salarySettingCont
 Route::delete('/delete-salary-setting/{id}', [App\Http\Controllers\salarySettingController::class, 'deleteSalarySetting']);
 
 //Salary increment 
-Route::get('/employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::get('/employee-salary-details', [App\Http\Controllers\SalaryController::class, 'employeeSalaryDetails']);
+Route::get('/individual-employee-salary-details/{id}', [App\Http\Controllers\SalaryController::class, 'individualEmployeeSalaryDetails']);
 Route::post('/change-employee-salary/{id}', [App\Http\Controllers\SalaryController::class, 'changeEmployeeSalary']);
 Route::get('/salary-list', [App\Http\Controllers\SalaryController::class, 'salaryList']);
 Route::get('/employee-salary-history/{id}', [App\Http\Controllers\SalaryController::class, 'employeeSalaryHistory']);
@@ -217,8 +218,10 @@ Route::post('/create-payslip', [App\Http\Controllers\SalaryController::class, 'c
 Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::class, 'adjustPayslip']);
 
 
-//Report
+//Report for admin panel
 Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
+Route::get('/chart-details', [App\Http\Controllers\frontendController\timeWiseController::class, 'chartDetails']);
+
 
 //bulk employee add 
 Route::post('/upload-employees',[App\Http\Controllers\employeeController::class, 'uploadEmployees']);
@@ -228,6 +231,18 @@ Route::post('/temp-salary-setting',[App\Http\Controllers\salarySettingController
 Route::get('/temp-salary-setting-list',[App\Http\Controllers\salarySettingController::class, 'tempSalarySettingList']);
 Route::delete('/delete-temp-salary-setting/{id}',[App\Http\Controllers\salarySettingController::class, 'deletetempSalarySetting']);
 
+//Timeline Setting
+Route::post('/add-timeline', [App\Http\Controllers\timelineController::class, 'addTimeline']);
+Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 'timelineList']);
+Route::post('/edit-timeine/{id}', [App\Http\Controllers\timelineController::class, 'editTimeline']);
+Route::delete('/delete-timeline/{id}', [App\Http\Controllers\timelineController::class, 'deleteTimeline']);
+Route::get('/individual-timeline-list/{id}', [App\Http\Controllers\timelineController::class, 'individualTimelineList']);
+
+
+//Timeline Track
+Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
+Route::post('/date-wise-track-of-employee', [App\Http\Controllers\timelineController::class, 'dateWiseTrackOfEmployee']);
+Route::post('/employee-wise-timeline-list', [App\Http\Controllers\timelineController::class, 'employeeWiseTimelineList']);
 
 });
 Route::get('/department-name-list',[App\Http\Controllers\departmentController::class, 'departmentNameList'])->name('departmentNameList');

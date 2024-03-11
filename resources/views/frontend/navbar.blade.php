@@ -76,6 +76,7 @@
 									<li class="submenu">
 										<a href="#"><span>Attendance Settitng</span> <span class="menu-arrow"></span></a>
 											<ul>
+												<li><a href="{{route('ShiftList')}}">Shift</a></li>
 												<li><a href="{{route('attendanceSetting')}}">Office Time</a></li>
 												<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
 											</ul>
@@ -95,7 +96,6 @@
 												<li><a href="{{route('designation')}}">Designations</a></li>
 											</ul>
 									</li>
-									
 									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
 									<li><a href="{{route('holidays')}}">Holiday</a></li>
 								</ul>
@@ -109,29 +109,30 @@
 								<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li><a href="{{route('salarySetting')}}">Salary Setting</a></li>
-									<li><a href="salary-view.html"> Payslip </a></li>
-									<li><a href="payroll-items.html"> Payroll Items </a></li>
+									<li><a href="{{route('payslip')}}"> Salary List </a></li>
+									<li><a href="{{route('increment')}}"> Increment </a></li>
+									<li><a href="{{route('incrementHistory')}}"> Increment History</a></li>
 								</ul>
 							</li>
-							<!-- <li> 
-								<a href="policies.html"><i class="la la-file-pdf-o"></i> <span>Policies</span></a>
-							</li> -->
-							<!-- <li class="submenu">
+							<li> 
+								<a href="{{route('timelineSetting')}}"><i class="fas fa-clock"></i> <span>Timeline</span></a>
+							</li>
+							<li class="submenu">
 								<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="expense-reports.html"> Expense Report </a></li>
+									<!-- <li><a href="expense-reports.html"> Expense Report </a></li>
 									<li><a href="invoice-reports.html"> Invoice Report </a></li>
 									<li><a href="payments-reports.html"> Payments Report </a></li>
 									<li><a href="project-reports.html"> Project Report </a></li>
 									<li><a href="task-reports.html"> Task Report </a></li>
 									<li><a href="user-reports.html"> User Report </a></li>
 									<li><a href="employee-reports.html"> Employee Report </a></li>
-									<li><a href="payslip-reports.html"> Payslip Report </a></li>
-									<li><a href="attendance-reports.html"> Attendance Report </a></li>
-									<li><a href="leave-reports.html"> Leave Report </a></li>
-									<li><a href="daily-reports.html"> Daily Report </a></li>
+									<li><a href="payslip-reports.html"> Payslip Report </a></li> -->
+									<li><a href="{{route('customReport')}}"> Attendance Report </a></li>
+									<!-- <li><a href="leave-reports.html"> Leave Report </a></li>
+									<li><a href="daily-reports.html"> Daily Report </a></li> -->
 								</ul>
-							</li> -->
+							</li>
 							
 						</ul>
 					</div>

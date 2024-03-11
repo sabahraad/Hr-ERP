@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('payslips', function (Blueprint $table) {
             $table->bigIncrements('payslips_id');
             $table->integer('salary');
+            $table->enum('adjustment_type',['addition','deduction']);
+            $table->integer('adjusted_amount')->nullable();
             $table->string('adjustment_reason')->nullable();
+            $table->integer('after_adjustment_salary')->nullable();
             $table->enum('status', ['paid', 'pending', 'cancelled'])->default('pending');
             $table->date('month');
             $table->integer('year');

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use App\Models\Employee;
+use App\Models\Salary;
 use Illuminate\Validation\ValidationException;
 
 
@@ -26,6 +27,7 @@ class EmployeesImport implements ToCollection, WithHeadingRow
                 'name' => 'required|string|between:2,100',
                 'gender' => 'string',
                 'dob' => 'required',
+                'salary' => 'required|integer',
                 'joining_date' => 'required',
                 'dept_id' => 'required|integer',
                 'designation_id' => 'required|integer',
@@ -59,9 +61,9 @@ class EmployeesImport implements ToCollection, WithHeadingRow
     
                 $user_id = User::where('email',$row['email'])->value('id');
                 $joiningDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['joining_date']);
-                $joiningDateOnly = $joiningDate->format('d-m-Y');
+                $joiningDateOnly = $joiningDate->format('Y-m-d');
                 $dob = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['joining_date']);
-                $dobOnly = $dob->format('d-m-Y');
+                $dobOnly = $dob->format('Y-m-d');
                 $data=new Employee();
                 $data->id = $user_id;
                 $data->officeEmployeeID = $row['officeemployeeid'];
@@ -75,6 +77,14 @@ class EmployeesImport implements ToCollection, WithHeadingRow
                 $data->status = 1;
                 $data->company_id = $company_id;
                 $data->save();
+
+                $sal = new Salary();
+                $sal->salary = $row['salary'];
+                $sal->joining_date =  $joiningDateOnly; 
+                $sal->last_increment_date =  $joiningDateOnly; 
+                $sal->emp_id = $data->emp_id; 
+                $sal->company_id = $company_id; 
+                $sal->save();
             }
         }
         

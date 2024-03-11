@@ -10,36 +10,18 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Employee</h3>
+                    <h3 class="page-title">Shift List</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item">Dashboard</li>
-                        <li class="breadcrumb-item active">Employee</li>
+                        <li class="breadcrumb-item active">Shift List</li>
                     </ul>
                 </div>
                 <div class="col-auto float-end ms-auto">
-                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee" id="addEmployeeButton">
+                    <a href="{{route('addShift')}}" class="btn add-btn" >
                         <i class="fa-solid fa-plus"></i> 
-                        Add Employee
+                        Add Shift
                     </a>
 
-                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_bulk" id="addEmployeeButton" style="margin-right: 19px;">
-                        <i class="fa-solid fa-upload"></i>
-                        Add Employee in bulk
-                    </a>
-
-                    <a href="{{route('downloadDeptExcel')}}" class="btn add-btn add-employee"  style="margin-right: 19px;">
-                        <i class="fa-solid fa-download"></i>
-                        Export Department Details
-                    </a>
-
-                    <a href="{{route('downloadDesigExcel')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
-                        <i class="fa-solid fa-download"></i>
-                        Export Designation Details
-                    </a>
-                    <div class="view-icons">
-                        <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
-                        <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
-                    </div>
                 </div>
             </div>
         </div>
@@ -51,40 +33,32 @@
                     <table class="table table-striped custom-table" id="empTable">
                         <thead>
                             <tr>
-                                <th>Employee ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Mobile</th>
-                                <th>DOB</th>
-                                <th>Department</th>
-                                <th>Designation</th>
+                                <th>#</th>
+                                <th>Shift Name</th>
+                                <th>Check IN Time</th>
+                                <th>Check Out Time</th>
+                                <th>Grace Time</th>
                                 <th class="text-end no-sort">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($dataArray['data'] as $employee)
+                            @foreach ($data as $key =>$shift)
                             <tr>
-                                <td>{{$employee['emp_id']}}</td>
-                                <td>
-                                    <h2 class="table-avatar">
-                                        <a href="profile.html" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
-                                        <a href="profile.html">{{$employee['name']}}</a>
-                                    </h2>
-                                </td>
-                                <td>{{$employee['email']}}</td>
-                                <td>{{$employee['phone_number'] ?? 'N/A'}}</td>
-                                <td>{{$employee['dob'] ?? 'N/A'}}</td>
-                                <td>{{$employee['deptTitle']}}</td>
-                                <td>{{$employee['desigTitle']}}</td>
+                                <td>{{$key+1}}</td>
+                                <td>{{$shift->shifts_title}}</td>
+                                <td>{{$shift->shifts_start_time}}</td>
+                                <td>{{$shift->shifts_end_time}}</td>
+                                <td>{{$shift->shifts_grace_time}}</td>
                                 <td class="text-end">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}">
-                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                            </a>
-                                                <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a> -->
-                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $employee['emp_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                        <a class="dropdown-item edit-employee" href="{{ route('showEditShift', ['id' => $shift->shifts_id]) }}">
+                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                        </a>
+                                            <a class="dropdown-item delete-employee" href="{{ route('deleteShift', ['id' => $shift->shifts_id]) }}" ><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                            <a class="dropdown-item delete-employee" href="{{ route('showAddEmployeeInShift', ['id' => $shift->shifts_id]) }}" ><i class="fas fa-plus-circle m-r-5"></i> Add Employee To This Shift</a>
+
                                         </div>
                                     </div>
                                 </td>
@@ -97,177 +71,6 @@
         </div>
     </div>
     <!-- /Page Content -->
-    <!-- Add Employee Modal -->
-    <div id="add_employee" class="modal custom-modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Employee</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="msform">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Name <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="name">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="email">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Password <span class="text-danger">*</span></label>
-                            <div class="input-group mb-3">
-                                <input class="form-control" type="password" name="password" id="password1">
-                                <span class="input-group-text">
-                                    <span class="fa-solid fa-eye-slash" id="toggle-password" style="cursor: pointer"></span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Confirm Password <span class="text-danger">*</span></label>
-                            <div class="input-group mb-3">
-                                <input class="form-control" type="password" name="password_confirmation" id="password_confirmation">
-                                <span class="input-group-text">
-                                    <span class="fa-solid fa-eye-slash" id="toggle-password-confirmation" style="cursor: pointer"></span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Phone Number</label>
-                                <input class="form-control" type="number" name="phone_number">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">  
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Date of Birth</label>
-                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="dob"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Salary</label>
-                                <input class="form-control" type="number" name="salary">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">  
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Joining Date</label>
-                                <div class="cal-icon"><input class="form-control datetimepicker" type="text" name="joining_date"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Profile picture</label>
-                                <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg, image/jpg" name="image">
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Gender</label>
-                                <select class="select" name="gender">
-                                    <option selected disabled>Select Gender</option>                                   
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                <select class="select" id="selectDept" name="dept_id">
-                                    <option selected disabled>Select Department</option>                                   
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Designation <span class="text-danger">*</span></label>
-                                <select class="select" id="desig_id" name="designation_id">
-                                    <option selected disabled>Select Designation</option>                                   
-                                </select>
-                            </div>
-                        </div>
-                        <input class="form-control" type="number" name="status" value="1" hidden>
-                    </div>
-                    
-                    <div class="submit-section">
-                        <button class="btn btn-primary submit-btn">Submit</button>
-                    </div>
-                </form>
-                
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Employee Modal -->
-
-
-<!-- Add Employee in bulk Modal -->
-<div id="add_employee_bulk" class="modal custom-modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Upload Employee Excel</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="excelForm">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="input-block mb-12">
-                                <a class="btn btn-primary" href="{{ url('/') . '/' . 'storage/excels/testraad.xlsx' }}" download>Download Sample Excel</a>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Upload Excel <span class="text-danger">*</span></label>
-                                <input class="form-control" type="file" name="file">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="submit-section">
-                        <button class="btn btn-primary submit-btn">Submit</button>
-                    </div>
-                </form>
-                
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Employee in bulk Modal -->
-
-
-
-
-
-
-
-
-
 
 <!-- Edit Employee Modal -->
 <div id="edit_employee" class="modal custom-modal fade" role="dialog">

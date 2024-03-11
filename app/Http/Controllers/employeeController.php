@@ -6,7 +6,9 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EmployeesImport;
+use App\Models\Salary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 
 
@@ -23,7 +25,8 @@ class employeeController extends Controller
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
             'dob' => 'string',
-            'joining_date' => 'date',
+            'salary'=>'required|integer',
+            'joining_date' => 'required|date',
             'dept_id' => 'required|integer',
             'designation_id' => 'required|integer',
             'phone_number' => 'digits:11',
@@ -40,6 +43,7 @@ class employeeController extends Controller
         }
 
         $company_id= auth()->user()->company_id;
+        $joining_date = Carbon::createFromFormat('d-m-Y', $request->joining_date)->format('Y-m-d');
 
         $user = new User();
         $user->name = $request->name;
@@ -58,21 +62,35 @@ class employeeController extends Controller
             $imagePath = 'images/' . $imageName;
             $data->image = $imagePath;
         }
-
-        
+               
         // $user_id = auth()->user()->id;
         $data->id = $user_id;
         $data->officeEmployeeID = $request->officeEmployeeID;
         $data->name = $request->name;
         $data->gender = $request->gender;
         $data->dob = $request->dob;
-        $data->joining_date = $request->joining_date;
+        $data->joining_date = $joining_date;
         $data->phone_number = $request->phone_number;
         $data->dept_id = $request->dept_id;
         $data->designation_id = $request->designation_id;
         $data->status = $request->status;
         $data->company_id = $company_id;
-        $data->save();
+        
+        if($data->save()){
+            if($request->has('salary')){
+                $sal = new Salary();
+                $sal->salary = $request->salary;
+                $sal->joining_date = $joining_date; 
+                $sal->last_increment_date = $joining_date; 
+                $sal->emp_id = $data->emp_id; 
+                $sal->company_id = $data->company_id; 
+                $sal->save();
+            }
+        }else{
+            return response()->json([
+                'message' => 'something Went Wrong'
+            ],500);
+        }
 
         return response()->json([
             'message' => 'Employee Added Successful',
@@ -139,6 +157,7 @@ class employeeController extends Controller
             'name' => 'required|string|between:2,100',
             'gender' => 'string',
             'dob' => 'date',
+            'salary' => 'integer',
             'joining_date' =>'date',
             'dept_id' => 'required|integer',
             'phone_number' => 'digits:11',
@@ -156,6 +175,7 @@ class employeeController extends Controller
         }
         $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
+        $joining_date = Carbon::createFromFormat('d-m-Y', $request->joining_date)->format('Y-m-d');
         if(!$userInfo){
             return response()->json([
                 'message' => 'User Not Found',
@@ -190,13 +210,20 @@ class employeeController extends Controller
         $data->name = $request->name;
         $data->gender = $request->gender ?? $data->gender;
         $data->dob = $request->dob ?? $data->dob;
-        $data->joining_date = $request->joining_date ?? $data->joining_date;
+        $data->joining_date = $joining_date ?? $data->joining_date;
         $data->phone_number = $request->phone_number ?? $data->phone_number;
         $data->dept_id = $request->dept_id;
         $data->designation_id = $request->designation_id;
         $data->status = $request->status ?? $data->status;
         $data->company_id = $company_id;
         $data->save();
+
+        if($request->has('salary')){
+            $sal = Salary::where('emp_id',$data->emp_id)->first();
+            $sal->salary = $request->salary ?? $sal->salary;
+            $sal->joining_date = $joining_date; 
+            $sal->save();
+        }
 
         return response()->json([
             'message' => 'Employee Updated Successful',

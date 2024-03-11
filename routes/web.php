@@ -56,7 +56,33 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::post('/create-salary-setting', [App\Http\Controllers\frontendController\salarySettingController::class, 'createSalarySetting'])->name('createSalarySetting');
 
     //payslip 
-    Route::get('/payslip', [App\Http\Controllers\frontendController\payslipController::class, 'payslip']);
+    Route::get('/payslip', [App\Http\Controllers\frontendController\payslipController::class, 'payslip'])->name('payslip');
+    
+    //increment
+    Route::get('/increment', [App\Http\Controllers\frontendController\incrementController::class, 'increment'])->name('increment');
+    Route::get('/increment-history', [App\Http\Controllers\frontendController\incrementController::class, 'incrementHistory'])->name('incrementHistory');
+    
+    //timeline 
+    Route::get('/timeline-setting', [App\Http\Controllers\frontendController\timelineController::class, 'timelineSetting'])->name('timelineSetting');
+    Route::get('/employee-wise-timeline', [App\Http\Controllers\frontendController\timelineController::class, 'employeeWiseTimeline'])->name('employeeWiseTimeline');
+
+    //custom report 
+    Route::get('/custom-report', [App\Http\Controllers\frontendController\timelineController::class, 'customReport'])->name('customReport');
+
+    //dashboard
+    Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
+
+    //Shift
+    Route::get('/shift-list', [App\Http\Controllers\frontendController\shiftController::class, 'ShiftList'])->name('ShiftList');
+    Route::get('/add-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addShift'])->name('addShift');
+    Route::post('/create-shift', [App\Http\Controllers\frontendController\shiftController::class, 'createShift'])->name('createShift');
+    Route::get('/edit-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'showEditShift'])->name('showEditShift');
+    Route::post('/edit-shift', [App\Http\Controllers\frontendController\shiftController::class, 'editShift'])->name('editShift');
+    Route::get('/delete-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'deleteShift'])->name('deleteShift');
+    
+    Route::get('/show-add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'showAddEmployeeInShift'])->name('showAddEmployeeInShift');
+    
+    Route::post('/add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addEmployeeInShift'])->name('addEmployeeInShift');
 
 });
  //dept excel download

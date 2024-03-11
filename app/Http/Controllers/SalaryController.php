@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Carbon;
 use App\Models\Employee;
 use App\Models\Payslip;
 use App\Models\PreviousSalaryHistroy;
@@ -16,14 +16,42 @@ class SalaryController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function employeeSalaryDetails($id){
-        $data =Salary::where('salaries.emp_id', $id)
-                    ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
-                    ->select('salaries.*', 'employees.*')
-                    ->get();
+    public function employeeSalaryDetails(){
+        $company_id = auth()->user()->company_id;
+
+        $data = Salary::where('salaries.company_id', $company_id)
+                        ->join('employees', function ($join) use ($company_id) {
+                            $join->on('salaries.emp_id', '=', 'employees.emp_id')
+                                ->where('salaries.company_id', '=', $company_id)
+                                ->where('employees.company_id', '=', $company_id);
+                        })
+                        ->join('users', 'employees.id', '=', 'users.id')
+                        ->select('salaries.*', 'employees.*','users.email')
+                        ->get();
+
         if(count($data) == 0){
             return response()->json([
-                'message'=>'No Salary Details Found For This Employee',
+                'message'=>'No Salary Details Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Salary Details',
+                'data'=>$data
+            ],200);
+        }
+    }
+
+    public function individualEmployeeSalaryDetails($id){
+        $data = Salary::where('salaries.emp_id', $id)
+                        ->join('employees', 'salaries.emp_id', '=', 'employees.emp_id')
+                        ->join('users', 'users.id', '=', 'employees.id')
+                        ->select('salaries.*', 'employees.*', 'users.email')
+                        ->get();
+
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Salary Details Found',
                 'data'=>$data
             ],200);
         }else{
@@ -36,8 +64,7 @@ class SalaryController extends Controller
 
     public function changeEmployeeSalary(Request $request,$id){
         $validator = Validator::make($request->all(), [
-            'salary' => 'required|integer',
-            'last_increment_date' => 'required|date'
+            'salary' => 'required|integer'
         ]);
 
         if($validator->fails()) {
@@ -45,6 +72,7 @@ class SalaryController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
+        $increment_date = Carbon::now()->format('Y-m-d');
         $privouseSalaryDetails = Salary::find($id);
 
         $savePrivouseSalaryDetails = new PreviousSalaryHistroy();
@@ -56,7 +84,7 @@ class SalaryController extends Controller
         $savePrivouseSalaryDetails->save();
 
         $privouseSalaryDetails->salary = $request->salary;
-        $privouseSalaryDetails->last_increment_date = $request->last_increment_date;
+        $privouseSalaryDetails->last_increment_date = $increment_date;
         $privouseSalaryDetails->save();
 
         return response()->json([
@@ -124,7 +152,15 @@ class SalaryController extends Controller
 
     public function adjustPayslip(Request $request,$id){
         $data = Payslip::find($id);
-        $data->deducted_amount = $request->deducted_amount;
+        if($request->adjustment_type == "addition"){
+            $after_adjustment_salary = $data->salary + $request->adjusted_amount;
+        }else{
+            $after_adjustment_salary = $data->salary - $request->adjusted_amount;
+        }
+        $data->adjustment_type = $request->adjustment_type;
+        $data->adjustment_reason = $request->adjustment_reason;
+        $data->after_adjustment_salary = $after_adjustment_salary;
+        $data->adjusted_amount = $request->adjusted_amount;
         $data->adjustment_reason = $request->adjustment_reason;
         $data->save();
         return response()->json([
@@ -134,12 +170,16 @@ class SalaryController extends Controller
     }
 
     public function employeeSalaryHistory($id){
-        $data = PreviousSalaryHistroy::where('emp_id',$id)->get();
+        $data = PreviousSalaryHistroy::where('previous_salary_histroys.emp_id', $id)
+                                    ->join('employees', 'previous_salary_histroys.emp_id', '=', 'employees.emp_id')
+                                    ->select('previous_salary_histroys.*', 'employees.*')
+                                    ->orderBy('previous_salary_histroys.salary_update_date', 'desc') 
+                                    ->get();
         if(count($data)==0){
             return response()->json([
                 'message'=>'no data found',
                 'data'=>$data
-            ],200);
+            ],404);
         }else{
             return response()->json([
                 'message'=>'Previous Salary History',
@@ -170,8 +210,10 @@ class SalaryController extends Controller
         $data = Payslip::find($id);
         $salary_setting = SalarySetting::where('company_id',$company_id)->first();
         $salaryComponents = $salary_setting->components;
-        $deducted_amount = $data->deducted_amount;
         $salary = $data->salary; 
+        $adjustment_type = $data->adjustment_type;
+        $adjusted_amount = $data->adjusted_amount;
+        $after_adjustment_salary = $data->after_adjustment_salary;
         $adjustment_reason = $data->adjustment_reason;
         $salaryDistribution = [];
         foreach ($salaryComponents as $component) {
@@ -198,7 +240,9 @@ class SalaryController extends Controller
                     'employee details' => $employeeDetails,
                     'salaryDistribution' => $salaryDistribution,
                     'Salary'=>$salary,
-                    'deducted_amount' => $deducted_amount,
+                    'adjustment_type' => $adjustment_type,
+                    'adjusted_amount' => $adjusted_amount,
+                    'Payable Amount' => $after_adjustment_salary,
                     'adjustment_reason'=> $adjustment_reason
                 ]
             ],200);
@@ -206,9 +250,27 @@ class SalaryController extends Controller
 
     public function payslipListCompanyWise($month,$year){
         $company_id = auth()->user()->company_id;
-        $data = Payslip::where('company_id',$company_id)
-                        ->where('month',$month)
-                        ->where('year',$year)
+        $data = Payslip::where('payslips.company_id', $company_id)
+                        ->where('payslips.month', $month)
+                        ->where('payslips.year', $year)
+                        ->join('employees', 'payslips.emp_id', '=', 'employees.emp_id')
+                        ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
+                        ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
+                        ->where('employees.company_id', $company_id)
+                        ->select(
+                            'employees.*',
+                            'departments.deptTitle',
+                            'designations.desigTitle',
+                            'payslips.salary', 
+                            'payslips.adjustment_type',
+                            'payslips.after_adjustment_salary',
+                            'payslips.adjustment_reason',
+                            'payslips.adjusted_amount',
+                            'payslips.status as payslips_status',
+                            'payslips.month',
+                            'payslips.year',
+                            'payslips.payslips_id',
+                        )
                         ->get();
         if(count($data) == 0){
             return response()->json([
@@ -222,5 +284,6 @@ class SalaryController extends Controller
             ],200);
         }
     }
+
 
 }
