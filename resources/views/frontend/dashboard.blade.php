@@ -99,7 +99,6 @@
 		<!-- /Main Wrapper -->
         <script src="{{ asset('plugins/morris/morris.min.js') }}"></script>
         <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
-        <script src="{{ asset('js/chart.js') }}"></script>
         <script >
         $(document).ready(function() {
     var jwtToken = "{{ $jwtToken }}";
