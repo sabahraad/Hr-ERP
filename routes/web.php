@@ -80,10 +80,15 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::post('/edit-shift', [App\Http\Controllers\frontendController\shiftController::class, 'editShift'])->name('editShift');
     Route::get('/delete-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'deleteShift'])->name('deleteShift');
     
+    //add employee in shift
     Route::get('/show-add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'showAddEmployeeInShift'])->name('showAddEmployeeInShift');
-    
     Route::post('/add-employee-in-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addEmployeeInShift'])->name('addEmployeeInShift');
-
+    
+    //remove employee from shift
+    Route::get('/show-remove-employee-from-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'showRemoveEmployeeFromShift'])->name('showRemoveEmployeeFromShift');
+    Route::post('/remove-employee-from-shift', [App\Http\Controllers\frontendController\shiftController::class, 'removeEmployeeFromShift'])->name('removeEmployeeFromShift');
+    
+    
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');

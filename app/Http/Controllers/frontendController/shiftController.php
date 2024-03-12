@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Shift;
 use App\Models\ShiftEmployee;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class shiftController extends Controller
 {
@@ -87,7 +88,6 @@ class shiftController extends Controller
         $existingData = ShiftEmployee::where('shifts_id', $request->shifts_id)
                                     ->where('company_id', $compnany_id)
                                     ->first();
-
         if ($existingData) {
             $existingList = json_decode($existingData->shift_emp_list, true);
 
@@ -125,7 +125,38 @@ class shiftController extends Controller
             $newData->save();
         }
 
-        return redirect()->route('showAddEmployeeInShift');
+        return redirect()->route('showAddEmployeeInShift')->with('success', 'Employee Added successfully.');
+    }
+
+    public function showRemoveEmployeeFromShift($id){
+        $value = ShiftEmployee::where('shift_employees.shift_employees_id', $id)
+                                ->join('shifts', 'shifts.shifts_id', '=', 'shift_employees.shifts_id')
+                                ->select('shift_employees.*', 'shifts.shifts_title', 'shifts.shifts_start_time', 'shifts.shifts_end_time')
+                                ->get();
+        return view('frontend.removeEmployeeFromShift',compact('value'));
+    }
+
+    public function removeEmployeeFromShift(Request $request){
+        $data = ShiftEmployee::find($request->shift_employees_id);
+        $employees = json_decode($data->shift_emp_list, true);
+
+        // Array of employee IDs to remove
+        $employeesToRemove = $request->emp_id;
+
+        // Remove the specified employees from the array
+        foreach ($employeesToRemove as $employeeId) {
+            $indexToRemove = array_search($employeeId, array_column($employees, 'emp_id'));
+
+            if ($indexToRemove !== false) {
+                array_splice($employees, $indexToRemove, 1);
+            }
+        }
+        // Encode the modified array back to JSON
+        $modifiedJsonString = json_encode($employees);
+        //edit the shift_emp_list
+        $data->shift_emp_list = $modifiedJsonString;
+        $data->save();
+        return back()->with('success', 'Employee removed successfully.');
     }
 
 }
