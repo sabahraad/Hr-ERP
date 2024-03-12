@@ -22,6 +22,12 @@
                         Add Shift
                     </a>
 
+                    <a href="{{route('showAddEmployeeInShift')}}" class="btn add-btn" style="margin-right: 20px;">
+                        <i class="fa-solid fa-plus"></i> 
+                        Add Employee In Shift
+                    </a>
+
+                    
                 </div>
             </div>
         </div>

@@ -27,6 +27,26 @@
                                 </div>
                             </div>
                         </div>
+                        @if(session('success'))
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            <script>
+                                // Display SweetAlert with a "Reload" button
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: "{{ session('success') }}",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'ok'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Reload the page
+                                        location.reload();
+                                    }
+                                });
+                            </script>
+                        @endif
                         <!-- /Page Header -->
                         <form action="{{route('addEmployeeInShift')}}" method="post">
                             @csrf
@@ -107,7 +127,7 @@
                                     <td>{{$raw->shifts_start_time}}</td>
                                     <td>{{$raw->shifts_end_time}}</td>
                                     <td>
-                                        <a class="btn btn-danger" href="#" ><i class="fas fa-minus-circle m-r-5"></i> Remove Employee From This Shift</a>
+                                        <a class="btn btn-danger" href="{{ route('showRemoveEmployeeFromShift', ['id' => $raw->shift_employees_id]) }}" ><i class="fas fa-minus-circle m-r-5"></i> Remove Employee From Shift</a>
                                     </td>
                                     </tr>
                                     @endforeach
