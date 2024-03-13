@@ -37,6 +37,9 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/attendance-list', [App\Http\Controllers\attendanceController::class, 'showattendance'])->name('showattendance');
     Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
 
+    //checkLocation
+    Route::post('/check-location', [App\Http\Controllers\attendanceController::class,'checkLocation'])->name('checkLocation');
+
     Route::post('/apply-leave', [App\Http\Controllers\leaveController::class, 'createLeaveApplications'])->name('createLeaveApplications');
     Route::get('/currentDateStatus', [App\Http\Controllers\attendanceController::class, 'currentDateStatus'])->name('currentDateStatus');
     Route::post('/update-reason', [App\Http\Controllers\attendanceController::class, 'updateReason'])->name('updateReason');
@@ -102,6 +105,10 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/payslip-list', [App\Http\Controllers\SalaryController::class, 'payslipList']);
     Route::get('/payslip-details/{id}', [App\Http\Controllers\SalaryController::class, 'payslipDetails']);
     Route::get('/payslip-list-companywise/{month}/{year}', [App\Http\Controllers\SalaryController::class, 'payslipListCompanyWise']);
+    
+    //timeline
+    Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 'timelineList']);
+    Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
 
 });
 
@@ -233,14 +240,12 @@ Route::delete('/delete-temp-salary-setting/{id}',[App\Http\Controllers\salarySet
 
 //Timeline Setting
 Route::post('/add-timeline', [App\Http\Controllers\timelineController::class, 'addTimeline']);
-Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 'timelineList']);
 Route::post('/edit-timeine/{id}', [App\Http\Controllers\timelineController::class, 'editTimeline']);
 Route::delete('/delete-timeline/{id}', [App\Http\Controllers\timelineController::class, 'deleteTimeline']);
 Route::get('/individual-timeline-list/{id}', [App\Http\Controllers\timelineController::class, 'individualTimelineList']);
 
 
 //Timeline Track
-Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
 Route::post('/date-wise-track-of-employee', [App\Http\Controllers\timelineController::class, 'dateWiseTrackOfEmployee']);
 Route::post('/employee-wise-timeline-list', [App\Http\Controllers\timelineController::class, 'employeeWiseTimelineList']);
 
