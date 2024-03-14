@@ -44,6 +44,7 @@
                                 <th>Check IN Time</th>
                                 <th>Check Out Time</th>
                                 <th>Grace Time</th>
+                                <th>Weekend</th>
                                 <th class="text-end no-sort">Action</th>
                             </tr>
                         </thead>
@@ -55,6 +56,11 @@
                                 <td>{{$shift->shifts_start_time}}</td>
                                 <td>{{$shift->shifts_end_time}}</td>
                                 <td>{{$shift->shifts_grace_time}}</td>
+                                <td>
+                                    @foreach ($shift->weekend as $weekend)
+                                    {{$weekend}} <br>
+                                    @endforeach
+                                </td>
                                 <td class="text-end">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Shift;
 use App\Models\ShiftEmployee;
+use App\Models\ShiftWeekend;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
@@ -13,8 +14,16 @@ class shiftController extends Controller
 {
     public function ShiftList(){
         $access_token = session('access_token');
-        $compnany_id = session('company_id');
-        $data = Shift::where('company_id',$compnany_id)->orderBy('updated_at', 'desc')->get();
+        $company_id = session('company_id');
+        $data = Shift::where('company_id',$company_id)->orderBy('updated_at', 'desc')->get();
+        foreach($data as $raw){
+            $Weekend = ShiftWeekend::where('shifts_id',$raw->shifts_id)->first();
+            $result=$Weekend->getAttributes();
+            $Weekend = array_keys(array_filter($result, function($value) {
+                return $value === 1;
+            }));
+            $raw->weekend = $Weekend;
+        }
         return view('frontend.shiftList',compact('data'), ['jwtToken' => $access_token]);
     }
 
@@ -30,12 +39,26 @@ class shiftController extends Controller
         $data->shifts_end_time = $request->shifts_end_time;
         $data->shifts_grace_time = $request->shifts_grace_time;
         $data->company_id = $compnany_id;
-        $data->save();
+        if($data->save()){
+            $weekend = new ShiftWeekend();
+            $weekend->Sunday = $request->Sunday;
+            $weekend->Monday = $request->Monday;
+            $weekend->Tuesday = $request->Tuesday;
+            $weekend->Wednesday = $request->Wednesday;
+            $weekend->Thursday = $request->Thursday;
+            $weekend->Friday = $request->Friday;
+            $weekend->Saturday = $request->Saturday;
+            $weekend->shifts_id = $data->shifts_id;
+            $weekend->company_id = $compnany_id;
+            $weekend->save();        
+        }
         return redirect()->route('ShiftList');
     }
 
     public function showEditShift($id){
-        $data = Shift::where('shifts_id',$id)->get();
+        $data = Shift::where('shifts.shifts_id', $id)
+             ->join('shift_weekends', 'shifts.shifts_id', '=', 'shift_weekends.shifts_id')
+             ->get();
         return view('frontend.editShift',compact('data'));
     }
 
@@ -46,6 +69,15 @@ class shiftController extends Controller
         $data->shifts_end_time = $request->shifts_end_time;
         $data->shifts_grace_time = $request->shifts_grace_time;
         $data->save();
+        $weekend = ShiftWeekend::find($request->shift_weekends_id);
+        $weekend->Sunday = $request->Sunday;
+        $weekend->Monday = $request->Monday;
+        $weekend->Tuesday = $request->Tuesday;
+        $weekend->Wednesday = $request->Wednesday;
+        $weekend->Thursday = $request->Thursday;
+        $weekend->Friday = $request->Friday;
+        $weekend->Saturday = $request->Saturday;
+        $weekend->save();
         return redirect()->route('ShiftList');
     }
 
