@@ -73,10 +73,12 @@
 							<li class="submenu">
 								<a href="#"><i class="la la-cog"></i> <span> Settings</span> <span class="menu-arrow"></span></a>
 								<ul>
+									<li>
+										<a href="{{route('ShiftList')}}">Shift</a>
+									</li>
 									<li class="submenu">
 										<a href="#"><span>Attendance Settitng</span> <span class="menu-arrow"></span></a>
 											<ul>
-												<li><a href="{{route('ShiftList')}}">Shift</a></li>
 												<li><a href="{{route('attendanceSetting')}}">Office Time</a></li>
 												<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
 											</ul>
