@@ -19,14 +19,30 @@
             <div class="content container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- Page Header -->
-                        <div class="page-header">
-                            <div class="row">
-                                <div class="col-sm-12">
+                         <!-- Page Header -->
+                         <div class="page-header">
+                            <div class="row align-items-center">
+                                <div class="col">
                                     <h3 class="page-title">Add Employee In Shift</h3>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item">Dashboard</li>
+                                        <li class="breadcrumb-item active">Shift Employee</li>
+                                    </ul>
+                                </div>
+                                <div class="col-auto float-end ms-auto">
+                                    <a href="{{route('ShiftList')}}" class="btn add-btn" >
+                                        <i class="fa-solid fa-list"></i> 
+                                        Shift List
+                                    </a>
+
+                                    <div class="view-icons">
+                                        <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
+                                        <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- /Page Header -->
                         @if(session('success'))
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                             <script>
