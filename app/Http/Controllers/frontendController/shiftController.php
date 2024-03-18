@@ -9,12 +9,14 @@ use App\Models\ShiftEmployee;
 use App\Models\ShiftWeekend;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
+use App\Utils\BaseUrl;
 
 class shiftController extends Controller
 {
     public function ShiftList(){
         $access_token = session('access_token');
         $company_id = session('company_id');
+        $baseUrl = BaseUrl::get();
         $data = Shift::where('company_id',$company_id)->orderBy('updated_at', 'desc')->get();
         foreach($data as $raw){
             $Weekend = ShiftWeekend::where('shifts_id',$raw->shifts_id)->first();
@@ -24,7 +26,7 @@ class shiftController extends Controller
             }));
             $raw->weekend = $Weekend;
         }
-        return view('frontend.shiftList',compact('data'), ['jwtToken' => $access_token]);
+        return view('frontend.shiftList',compact('data'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function addShift(){
@@ -90,10 +92,10 @@ class shiftController extends Controller
         $access_token = session('access_token');
         $compnany_id = session('company_id');
         $shift = Shift::where('company_id',$compnany_id)->get();
-
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/all-employee-list',
+        CURLOPT_URL => $baseUrl.'/all-employee-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-
+use App\Utils\BaseUrl;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -9,10 +9,10 @@ class HolidaysController extends Controller
 {
     public function holidays(){
         $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/holiday-list',
+        CURLOPT_URL => $baseUrl.'/holiday-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -28,7 +28,7 @@ class HolidaysController extends Controller
 
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.holidays',compact('dataArray'), ['jwtToken' => $access_token]);
+        return view('frontend.holidays',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
 
     }
 

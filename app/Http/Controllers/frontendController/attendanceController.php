@@ -7,14 +7,23 @@ use App\Models\Attendance;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class attendanceController extends Controller
 {
+    protected $baseUrl;
+    
+    public function __construct()
+    {
+        $this->baseUrl = BaseUrl::get();
+    }
+
     public function attendanceType(){
         $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/attendance-type-details',
+        CURLOPT_URL => $baseUrl.'/attendance-type-details',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -28,14 +37,15 @@ class attendanceController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.attendanceType',compact('dataArray'), ['jwtToken' => $access_token]);  
+        return view('frontend.attendanceType',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);  
     }
 
     public function attendanceSetting(){
         $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/office-hour-list',
+        CURLOPT_URL => $baseUrl.'/office-hour-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -50,16 +60,16 @@ class attendanceController extends Controller
         curl_close($curl);
         $dataArray = json_decode($response,true);
         // dd($dataArray);
-        return view('frontend.attendanceSetting',compact('dataArray'), ['jwtToken' => $access_token]);
+        return view('frontend.attendanceSetting',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function attendanceList(){
         $access_token = session('access_token');
-        
+        $baseUrl = $this->baseUrl;
         //employeeList
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/all-employee-list',
+        CURLOPT_URL => $baseUrl.'/all-employee-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -73,12 +83,13 @@ class attendanceController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $employee = json_decode($response,true);
-        return view('frontend.attendanceList',compact('employee'), ['jwtToken' => $access_token]);        
+        return view('frontend.attendanceList',compact('employee'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);        
     }
 
     public function editAttendance($id){
         $access_token = session('access_token');
         $company_id = session('company_id');
+        $baseUrl = $this->baseUrl;
         if($access_token){
             $attendance = Attendance::select(
                             'attendances.*',
@@ -91,7 +102,7 @@ class attendanceController extends Controller
                         ->where('attendances.company_id', $company_id)
                         ->get();
             
-                return view('frontend.editAttendance',compact('attendance'), ['jwtToken' => $access_token]);
+                return view('frontend.editAttendance',compact('attendance'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
         }else{
             return view('frontend.login');
         }

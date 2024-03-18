@@ -4,14 +4,23 @@ namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class timelineController extends Controller
 {
+    protected $baseUrl;
+    
+    public function __construct()
+    {
+        $this->baseUrl = BaseUrl::get();
+    }
+
     public function timelineSetting(){
         $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/timeline-list',
+        CURLOPT_URL => $baseUrl.'/timeline-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -28,7 +37,7 @@ class timelineController extends Controller
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/emp-list',
+        CURLOPT_URL => $baseUrl.'/emp-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -42,14 +51,15 @@ class timelineController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $employee = json_decode($response,true);
-        return view('frontend.timelineSetting',compact('dataArray','employee'), ['jwtToken' => $access_token]);
+        return view('frontend.timelineSetting',compact('dataArray','employee'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function employeeWiseTimeline(){
         $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/emp-list',
+        CURLOPT_URL => $baseUrl.'/emp-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -63,10 +73,11 @@ class timelineController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $employee = json_decode($response,true);
-        return view('frontend.employeeTimeline',compact('employee'), ['jwtToken' => $access_token]);
+        return view('frontend.employeeTimeline',compact('employee'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
     public function customReport(){
         $access_token = session('access_token');
-        return view('frontend.customReport', ['jwtToken' => $access_token]);
+        $baseUrl = $this->baseUrl;
+        return view('frontend.customReport', ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 }

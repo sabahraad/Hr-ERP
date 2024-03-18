@@ -11,6 +11,7 @@ use App\Models\Holiday;
 use Illuminate\Database\QueryException;
 use Exception;
 use Carbon\Carbon;
+use App\Utils\BaseUrl;
 
 class timeWiseController extends Controller
 {
@@ -21,6 +22,7 @@ class timeWiseController extends Controller
     public function dashboard(){
         $access_token = session('access_token');
         $company_id = session('company_id');
+        $baseUrl = BaseUrl::get();
         $total_emp = Employee::where('company_id',$company_id)
                               ->where('deleted_at',null)
                               ->count();
@@ -43,7 +45,7 @@ class timeWiseController extends Controller
             'total_absent' => $total_absent
         ];
         
-        return view('frontend.dashboard',compact('data'),['jwtToken' => $access_token]);
+        return view('frontend.dashboard',compact('data'),['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function chartDetails(){

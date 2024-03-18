@@ -6,16 +6,17 @@ use App\Exports\DesigExport;
 use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class designationController extends Controller
 {
     public function designation(){
         
         $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/department-list',
+        CURLOPT_URL => $baseUrl.'/department-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -31,7 +32,7 @@ class designationController extends Controller
 
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.designation',compact('dataArray'), ['jwtToken' => $access_token]);
+        return view('frontend.designation',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
    
     }
 
