@@ -6,7 +6,7 @@
         <meta name="description" content="Iime Wise">
 		<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
         <meta name="author" content="Sabah Raad">
-        <title>Time Wise</title>
+        <title>Time Wise </title>
 		
 		
 

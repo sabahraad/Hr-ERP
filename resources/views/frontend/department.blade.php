@@ -199,61 +199,58 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
 
-        var formData = new FormData(this);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-department', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Department added successful',
-                        text: 'Your department registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+            $.ajax({
+                    url: baseUrl + '/add-department', 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
+                            icon: 'success',
+                            title: 'Department added successful',
+                            text: 'Your department registration was successful!',
+                            showConfirmButton: false, // Hide the OK button
+                            }); 
+                            setTimeout(function() {
+                                location.reload(); // This will refresh the current page
+                            }, 100);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
             });
         });
-    });
 
-
-
-    $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
+        $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
         // Get the dept_id from the clicked element's data-id attribute
             var deptId = $(this).find('.fa-pencil').data('id');
-
+            console.log('deptTitle:', deptId);
             // Log the dept_id to the console
-            console.log(deptId);
+            // console.log(deptId);
             var trElement = $(this).closest('tr');
 
             // Find the 'td' elements within the 'tr'
@@ -261,126 +258,114 @@
             var details = trElement.find('td:eq(2)').text();
 
             // Log the data to the console
-            console.log('deptTitle:', deptTitle);
-            console.log('details:', details);
+            // console.log('deptTitle:', deptTitle);
+            // console.log('details:', details);
             $('#deptName').val(deptTitle);
             $('#details').val(details);
             $('#dept_id').val(deptId);
             // Show the modal
             $('#edit_department').modal('show');
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var dept_id = $('#dept_id').val();
+            // console.log(dept_id);
 
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var dept_id = $('#dept_id').val();
-        console.log(dept_id);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/department/'+dept_id, 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Department Edited successfully',
-                        text: 'Your department edit was successful!',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 200);
-
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+            $.ajax({
+                    url: baseUrl + '/edit/department/'+dept_id, 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
+                            icon: 'success',
+                            title: 'Department Edited successfully',
+                            text: 'Your department edit was successful!',
+                            showConfirmButton: false, 
                         });
+                        setTimeout(function() {
+                                location.reload(); // This will refresh the current page
+                            }, 200);
+
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
-            });
+                });
         });
-    });
 
-
-    $(document).ready(function() {
         $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
             // Get the dept_id from the clicked element's data-id attribute
             var deptId = $(this).find('.fa-regular').data('id');
             // Log the dept_id to the console
-            console.log(deptId);
+            // console.log(deptId);
             var trElement = $(this).closest('tr');
             $('#dept_id').val(deptId);
         });
-    });
 
+        $('#deptDelete').submit(function(e) {
+            e.preventDefault();
+            var dept_id = $('#dept_id').val();
+            // console.log(dept_id);
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var dept_id = $('#dept_id').val();
-        console.log(dept_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/department/'+dept_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Department successfully deleted',
-                        text: 'You have successfully deleted a department',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },200);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+            $.ajax({
+                    url: baseUrl + '/delete/department/'+dept_id, 
+                    type: 'DELETE',
+                    data: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
+                            icon: 'success',
+                            title: 'Department successfully deleted',
+                            text: 'You have successfully deleted a department',
+                            showConfirmButton: false, 
                         });
+                        setTimeout(function() {
+                            location.reload(); // This will refresh the current page
+                        },200);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
-            });
+                });
         });
     });
 

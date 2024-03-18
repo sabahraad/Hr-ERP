@@ -16,17 +16,6 @@
                         <li class="breadcrumb-item active">Increment</li>
                     </ul>
                 </div>
-                <div class="col-auto float-end ms-auto">
-                    <!-- <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee" id="addEmployeeButton">
-                        <i class="fa-solid fa-plus"></i> 
-                        Add Employee
-                    </a> -->
-
-                    <div class="view-icons">
-                        <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
-                        <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
-                    </div>
-                </div>
             </div>
         </div>
         <!-- /Page Header -->
@@ -145,18 +134,13 @@
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-            $('#empTable').DataTable();
-    });
-
-    $(document).ready(function() {
+        $('#empTable').DataTable();
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
         $(document).on('click', '.edit-employee', function(){
-            console.log(empId,'ok');
-
             var empId = $(this).data('id');
-
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/individual-employee-salary-details/'+empId, 
+                url: baseUrl + '/individual-employee-salary-details/'+empId, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -189,20 +173,14 @@
             });
 
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var salaries_id = $('#salaries_id').val();
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var salaries_id = $('#salaries_id').val();
-        console.log(salaries_id);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/change-employee-salary/'+salaries_id, 
+            $.ajax({
+                url: baseUrl + '/change-employee-salary/'+salaries_id, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -242,5 +220,4 @@
             });
         });
     });
-    
 </script>

@@ -217,10 +217,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
-
-    // $(document).ready(function(){
-    //     $('#desigTable').DataTable();
-    // });
     $(document).ready(function() {
         $('#desigTable').DataTable({
         dom: 'Bfrtip', 
@@ -244,68 +240,65 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
 
-        var formData = new FormData(this);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/attendance-add-by-HR', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance added successful',
-                        text: 'Your attendance registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422 ) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
+            $.ajax({
+                    url: baseUrl + '/attendance-add-by-HR', 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Attendance added successful',
+                            text: 'Your attendance registration was successful!',
+                            showConfirmButton: false, // Hide the OK button
+                            }); 
+                            setTimeout(function() {
+                                location.reload(); // This will refresh the current page
+                            }, 100);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422 ) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: xhr.responseJSON.message
+                            });
                         }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: xhr.responseJSON.message
-                        });
                     }
-                }
             });
         });
-    });
 
-    
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-		$('#myForm').submit(function(event) {
+        $('#myForm').submit(function(event) {
 			event.preventDefault(); // Prevent the form from submitting normally
                 
             var formData = new FormData(this);
 
 			$.ajax({
-			url: 'https://hrm.aamarpay.dev/api/present-employee-list',
+			url: baseUrl+'/present-employee-list',
 			type: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + jwtToken
@@ -363,68 +356,63 @@
             }
 			});
 		});
-	});
+
+        $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
+            var attendance_id = $(this).find('.fa-regular.fa-trash-can').data('id');
+            console.log(attendance_id);
+            $('#attendance_id').val(attendance_id);
+        });
 
 
-    $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var attendance_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        console.log(attendance_id);
-        $('#attendance_id').val(attendance_id);
-    });
-  
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desigDelete').submit(function(e) {
-        e.preventDefault();
-        var attendance_id = $('#attendance_id').val();
-        console.log(attendance_id);
-        var formData = new FormData(this);
+        $('#desigDelete').submit(function(e) {
+            e.preventDefault();
+            var attendance_id = $('#attendance_id').val();
+            console.log(attendance_id);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-attendance/'+attendance_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    // var dept_id = response.data;
-                    console.log(response);
-                    $('#delete_designation').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance successfully deleted',
-                        text: 'You have successfully deleted a Attendance',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    });
-                    
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+            $.ajax({
+                    url: baseUrl+'/delete-attendance/'+attendance_id, 
+                    type: 'DELETE',
+                    data: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // var dept_id = response.data;
+                        console.log(response);
+                        $('#delete_designation').modal('hide');
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
+                            icon: 'success',
+                            title: 'Attendance successfully deleted',
+                            text: 'You have successfully deleted a Attendance',
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
                         });
+                        
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
-            });
+                });
         });
     });
-
-
 </script>

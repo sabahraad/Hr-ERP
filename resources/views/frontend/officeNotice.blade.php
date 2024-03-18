@@ -154,21 +154,14 @@
 
 <script>
     CKEDITOR.replace('notice');
-
     $(document).ready(function() {
         $('#deptTable').DataTable();
-    });
-
-    $(document).ready(function() {
         $('.btn.btn-primary[data-bs-target="#delete_department"]').click(function(e) {
             e.preventDefault();
             var officeNoticeId = $(this).find('.fa-regular').data('id');
-            console.log(officeNoticeId);
             $('#officeNoticeId').val(officeNoticeId);
         });
-    });
-
-    $(document).ready(function() {
+        var baseUrl = "{{ $baseUrl }}";
         var jwtToken = "{{ $jwtToken }}";
         $('#deptDelete').submit(function(e) {
             e.preventDefault();
@@ -176,7 +169,7 @@
             console.log(officeNoticeId);
 
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/notice/' + officeNoticeId,
+                url: baseUrl + '/delete/notice/' + officeNoticeId,
                 type: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken

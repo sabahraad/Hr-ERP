@@ -452,16 +452,13 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
         $('#empTable').DataTable();
-        $(document).on('click', '.edit-employee', function(){
-            console.log('tafdvhcb');
-            
-        });
-
+       
         $(document).on('click', '.add-employee', function(){
             console.log('tafdvhcb');
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/department-name-list', 
+                url: baseUrl + '/department-name-list', 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -482,45 +479,37 @@
                 }
             });
         });
-    });
 
-    $(document).on('change', '#selectDept', function() {
-        console.log('okllll');
-        var jwtToken = "{{ $jwtToken }}";
-        var dept_id = $(this).val();
-        console.log(dept_id);
-
-        $.ajax({
-            url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
-            type: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            success: function(data) {
-                console.log(data);
-                $('#desig_id option:not(:first-child)').remove();
-                // Handle the response from the server
-                $.each(data, function(value, text) {
-                    $('#desig_id').append($('<option>').text(text).attr('value', value));
-                });
-                console.log(data);
-            },
-            error: function(error) {
-                console.error(error);
-            }
+        $(document).on('change', '#selectDept', function() {
+            var dept_id = $(this).val();
+            $.ajax({
+                url: baseUrl + '/designation-name-list/'+dept_id , 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#desig_id option:not(:first-child)').remove();
+                    // Handle the response from the server
+                    $.each(data, function(value, text) {
+                        $('#desig_id').append($('<option>').text(text).attr('value', value));
+                    });
+                    console.log(data);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
         });
-    });
 
+        $('#msform').submit(function(e) {
+            e.preventDefault();
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
+            var formData = new FormData(this);
 
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-employee', 
+            $.ajax({
+                url: baseUrl + '/add-employee', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -564,17 +553,14 @@
                 }
             });
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#excelForm').submit(function(e) {
-        e.preventDefault();
+        $('#excelForm').submit(function(e) {
+            e.preventDefault();
 
-        var formData = new FormData(this);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/upload-employees', 
+            $.ajax({
+                url: baseUrl + '/upload-employees', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -623,17 +609,11 @@
                 }
             });
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
         $(document).on('click', '.edit-employee', function(){
-            console.log(empId,'ok');
-
             var empId = $(this).data('id');
-
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/employee-details/'+empId, 
+                url: baseUrl + '/employee-details/'+empId, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -654,7 +634,7 @@
                     console.log(desig_id,'==============================raad');
 
                     $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/department-name-list', 
+                        url: baseUrl + '/department-name-list', 
                         type: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + jwtToken
@@ -681,7 +661,7 @@
                     });
                     
                     $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/designation-name-list/'+dept_id , 
+                        url: baseUrl + '/designation-name-list/'+dept_id , 
                         type: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + jwtToken
@@ -714,12 +694,7 @@
                         console.log('ok');
                         $('#genderSelect option[value=""]').prop('selected', true);
                     }
-                    // $('#selectDept1 option').removeAttr('selected');
-                    // $('#selectDept1 option[value="' + dept_id + '"]').prop('selected', true);
-                    // $('#desig_id1 option[value="' + dept_id + '"]').prop('selected', true);
-
                     $('#genderSelect').change();
-                    // $('#selectDept1').change();
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
@@ -741,20 +716,14 @@
             });
 
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var emp_id = $('#empID').val();
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var emp_id = $('#empID').val();
-        console.log(emp_id);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/employee/'+emp_id, 
+            $.ajax({
+                url: baseUrl + '/edit/employee/'+emp_id, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -792,25 +761,18 @@
                 }
             });
         });
-    });
-    
-    $(document).ready(function() {
+
         $(document).on('click', '.delete-employee', function(){
             var empId = $(this).data('id');
             $('#emp_id').val(empId);
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var emp_id = $('#emp_id').val();
-        console.log(emp_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/employee/'+emp_id, 
+        $('#deptDelete').submit(function(e) {
+            e.preventDefault();
+            var emp_id = $('#emp_id').val();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/delete/employee/'+emp_id, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -848,4 +810,5 @@
             });
         });
     });
+
 </script>

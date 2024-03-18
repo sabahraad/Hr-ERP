@@ -169,30 +169,31 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-        var sunday = document.getElementById('sundayCheckbox').checked ? 1 : 0;
-        var monday = document.getElementById('mondayCheckbox').checked ? 1 : 0;
-        var tuesday = document.getElementById('tuesdayCheckbox').checked ? 1 : 0;
-        var wednesday = document.getElementById('wednesdayCheckbox').checked ? 1 : 0;
-        var thursday = document.getElementById('thursdayCheckbox').checked ? 1 : 0;
-        var friday = document.getElementById('fridayCheckbox').checked ? 1 : 0;
-        var saturday = document.getElementById('saturdayCheckbox').checked ? 1 : 0;
-        console.log(sunday,friday);
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
+            var sunday = document.getElementById('sundayCheckbox').checked ? 1 : 0;
+            var monday = document.getElementById('mondayCheckbox').checked ? 1 : 0;
+            var tuesday = document.getElementById('tuesdayCheckbox').checked ? 1 : 0;
+            var wednesday = document.getElementById('wednesdayCheckbox').checked ? 1 : 0;
+            var thursday = document.getElementById('thursdayCheckbox').checked ? 1 : 0;
+            var friday = document.getElementById('fridayCheckbox').checked ? 1 : 0;
+            var saturday = document.getElementById('saturdayCheckbox').checked ? 1 : 0;
+            console.log(sunday,friday);
 
-        var data = {
-            "sunday": sunday,
-            "monday":monday,
-            "tuesday":tuesday,
-            "wednesday":wednesday,
-            "thursday":thursday,
-            "friday":friday,
-            "saturday":saturday
-        };
-        console.log(data);
-        
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-weekend',
+            var data = {
+                "sunday": sunday,
+                "monday":monday,
+                "tuesday":tuesday,
+                "wednesday":wednesday,
+                "thursday":thursday,
+                "friday":friday,
+                "saturday":saturday
+            };
+            console.log(data);
+            
+            $.ajax({
+                url: baseUrl + '/add-weekend',
                 type: 'POST',
                 contentType: 'application/json',
                 headers: {
@@ -228,7 +229,7 @@
                     }
                 }
             });
-       
+    
         });
     });
     

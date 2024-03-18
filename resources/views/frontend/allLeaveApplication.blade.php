@@ -168,18 +168,16 @@
 <script>
 
     $(document).ready(function(){
-        console.log("desigtable")
         $('#desigTable').DataTable();
     });
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
         $(document).on('click', '.edit-leaveApplication', function(){
             var leaveApplicationID = $(this).data('id');
-            console.log(leaveApplicationID);
-
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/leave-application-details/'+leaveApplicationID, 
+                url: baseUrl + '/leave-application-details/' +leaveApplicationID, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -211,140 +209,133 @@
                 }
             });
         });
-    });
-    
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var leaveApplicationId = $('#leaveApplicationId').val();
-        console.log(leaveApplicationId);
 
-        var formData = new FormData(this);
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var leaveApplicationId = $('#leaveApplicationId').val();
+            // console.log(leaveApplicationId);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/leave-approved-by-HR', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response.data == 0) {
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Leave application status made pending',
-                            showConfirmButton: true,  // Set to true to show the "OK" button
-                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User clicked "OK"
-                                location.reload(); // Reload the current page
-                            }
-                        });                          
-                    } else if (response.data == 1) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Leave application approved successfully',
-                            showConfirmButton: true,  // Set to true to show the "OK" button
-                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User clicked "OK"
-                                location.reload(); // Reload the current page
-                            }
-                        });                     
-                      } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Leave application rejected successfully',
-                            showConfirmButton: true,  // Set to true to show the "OK" button
-                            allowOutsideClick: false, // Prevent closing by clicking outside the modal
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User clicked "OK"
-                                location.reload(); // Reload the current page
-                            }
-                        });     
-                    }
-                    
+            var formData = new FormData(this);
 
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
+            $.ajax({
+                    url: baseUrl +'/leave-approved-by-HR', 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Leave application status made pending',
+                                showConfirmButton: true,  // Set to true to show the "OK" button
+                                allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User clicked "OK"
+                                    location.reload(); // Reload the current page
+                                }
+                            });                          
+                        } else if (response.data == 1) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Leave application approved successfully',
+                                showConfirmButton: true,  // Set to true to show the "OK" button
+                                allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User clicked "OK"
+                                    location.reload(); // Reload the current page
+                                }
+                            });                     
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Leave application rejected successfully',
+                                showConfirmButton: true,  // Set to true to show the "OK" button
+                                allowOutsideClick: false, // Prevent closing by clicking outside the modal
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User clicked "OK"
+                                    location.reload(); // Reload the current page
+                                }
+                            });     
                         }
-                        errorMessage += "</ul>";
                         
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
 
-    $(document).ready(function() {
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
+                    }
+                });
+        });
+
         $(document).on('click', '.delete-leaveApplication', function(){
             var leave_application_id = $(this).data('id');
             $('#leave_application_id').val(leave_application_id);
         });
-    });
-  
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var leave_application_id = $('#leave_application_id').val();
-        console.log(leave_application_id);
-        var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-leave-application/'+leave_application_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Leave Application successfully deleted',
-                        text: 'You have successfully deleted a leave Application',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },400);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+        $('#deptDelete').submit(function(e) {
+            e.preventDefault();
+            var leave_application_id = $('#leave_application_id').val();
+            // console.log(leave_application_id);
+            var formData = new FormData(this);
+
+            $.ajax({
+                    url: baseUrl + '/delete-leave-application/'+leave_application_id, 
+                    type: 'DELETE',
+                    data: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
+                            icon: 'success',
+                            title: 'Leave Application successfully deleted',
+                            text: 'You have successfully deleted a leave Application',
+                            showConfirmButton: false, 
                         });
+                        setTimeout(function() {
+                            location.reload(); // This will refresh the current page
+                        },400);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
             });
         });
     });
+ 
 
 </script>

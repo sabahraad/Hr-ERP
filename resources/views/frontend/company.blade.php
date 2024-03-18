@@ -217,13 +217,14 @@
 
 	$(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+		 var baseUrl = "{{ $baseUrl }}";
     $('#msform').submit(function(e) {
         e.preventDefault();
 
         var formData = new FormData(this);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/company', 
+                url: baseUrl +'/edit/company', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken

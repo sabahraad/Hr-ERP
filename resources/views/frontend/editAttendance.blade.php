@@ -83,54 +83,55 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-        var created_at = $('#created_at').val();
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
+            var created_at = $('#created_at').val();
 
-        console.log(created_at);
+            console.log(created_at);
 
-        var formData = new FormData(this);
-        console.log(formData);
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/attendance-edited-by-HR', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
+            var formData = new FormData(this);
+            console.log(formData);
+            $.ajax({
+                    url: baseUrl + '/attendance-edited-by-HR', 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance Edit Successful',
-                        text: 'Your attendance edit was successful!',
-                        showConfirmButton: true, // Enable the Confirm button
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/attendance-list';
-                        }
-                    });
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
+                            icon: 'success',
+                            title: 'Attendance Edit Successful',
+                            text: 'Your attendance edit was successful!',
+                            showConfirmButton: true, // Enable the Confirm button
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/attendance-list';
+                            }
                         });
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
                     }
-                }
-            });
+                });
         });
     });
 

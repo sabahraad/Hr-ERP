@@ -228,16 +228,16 @@
 
     $(document).ready(function() {
         $('#emp_id').select2();
-    });
 
-    $(document).ready(function() {
         $('#desigTable').DataTable({
-        dom: 'Bfrtip', 
-        buttons: [
-            'excel'
+            dom: 'Bfrtip', 
+            buttons: [
+                'excel'
             ]
         });
+
     });
+
 
     $(function() {
     $('input[name="date_range"]').daterangepicker({
@@ -253,13 +253,15 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
+        var baseUrl = "{{ $baseUrl }}";
+        
+        $('#myForm').submit(function(event) {
+			event.preventDefault(); // Prevent the form from submitting normally
+                
+            var formData = new FormData(this);
 
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/attendance-add-by-HR', 
+			$.ajax({
+                url: baseUrl + '/employee-wise-timeline-list',
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -268,157 +270,39 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance added successful',
-                        text: 'Your attendance registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100);
+                    var table = $('#desigTable').DataTable();
+                    table.clear().draw();
+
+                    response.data.forEach(function(item) {
+                        var locations = JSON.parse(item.location);
+                        var locationData = '';
+
+                        locations.forEach(function(location) {
+                            locationData += ' <b>Name:</b> ' + (location.name || 'N/A') + '&nbsp;&nbsp;&nbsp;' +
+                                            '<b>Time:</b> ' + location.time + '&nbsp;&nbsp;&nbsp;' + '<br>';
+                        });
+                        key = 0;
+                        table.row.add([
+                            key+1,
+                            item.name,
+                            item.track_date,
+                            locationData
+                        ]).draw();
+                    });
                 },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422 ) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+                error: function(xhr, textStatus, errorThrown) {
+                    if (xhr.status == 404) {
+                        var table = $('#desigTable').DataTable();
+                        table.clear().draw();
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: xhr.responseJSON.message
-                        });
+                                icon: 'error',
+                                title: 'No Timeline Details Found For This Date',
+                            });
+                    } else {
+                        console.log('Error in API call');
                     }
                 }
-            });
-        });
-    });
-
-    
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-		$('#myForm').submit(function(event) {
-			event.preventDefault(); // Prevent the form from submitting normally
-                
-            var formData = new FormData(this);
-
-			$.ajax({
-			url: 'https://hrm.aamarpay.dev/api/employee-wise-timeline-list',
-			type: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            data: formData,
-            contentType: false,
-            processData: false,
-			success: function(response) {
-                var table = $('#desigTable').DataTable();
-                table.clear().draw();
-
-                response.data.forEach(function(item) {
-                    var locations = JSON.parse(item.location);
-                    var locationData = '';
-
-                    locations.forEach(function(location) {
-                        locationData += ' <b>Name:</b> ' + (location.name || 'N/A') + '&nbsp;&nbsp;&nbsp;' +
-                                        '<b>Time:</b> ' + location.time + '&nbsp;&nbsp;&nbsp;' + '<br>';
-                    });
-                    key = 0;
-                    table.row.add([
-                        key+1,
-                        item.name,
-                        item.track_date,
-                        locationData
-                    ]).draw();
-                });
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                if (xhr.status == 404) {
-                    var table = $('#desigTable').DataTable();
-				    table.clear().draw();
-                    Swal.fire({
-                            icon: 'error',
-                            title: 'No Attendance Found For This Date',
-                        });
-                } else {
-                    console.log('Error in API call');
-                }
-            }
 			});
 		});
-	});
-
-
-    $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var attendance_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        console.log(attendance_id);
-        $('#attendance_id').val(attendance_id);
     });
-  
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desigDelete').submit(function(e) {
-        e.preventDefault();
-        var attendance_id = $('#attendance_id').val();
-        console.log(attendance_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-attendance/'+attendance_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    // var dept_id = response.data;
-                    console.log(response);
-                    $('#delete_designation').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Attendance successfully deleted',
-                        text: 'You have successfully deleted a Attendance',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    });
-                    
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-
 </script>

@@ -163,18 +163,15 @@
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-    $(document).ready(function(){
-        $('#leaveTypeTable').DataTable();
-    });
     $(document).ready(function() {
+        $('#leaveTypeTable').DataTable();
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-leave-type', 
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/add-leave-type', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -212,47 +209,32 @@
                 }
             });
         });
-    });
 
-
-
-    $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
-        // Get the dept_id from the clicked element's data-id attribute
+        $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
+            // Get the dept_id from the clicked element's data-id attribute
             var leaveID = $(this).find('.fa-pencil').data('id');
-
             // Log the dept_id to the console
             console.log(leaveID);
             var trElement = $(this).closest('tr');
-
             // Find the 'td' elements within the 'tr'
             var leave_type = trElement.find('td:eq(1)').text();
             var days = trElement.find('td:eq(2)').text();
-
-            // Log the data to the console
-            console.log('leave_type:', leave_type);
-            console.log('days:', days);
             $('#deptName').val(leave_type);
             $('#details').val(days);
             $('#dept_id').val(leaveID);
             // Show the modal
             $('#edit_department').modal('show');
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var leaveID = $('#dept_id').val();
+            console.log(leaveID);
 
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var leaveID = $('#dept_id').val();
-        console.log(leaveID);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/leave-type/'+leaveID, 
+            $.ajax({
+                url: baseUrl + '/edit/leave-type/'+leaveID, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -290,10 +272,7 @@
                 }
             });
         });
-    });
 
-
-    $(document).ready(function() {
         $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
             // Get the dept_id from the clicked element's data-id attribute
             var deptId = $(this).find('.fa-regular').data('id');
@@ -302,22 +281,13 @@
             var trElement = $(this).closest('tr');
             $('#dept_id').val(deptId);
         });
-    });
 
-
-
-
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var leaveID = $('#dept_id').val();
-        console.log(leaveID);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/leave-type/'+leaveID, 
+        $('#deptDelete').submit(function(e) {
+            e.preventDefault();
+            var leaveID = $('#dept_id').val();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/delete/leave-type/'+leaveID, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -356,5 +326,4 @@
             });
         });
     });
-
 </script>
