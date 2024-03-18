@@ -4,15 +4,17 @@ namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class officeLocationController extends Controller
 {
     public function officeLocation(){
 
         $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/office-location-list',
+        CURLOPT_URL => $baseUrl.'/office-location-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -26,6 +28,6 @@ class officeLocationController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.officeLocation',compact('dataArray'), ['jwtToken' => $access_token]);
+        return view('frontend.officeLocation',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 }

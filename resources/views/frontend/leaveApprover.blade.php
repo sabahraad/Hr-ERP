@@ -193,81 +193,67 @@
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-
-    $(document).ready(function(){
-        $('#desigTable').DataTable();
-    });
-
-    
     $(document).ready(function() {
+        $('#desigTable').DataTable();
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
 		$('#myForm').submit(function(event) {
 			event.preventDefault(); // Prevent the form from submitting normally
-                
             var dept_id = $('#dept_id').val();
-            console.log(dept_id);
-
 			$.ajax({
-			url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
-			type: 'GET',
-            headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-			success: function(response) {
-                console.log(response)
-                var table = $('#desigTable').DataTable();
-				table.clear().draw();
-                var rowNum = 1;
-
-                // Iterate through the data and populate the table
-                response.data.forEach(function(item) {
-
-                    var rowData = [
-                        rowNum,
-                        '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
-                        '<td data-deptid="' + item.emp_id + '">' + item.approver_name + '</td>',
-                        '<td >' + item.priority + '</td>',
-                        '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
-                    ];
-                    table.row.add(rowData);
-                    rowNum++;
-                });
-                
-                table.draw();
-			},
-            error: function(xhr, textStatus, errorThrown) {
-                if (xhr.status == 404) {
+                url: baseUrl + '/approvers-list/'+dept_id,
+                type: 'GET',
+                headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                success: function(response) {
+                    console.log(response)
                     var table = $('#desigTable').DataTable();
-				    table.clear().draw();
-                    Swal.fire({
-                            icon: 'error',
-                            title: 'No Leave Approver Found for this Department',
-                        });
-                } else {
-                    console.log('Error in API call');
+                    table.clear().draw();
+                    var rowNum = 1;
+
+                    // Iterate through the data and populate the table
+                    response.data.forEach(function(item) {
+
+                        var rowData = [
+                            rowNum,
+                            '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
+                            '<td data-deptid="' + item.emp_id + '">' + item.approver_name + '</td>',
+                            '<td >' + item.priority + '</td>',
+                            '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
+                        ];
+                        table.row.add(rowData);
+                        rowNum++;
+                    });
+                    
+                    table.draw();
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    if (xhr.status == 404) {
+                        var table = $('#desigTable').DataTable();
+                        table.clear().draw();
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'No Leave Approver Found for this Department',
+                            });
+                    } else {
+                        console.log('Error in API call');
+                    }
                 }
-            }
 			});
 		});
-	});
 
+        $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
+            var approvers_id = $(this).find('.fa-regular.fa-trash-can').data('id');
+            $('#approvers_id').val(approvers_id);
+        });
 
-    $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var approvers_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        // console.log(approvers_id);
-        $('#approvers_id').val(approvers_id);
-    });
-  
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desigDelete').submit(function(e) {
-        e.preventDefault();
-        var approvers_id = $('#approvers_id').val();
-        console.log(approvers_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-approvers/'+approvers_id, 
+        $('#desigDelete').submit(function(e) {
+            e.preventDefault();
+            var approvers_id = $('#approvers_id').val();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/delete-approvers/'+approvers_id, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -288,7 +274,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
+                                url: baseUrl + '/approvers-list/'+dept_id,
                                 type: 'GET',
                                 headers: {
                                         'Authorization': 'Bearer ' + jwtToken
@@ -297,7 +283,6 @@
                                     var table = $('#desigTable').DataTable();
                                     table.clear().draw();
                                     var rowNum = 1;
-
                                     // Iterate through the data and populate the table
                                     response.data.forEach(function(item) {
                                         var rowData = [
@@ -348,7 +333,5 @@
                 }
             });
         });
-    });
-
-
+	});
 </script>

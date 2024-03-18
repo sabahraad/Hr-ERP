@@ -4,12 +4,14 @@ namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class weekendController extends Controller
 {
     public function weekendlist(){
 
         $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://hrm.aamarpay.dev/api/weekend-list',
@@ -28,7 +30,7 @@ class weekendController extends Controller
 
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.weekend',compact('dataArray'), ['jwtToken' => $access_token]);
+        return view('frontend.weekend',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
     public function save(Request $request){
         dd($request);

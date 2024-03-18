@@ -48,7 +48,80 @@
                                 </div>
                             </div>
                             <input class="form-control" type="text" name="shifts_id" value="{{$shift->shifts_id}}"  hidden>
-                  
+                            <input class="form-control" type="text" name="shift_weekends_id" value="{{$shift->shift_weekends_id}}"  hidden>
+
+                            <div class="table-responsive">
+								<table class="table table-striped custom-table">
+									<thead>
+										<tr>
+											<th>Days</th>
+											<th class="text-center">Sunday</th>
+											<th class="text-center">Monday</th>
+											<th class="text-center">Tuesday</th>
+											<th class="text-center">Wednesday</th>
+											<th class="text-center">Thursday</th>
+											<th class="text-center">Friday</th>
+                                            <th class="text-center">Saturday</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Weekend</td>
+                                                <td class="text-center">
+                                                    <input name="Sunday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="sundayCheckbox" name="Sunday" type="checkbox" value="1" {{ $shift->Sunday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                               
+                                                <td class="text-center">
+                                                    <input name="Monday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="mondayCheckbox" name="Monday" type="checkbox" value="1" {{ $shift->Monday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                                <td class="text-center">
+                                                    <input name="Tuesday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="tuesdayCheckbox" name="Tuesday" type="checkbox" value="1" {{ $shift->Tuesday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                                <td class="text-center">
+                                                    <input name="Wednesday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="wednesdayCheckbox" name="Wednesday" type="checkbox" value="1" {{ $shift->Wednesday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                                <td class="text-center">
+                                                    <input name="Thursday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="thursdayCheckbox" name="Thursday" type="checkbox" value="1" {{ $shift->Thursday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                                <td class="text-center">
+                                                    <input name="Friday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="fridayCheckbox" name="Friday" type="checkbox" value="1" {{ $shift->Friday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+                                                <td class="text-center">
+                                                    <input name="Saturday" value="0" hidden>
+                                                    <label class="custom_check">
+                                                        <input id="saturdayCheckbox" name="Saturday" type="checkbox" value="1" {{ $shift->Saturday == 1 ? 'checked' : '' }}>													
+                                                        <span class="checkmark"></span>
+                                                    </label>																
+                                                </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
                             <div class="col-sm-12">
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Save</button>

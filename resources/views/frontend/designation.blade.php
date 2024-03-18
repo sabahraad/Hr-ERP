@@ -204,9 +204,7 @@
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 
 <script>
-    // $(document).ready(function(){
-    //     $('#desigTable').DataTable();
-    // });
+    
     $(document).ready(function() {
         $('#desigTable').DataTable({
         dom: 'Bfrtip', 
@@ -224,6 +222,7 @@
     
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
 		$('#myForm').submit(function(event) {
 			event.preventDefault(); // Prevent the form from submitting normally
                 
@@ -231,7 +230,7 @@
             console.log(dept_id);
 
 			$.ajax({
-			url: 'https://hrm.aamarpay.dev/api/designations-list/'+dept_id,
+			url: baseUrl + '/designations-list/'+dept_id,
 			type: 'GET',
             headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -258,181 +257,160 @@
 			}
 			});
 		});
-	});
 
+        $('#desig_form').submit(function(e) {
+            e.preventDefault();
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desig_form').submit(function(e) {
-        e.preventDefault();
+            var formData = new FormData(this);
 
-        var formData = new FormData(this);
+            $.ajax({
+                    url: baseUrl + '/add-designations', 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Designation added successful',
+                            text: 'Your Designation registration was successful!',
+                            showConfirmButton: false, // Hide the OK button
+                            }); 
+                            setTimeout(function() {
+                                location.reload(); // This will refresh the current page
+                            }, 300);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
+                    }
+                });
+        });
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-designations', 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Designation added successful',
-                        text: 'Your Designation registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
+        $(document).on('click', '.dropdown-item[data-bs-target="#edit_designation"]', function() {
+            var designation_id = $(this).find('.fa-solid.fa-pencil').data('id');
+            var trElement = $(this).closest('tr');
+            // Find the 'td' elements within the 'tr'
+            var desigTitle = trElement.find('td:eq(1)').text();
+            var details = trElement.find('td:eq(2)').text();
+            // Log the data to the console
+            console.log('desigTitle:', desigTitle);
+            console.log('details:', details);
+            $('#desigTitle').val(desigTitle);
+            $('#details').val(details);
+            $('#designation_id').val(designation_id);
+            // Show the modal
+            $('#edit_designation').modal('show');
+        });
+
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var designation_id = $('#designation_id').val();
+            var formData = new FormData(this);
+
+            $.ajax({
+                    url: baseUrl + '/edit/designations/'+designation_id, 
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Designation Edited successfully',
+                            text: 'Your Designation edit was successful!',
+                            showConfirmButton: false, 
+                        });
+                        setTimeout(function() {
+                                location.reload(); // This will refresh the current page
+                            }, 200);
+
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
+                    }
+                });
+        });
+
+        $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
+            var designation_id = $(this).find('.fa-regular.fa-trash-can').data('id');
+            $('#designation_id').val(designation_id);
+        });
+
+        $('#desigDelete').submit(function(e) {
+            e.preventDefault();
+            var designation_id = $('#designation_id').val();
+            var formData = new FormData(this);
+
+            $.ajax({
+                    url: baseUrl + '/delete/designations/'+designation_id, 
+                    type: 'DELETE',
+                    data: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'designation successfully deleted',
+                            text: 'You have successfully deleted a designation',
+                            showConfirmButton: false, 
+                        });
                         setTimeout(function() {
                             location.reload(); // This will refresh the current page
-                        }, 300);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        },300);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
                         }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
                     }
-                }
-            });
+                });
         });
-    });
-
-    $(document).on('click', '.dropdown-item[data-bs-target="#edit_designation"]', function() {
-        var designation_id = $(this).find('.fa-solid.fa-pencil').data('id');
-        console.log(designation_id);
-
-        var trElement = $(this).closest('tr');
-
-        // Find the 'td' elements within the 'tr'
-        var desigTitle = trElement.find('td:eq(1)').text();
-        var details = trElement.find('td:eq(2)').text();
-
-        // Log the data to the console
-        console.log('desigTitle:', desigTitle);
-        console.log('details:', details);
-        $('#desigTitle').val(desigTitle);
-        $('#details').val(details);
-        $('#designation_id').val(designation_id);
-        // Show the modal
-        $('#edit_designation').modal('show');
-    });
-
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var designation_id = $('#designation_id').val();
-        console.log(designation_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/designations/'+designation_id, 
-                type: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Designation Edited successfully',
-                        text: 'Your Designation edit was successful!',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 200);
-
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
-
-    $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-        var designation_id = $(this).find('.fa-regular.fa-trash-can').data('id');
-        console.log(designation_id);
-        $('#designation_id').val(designation_id);
-     
-    });
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desigDelete').submit(function(e) {
-        e.preventDefault();
-        var designation_id = $('#designation_id').val();
-        console.log(designation_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete/designations/'+designation_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'designation successfully deleted',
-                        text: 'You have successfully deleted a designation',
-                        showConfirmButton: false, 
-                    });
-                    setTimeout(function() {
-                        location.reload(); // This will refresh the current page
-                    },300);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
+	});
 </script>

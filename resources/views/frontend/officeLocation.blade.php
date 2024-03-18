@@ -203,13 +203,14 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
 
-        var formData = new FormData(this);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-office-location', 
+            $.ajax({
+                url: baseUrl + '/add-office-location', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -247,29 +248,16 @@
                 }
             });
         });
-    });
 
-
-
-    $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
-        // Get the dept_id from the clicked element's data-id attribute
+        $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
+            // Get the dept_id from the clicked element's data-id attribute
             var locationID = $(this).find('.fa-pencil').data('id');
-
-            // Log the dept_id to the console
-            console.log(locationID);
             var trElement = $(this).closest('tr');
-
             // Find the 'td' elements within the 'tr'
             var location_name = trElement.find('td:eq(1)').text();
             var longitude = trElement.find('td:eq(2)').text();
             var latitude = trElement.find('td:eq(3)').text();
             var radius = trElement.find('td:eq(4)').text();
-            // Log the data to the console
-            console.log('deptTitle:', location_name);
-            console.log('details:', latitude);
-            console.log('deptTitle:', longitude);
-            console.log('details:', radius);
             $('#locationName').val(location_name);
             $('#latitude1').val(latitude);
             $('#longitude1').val(longitude);
@@ -278,21 +266,16 @@
             // Show the modal
             $('#edit_department').modal('show');
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var locationID = $('#locationID').val();
+            console.log(locationID);
 
+            var formData = new FormData(this);
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var locationID = $('#locationID').val();
-        console.log(locationID);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit/office-location/'+locationID, 
+            $.ajax({
+                url: baseUrl + '/edit/office-location/'+locationID, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -310,7 +293,6 @@
                     setTimeout(function() {
                             location.reload(); // This will refresh the current page
                         }, 200);
-
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -331,5 +313,4 @@
             });
         });
     });
-
 </script>

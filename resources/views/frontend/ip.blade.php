@@ -176,12 +176,12 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-IP', 
+        var baseUrl = "{{ $baseUrl }}";
+        $('#msform').submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/add-IP', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -219,19 +219,12 @@
                 }
             });
         });
-    });
 
-
-
-    $(document).ready(function() {
-    $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
-        // Get the dept_id from the clicked element's data-id attribute
+        $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
+            // Get the dept_id from the clicked element's data-id attribute
             var deptId = $(this).find('.fa-pencil').data('id');
-
             // Log the dept_id to the console
-            console.log(deptId);
             var trElement = $(this).closest('tr');
-
             // Find the 'td' elements within the 'tr'
             var ipList = trElement.find('td:eq(1)').text();
             var ipArray = ipList.split('\n');
@@ -248,31 +241,21 @@
                 container.appendChild(input);
                 }
             });
-
-
             var wifiName = trElement.find('td:eq(2)').text();
-
             // Log the data to the console
-            console.log('ipList:', ipList);
-            console.log('wifiName:', wifiName);
             $('#ipList').val(ipList);
             $('#wifiName').val(wifiName);
             $('#dept_id').val(deptId);
             // Show the modal
             $('#edit_department').modal('show');
         });
-    });
 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
 
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-IP', 
+            $.ajax({
+                url: baseUrl + '/add-IP', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -311,5 +294,4 @@
             });
         });
     });
-
 </script>

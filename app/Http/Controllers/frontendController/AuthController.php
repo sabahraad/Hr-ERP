@@ -10,9 +10,17 @@ use App\Models\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use App\Utils\BaseUrl;
 
 class AuthController extends Controller
 {
+    protected $baseUrl;
+    
+    public function __construct()
+    {
+        $this->baseUrl = BaseUrl::get();
+    }
+
     public function registrationForm(){
         return view('frontend.registration');
     }
@@ -27,10 +35,12 @@ class AuthController extends Controller
 
     public function logout(Request $request){
         $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/logout',
+        CURLOPT_URL => $baseUrl.'/logout',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -62,10 +72,11 @@ class AuthController extends Controller
 
             $email = $request->email;
             $password = $request->password;
+            $baseUrl = $this->baseUrl;
+
             $curl = curl_init();
-    
             curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://hrm.aamarpay.dev/api/login',
+            CURLOPT_URL => $baseUrl.'/login',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

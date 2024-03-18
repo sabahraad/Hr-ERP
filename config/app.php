@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => ('https://hrm.aamarpay.dev/api'),
 
     'asset_url' => env('ASSET_URL'),
 

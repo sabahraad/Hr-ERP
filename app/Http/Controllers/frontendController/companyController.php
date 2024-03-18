@@ -4,15 +4,18 @@ namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
+
 
 class companyController extends Controller
 {
     public function company(){
+        $baseUrl = BaseUrl::get();
         $access_token = session('access_token');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://hrm.aamarpay.dev/api/company-details',
+          CURLOPT_URL => $baseUrl .'/company-details',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -31,7 +34,7 @@ class companyController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/user-profile',
+        CURLOPT_URL => $baseUrl .'/user-profile',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -47,7 +50,7 @@ class companyController extends Controller
 
         curl_close($curl);
         $userDetails = json_decode($response,true);
-        return view('frontend.company',compact('dataArray','userDetails'), ['jwtToken' => $access_token]);
+        return view('frontend.company',compact('dataArray','userDetails'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function privacyPolicy(){

@@ -8,6 +8,9 @@ use App\Models\AttendanceType;
 use App\Models\Employee;
 use App\Models\IP;
 use App\Models\officeLocation;
+use App\Models\Shift;
+use App\Models\ShiftEmployee;
+use App\Models\ShiftWeekend;
 use App\Models\User;
 use App\Models\Weekend;
 use Carbon\Carbon;
@@ -49,21 +52,45 @@ class attendanceController extends Controller
         $company_id= auth()->user()->company_id;
         $checkIN = 1;
         $checkOut = 2;
+        //check shift
+        $foundInShifts = ShiftEmployee::where('company_id', $company_id)
+                                    ->get()
+                                    ->filter(function ($shift) use ($emp_id) {
+                                        $shiftEmpList = json_decode($shift->shift_emp_list, true);
+                                
+                                        // Check if the emp_id is present in the shift_emp_list
+                                        return collect($shiftEmpList)->contains('emp_id', $emp_id);
+                                    });
+        $shiftEmployee = $foundInShifts->first();
+        if ($shiftEmployee) {
+            //Weekend check
+            $Weekend = ShiftWeekend::where('company_id',$company_id)->first();
+            $data=$Weekend->getAttributes();
+            $Weekend = array_keys(array_filter($data, function($value) {
+                return $value === 1;
+            }));
+            $currentDayName = Carbon::now()->format('l');
+            if (in_array($currentDayName, $Weekend)) {
+                return response()->json([
+                    'message' => 'Attendance cannot be submitted on weekends.'
+                ],422);
+            }
 
-        //Weekend check
-        $Weekend = Weekend::where('company_id',$company_id)->first();
-        $data=$Weekend->getAttributes();
-        $Weekend = array_keys(array_filter($data, function($value) {
-            return $value === 1;
-        }));
-        $currentDayName = Carbon::now()->format('l');
+        } else {
+           //Regular Weekend check
+            $Weekend = Weekend::where('company_id',$company_id)->first();
+            $data=$Weekend->getAttributes();
+            $Weekend = array_keys(array_filter($data, function($value) {
+                return $value === 1;
+            }));
+            $currentDayName = Carbon::now()->format('l');
 
-        if (in_array($currentDayName, $Weekend)) {
-            return response()->json([
-                'message' => 'Attendance cannot be submitted on weekends.'
-            ],422);
+            if (in_array($currentDayName, $Weekend)) {
+                return response()->json([
+                    'message' => 'Attendance cannot be submitted on weekends.'
+                ],422);
+            }
         }
-        
         //Attendance check
         $attendanceType = AttendanceType::where('company_id',$company_id)->first();
         $data=$attendanceType->getAttributes();
@@ -119,18 +146,37 @@ class attendanceController extends Controller
                     'message'=> 'Your Are Already Checked IN'
                 ],400);
             }
-            //Late or on time check
-            $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
-            $graceTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('grace_time'));
-            $totalTime = $officeTime->addHours($graceTime->hour)
-                        ->addMinutes($graceTime->minute)
-                        ->addSeconds($graceTime->second);
-            $totalTime = $totalTime->format('H:i:s');
-            if($totalTime >= $currentTime){
-                $status = 1;
+            //Shift Late or on time check
+            if ($shiftEmployee) {
+                $shifts_id = $shiftEmployee->shifts_id;
+                $shift_time = Shift::find($shifts_id);
+                $shifts_start_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_start_time);
+                $shifts_grace_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_grace_time);
+                $totalTime = $shifts_start_time->addHours($shifts_grace_time->hour)
+                            ->addMinutes($shifts_grace_time->minute)
+                            ->addSeconds($shifts_grace_time->second);
+                $totalTime = $totalTime->format('H:i:s');
+                
+                if($totalTime > $currentTime){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
             }else{
-                $status = 2;
+                //Regular Late or on time check
+                $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
+                $graceTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('grace_time'));
+                $totalTime = $officeTime->addHours($graceTime->hour)
+                            ->addMinutes($graceTime->minute)
+                            ->addSeconds($graceTime->second);
+                $totalTime = $totalTime->format('H:i:s');
+                if($totalTime > $currentTime){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
             }
+            
             
             if($takePresent == 1){
                 $data = new Attendance();
@@ -155,40 +201,84 @@ class attendanceController extends Controller
             
             $onTime = 1;
             $earlyLeave = 2;
-            //Current date attendance check
-            $OUT = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('OUT');
-            if($OUT == $onTime || $OUT == $earlyLeave){
-                return response()->json([
-                    'message'=> 'Your Are Already Checked OUT'
-                ],400);
-            }
-            $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');
-            if($attendance == 1){
-                $endTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('end_time'));
-                $endTime = $endTime->format('H:i:s');
-                if($endTime <= $currentTime){
-                    $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
-                    $data->OUT = $onTime;
-                    $data->OUTstatus = $onTime;
-                    $data->save();
+            //shift check 
+            if ($shiftEmployee) {
+                $data = Attendance::where('emp_id',$emp_id)->orderBy('attendance_id','desc')->first();
+                $OUT = $data->OUT;
+                if($OUT == $onTime || $OUT == $earlyLeave){
                     return response()->json([
-                        'message' => 'Successfully Checked Out for Today',
-                        'data'=> $data
-                    ],201);
+                        'message'=> 'Your Are Already Checked OUT'
+                    ],400);
+                }
+                $checkIN = Attendance::where('emp_id',$emp_id)->orderBy('attendance_id','desc')->value('IN');
+                if($checkIN == 1){
+                    $shifts_id = $shiftEmployee->shifts_id;
+                    $shift_time = Shift::find($shifts_id);
+                    $shifts_start_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_start_time );
+                    $shifts_end_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_end_time );
+                    $timeDifference = $shifts_end_time->diffInSeconds($shifts_start_time);
+                    $current = Carbon::now()->format('H:i:s');
+                    $timeDiffFromStart = $shifts_start_time->diffInSeconds($current);
+                    if($timeDiffFromStart >= $timeDifference){
+                        $data= Attendance::where('emp_id',$emp_id)->orderBy('attendance_id','desc')->first();
+                        $data->OUT = $onTime;
+                        $data->OUTstatus = $onTime;
+                        $data->save();
+                        return response()->json([
+                            'message' => 'Successfully Checked Out for Today',
+                            'data'=> $data
+                        ],201);
+                    }else{
+                        $data= Attendance::where('emp_id',$emp_id)->orderBy('attendance_id','desc')->first();
+                        $data->OUT = $earlyLeave;
+                        $data->OUTstatus = $earlyLeave;
+                        $data->save();
+                        return response()->json([
+                            'message' => 'Successfully Checked Out for Today',
+                            'data'=> $data
+                        ],201);
+                    }
                 }else{
-                    $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
-                    $data->OUT = $earlyLeave;
-                    $data->OUTstatus = $earlyLeave;
-                    $data->save();
                     return response()->json([
-                        'message' => 'Successfully Checked Out for Today',
-                        'data'=> $data
-                    ],201);
+                        'message' => 'Give attendance first'
+                    ],403);
                 }
             }else{
-                return response()->json([
-                    'message' => 'Give attendance first'
-                ],403);
+                //Current date attendance check
+                $OUT = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('OUT');
+                if($OUT == $onTime || $OUT == $earlyLeave){
+                    return response()->json([
+                        'message'=> 'Your Are Already Checked OUT'
+                    ],400);
+                }
+                $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');
+                if($attendance == 1){
+                    $endTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('end_time'));
+                    $endTime = $endTime->format('H:i:s');
+                    if($endTime <= $currentTime){
+                        $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
+                        $data->OUT = $onTime;
+                        $data->OUTstatus = $onTime;
+                        $data->save();
+                        return response()->json([
+                            'message' => 'Successfully Checked Out for Today',
+                            'data'=> $data
+                        ],201);
+                    }else{
+                        $data= Attendance::whereDate('created_at', '=', Carbon::today()->toDateString())->where('emp_id',$emp_id)->first();
+                        $data->OUT = $earlyLeave;
+                        $data->OUTstatus = $earlyLeave;
+                        $data->save();
+                        return response()->json([
+                            'message' => 'Successfully Checked Out for Today',
+                            'data'=> $data
+                        ],201);
+                    }
+                }else{
+                    return response()->json([
+                        'message' => 'Give attendance first'
+                    ],403);
+                }
             }
         }   
     }
@@ -449,5 +539,56 @@ class attendanceController extends Controller
             'data'=>$data
         ],200);
 
+    }
+
+    public function checkLocation(Request $request){
+        $validator = Validator::make($request->all(), [
+            'latitude' => 'required|numeric ',
+            'longitude' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        $company_id= auth()->user()->company_id;
+
+        //Attendance check
+        $attendanceType = AttendanceType::where('company_id',$company_id)->first();
+        $data=$attendanceType->getAttributes();
+        $attendanceType = array_keys(array_filter($data, function($value) {
+            return $value === 1;
+        }));
+        if(in_array("location_based",$attendanceType)){
+            $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->first();
+            // Radius of the Earth in km
+            $earthRadius = 6371;
+           // Convert latitude and longitude from degrees to radians
+            $userLat = deg2rad($request->latitude);
+            $userLong = deg2rad($request->longitude);
+            $targetLat = deg2rad($officeLocation->latitude);
+            $targetLong = deg2rad($officeLocation->longitude);
+            $radius = $officeLocation->radius;
+            // Calculate the change in coordinates
+            $latDiff = $targetLat - $userLat;
+            $longDiff = $targetLong - $userLong;
+            // Haversine formula
+            $a = sin($latDiff/2) * sin($latDiff/2) + cos($userLat) * cos($targetLat) * sin($longDiff/2) * sin($longDiff/2);
+            $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+            $distance = $earthRadius * $c;
+            
+            if($distance <= $radius){
+                return response()->json([
+                    'message'=> 'Inside Office location'
+                ],200);
+            }else{
+                return response()->json([
+                    'message'=> 'Outside Office location'
+                ],200);
+            }
+        }else{
+            return response()->json([
+                'message'=> 'Office Location is not set.'
+            ],403);
+        }
     }
 }

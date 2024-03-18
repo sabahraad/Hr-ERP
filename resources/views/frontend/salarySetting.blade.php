@@ -126,14 +126,14 @@
 
 <script>
         $(document).ready(function(){
-                $('#desigTable').DataTable();
-            });
+            $('#desigTable').DataTable();
+        });
 
         $(document).ready(function() {
             var jwtToken = "{{ $jwtToken }}";
+            var baseUrl = "{{ $baseUrl }}";
             $('#msform').submit(function(e) {
                 e.preventDefault();
-
                 var name = $('#name').val();
                 var percentage = $('#percentage').val();
 
@@ -143,7 +143,7 @@
                 };
 
                 $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/temp-salary-setting', 
+                        url: baseUrl + '/temp-salary-setting', 
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
@@ -162,7 +162,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     $.ajax({
-                                        url: 'https://hrm.aamarpay.dev/api/temp-salary-setting-list',
+                                        url: baseUrl + '/temp-salary-setting-list',
                                         type: 'GET',
                                         headers: {
                                                 'Authorization': 'Bearer ' + jwtToken
@@ -253,14 +253,13 @@
   
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
     $('#delete_desig').submit(function(e) {
         e.preventDefault();
         var tempSalarySettingID = $('#tempSalarySettingID').val();
-        console.log(tempSalarySettingID);
-
         var formData = new FormData(this);
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-temp-salary-setting/'+tempSalarySettingID, 
+                url: baseUrl + '/delete-temp-salary-setting/'+tempSalarySettingID, 
                 type: 'DELETE',
                 data: formData,
                 headers: {
@@ -280,7 +279,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                url: 'https://hrm.aamarpay.dev/api/temp-salary-setting-list',
+                                url: baseUrl + '/temp-salary-setting-list',
                                 type: 'GET',
                                 headers: {
                                         'Authorization': 'Bearer ' + jwtToken
@@ -353,12 +352,13 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
     $('#saveAll').click(function(e) {
         e.preventDefault();
         console.log('ok');
        
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/create-salary-setting', 
+                url: baseUrl + '/create-salary-setting', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -376,7 +376,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                url: 'https://hrm.aamarpay.dev/api/temp-salary-setting-list',
+                                url: baseUrl + '/temp-salary-setting-list',
                                 type: 'GET',
                                 headers: {
                                         'Authorization': 'Bearer ' + jwtToken

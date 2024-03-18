@@ -6,15 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Shift;
 use App\Models\ShiftEmployee;
+use App\Models\ShiftWeekend;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
+use App\Utils\BaseUrl;
 
 class shiftController extends Controller
 {
     public function ShiftList(){
         $access_token = session('access_token');
-        $compnany_id = session('company_id');
-        $data = Shift::where('company_id',$compnany_id)->orderBy('updated_at', 'desc')->get();
-        return view('frontend.shiftList',compact('data'), ['jwtToken' => $access_token]);
+        $company_id = session('company_id');
+        $baseUrl = BaseUrl::get();
+        $data = Shift::where('company_id',$company_id)->orderBy('updated_at', 'desc')->get();
+        foreach($data as $raw){
+            $Weekend = ShiftWeekend::where('shifts_id',$raw->shifts_id)->first();
+            $result=$Weekend->getAttributes();
+            $Weekend = array_keys(array_filter($result, function($value) {
+                return $value === 1;
+            }));
+            $raw->weekend = $Weekend;
+        }
+        return view('frontend.shiftList',compact('data'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
     public function addShift(){
@@ -29,12 +41,26 @@ class shiftController extends Controller
         $data->shifts_end_time = $request->shifts_end_time;
         $data->shifts_grace_time = $request->shifts_grace_time;
         $data->company_id = $compnany_id;
-        $data->save();
+        if($data->save()){
+            $weekend = new ShiftWeekend();
+            $weekend->Sunday = $request->Sunday;
+            $weekend->Monday = $request->Monday;
+            $weekend->Tuesday = $request->Tuesday;
+            $weekend->Wednesday = $request->Wednesday;
+            $weekend->Thursday = $request->Thursday;
+            $weekend->Friday = $request->Friday;
+            $weekend->Saturday = $request->Saturday;
+            $weekend->shifts_id = $data->shifts_id;
+            $weekend->company_id = $compnany_id;
+            $weekend->save();        
+        }
         return redirect()->route('ShiftList');
     }
 
     public function showEditShift($id){
-        $data = Shift::where('shifts_id',$id)->get();
+        $data = Shift::where('shifts.shifts_id', $id)
+             ->join('shift_weekends', 'shifts.shifts_id', '=', 'shift_weekends.shifts_id')
+             ->get();
         return view('frontend.editShift',compact('data'));
     }
 
@@ -45,6 +71,15 @@ class shiftController extends Controller
         $data->shifts_end_time = $request->shifts_end_time;
         $data->shifts_grace_time = $request->shifts_grace_time;
         $data->save();
+        $weekend = ShiftWeekend::find($request->shift_weekends_id);
+        $weekend->Sunday = $request->Sunday;
+        $weekend->Monday = $request->Monday;
+        $weekend->Tuesday = $request->Tuesday;
+        $weekend->Wednesday = $request->Wednesday;
+        $weekend->Thursday = $request->Thursday;
+        $weekend->Friday = $request->Friday;
+        $weekend->Saturday = $request->Saturday;
+        $weekend->save();
         return redirect()->route('ShiftList');
     }
 
@@ -57,10 +92,10 @@ class shiftController extends Controller
         $access_token = session('access_token');
         $compnany_id = session('company_id');
         $shift = Shift::where('company_id',$compnany_id)->get();
-
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/all-employee-list',
+        CURLOPT_URL => $baseUrl.'/all-employee-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -87,7 +122,6 @@ class shiftController extends Controller
         $existingData = ShiftEmployee::where('shifts_id', $request->shifts_id)
                                     ->where('company_id', $compnany_id)
                                     ->first();
-
         if ($existingData) {
             $existingList = json_decode($existingData->shift_emp_list, true);
 
@@ -125,7 +159,38 @@ class shiftController extends Controller
             $newData->save();
         }
 
-        return redirect()->route('showAddEmployeeInShift');
+        return redirect()->route('showAddEmployeeInShift')->with('success', 'Employee Added successfully.');
+    }
+
+    public function showRemoveEmployeeFromShift($id){
+        $value = ShiftEmployee::where('shift_employees.shift_employees_id', $id)
+                                ->join('shifts', 'shifts.shifts_id', '=', 'shift_employees.shifts_id')
+                                ->select('shift_employees.*', 'shifts.shifts_title', 'shifts.shifts_start_time', 'shifts.shifts_end_time')
+                                ->get();
+        return view('frontend.removeEmployeeFromShift',compact('value'));
+    }
+
+    public function removeEmployeeFromShift(Request $request){
+        $data = ShiftEmployee::find($request->shift_employees_id);
+        $employees = json_decode($data->shift_emp_list, true);
+
+        // Array of employee IDs to remove
+        $employeesToRemove = $request->emp_id;
+
+        // Remove the specified employees from the array
+        foreach ($employeesToRemove as $employeeId) {
+            $indexToRemove = array_search($employeeId, array_column($employees, 'emp_id'));
+
+            if ($indexToRemove !== false) {
+                array_splice($employees, $indexToRemove, 1);
+            }
+        }
+        // Encode the modified array back to JSON
+        $modifiedJsonString = json_encode($employees);
+        //edit the shift_emp_list
+        $data->shift_emp_list = $modifiedJsonString;
+        $data->save();
+        return back()->with('success', 'Employee removed successfully.');
     }
 
 }

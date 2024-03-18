@@ -248,6 +248,7 @@
 <script>
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
         $('#empTable').DataTable();
 
         $(document).on('click', '.add-employee', function(){
@@ -257,17 +258,12 @@
                 });
             });
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#msform').submit(function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-timeline', 
+        $('#msform').submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/add-timeline', 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -329,14 +325,11 @@
                 }
             });
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
         $(document).on('click', '.edit-employee', function(){
             var timeline_settings_id = $(this).data('id');
             $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/individual-timeline-list/'+timeline_settings_id, 
+                url: baseUrl + '/individual-timeline-list/'+timeline_settings_id, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -375,22 +368,14 @@
                     }
                 }
             });
-
         });
-    });
 
-
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#editSubmit').submit(function(e) {
-        e.preventDefault();
-        var timeline_settings_id = $('#timeline_settings_id').val();
-        console.log(timeline_settings_id);
-
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/edit-timeine/'+timeline_settings_id, 
+        $('#editSubmit').submit(function(e) {
+            e.preventDefault();
+            var timeline_settings_id = $('#timeline_settings_id').val();
+            var formData = new FormData(this);
+            $.ajax({
+                url: baseUrl + '/edit-timeine/'+timeline_settings_id, 
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -445,25 +430,20 @@
                 }
             });
         });
-    });
-    
-    $(document).ready(function() {
+
         $(document).on('click', '.delete-employee', function(){
             var timeline_settings_id = $(this).data('id');
             $('#timeline_settings_id').val(timeline_settings_id);
         });
-    });
 
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#deptDelete').submit(function(e) {
-        e.preventDefault();
-        var timeline_settings_id = $('#timeline_settings_id').val();
-        console.log(timeline_settings_id);
-        var formData = new FormData(this);
+        $('#deptDelete').submit(function(e) {
+            e.preventDefault();
+            var timeline_settings_id = $('#timeline_settings_id').val();
+            console.log(timeline_settings_id);
+            var formData = new FormData(this);
 
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-timeline/'+timeline_settings_id, 
+            $.ajax({
+                url: baseUrl + '/delete-timeline/'+timeline_settings_id, 
                 type: 'DELETE',
                 data: formData,
                 headers: {

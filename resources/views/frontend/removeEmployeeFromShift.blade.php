@@ -19,11 +19,12 @@
             <div class="content container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                         <!-- Page Header -->
-                         <div class="page-header">
+                        
+                        <!-- Page Header -->
+                        <div class="page-header">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h3 class="page-title">Add Employee In Shift</h3>
+                                    <h3 class="page-title">Remove Employee From Shift</h3>
                                     <ul class="breadcrumb">
                                         <li class="breadcrumb-item">Dashboard</li>
                                         <li class="breadcrumb-item active">Shift Employee</li>
@@ -64,36 +65,39 @@
                             </script>
                         @endif
                         <!-- /Page Header -->
-                        <form action="{{route('addEmployeeInShift')}}" method="post">
+                        <form action="{{route('removeEmployeeFromShift')}}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="input-block mb-3">
-                                       
+                                    @foreach ($value as $raw)
                                         <label class="col-form-label">Shift Name<span class="text-danger">*</span></label>
-                                        <select name="shifts_id" class="form-control select" required>
-                                            @foreach ($shift as $raw)
-                                                <option value="{{ $raw['shifts_id'] }}">{{ $raw['shifts_title'] }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input class="form-control" value="{{ $raw->shifts_title }}" readonly></input>
+                                        <input class="form-control" name="shift_employees_id" value="{{ $raw->shift_employees_id }}" hidden></input>
                                     </div>
                                 </div>
-                                
+                                        @php
+                                            $employees = json_decode($raw->shift_emp_list, true);
+                                        @endphp
                                 <div class="col-sm-4">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Employee<span class="text-danger">*</span></label>
                                         <select name="emp_id[]" class="form-control selectpicker" multiple data-live-search="true" title="Select Employees" required>
-                                            @foreach ($employee['data'] as $employee)
-                                                <option value="{{ $employee['emp_id'] }}">{{ $employee['name'] }}</option>
-                                            @endforeach
+                                            @if (!empty($employees))
+                                                @foreach ($employees as $employee)
+                                                    <option value="{{ $employee['emp_id'] }}">{{ $employee['emp_name'] }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>  
+                                @endforeach
+
                                 <div class="col-sm-2">
                                     <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn-md" style="padding-left: 56px;padding-right: 57px;padding-top: 7px;padding-bottom: 5px;">
-                                            <i class="fas fa-plus-circle m-r-5"></i>
-                                                Add
+                                        <button class="btn btn-danger submit-btn">
+                                            <i class="fas fa-minus-circle m-r-5"></i>
+                                                Remove
                                         </button>
                                     </div>
                                 </div>
@@ -143,7 +147,7 @@
                                     <td>{{$raw->shifts_start_time}}</td>
                                     <td>{{$raw->shifts_end_time}}</td>
                                     <td>
-                                        <a class="btn btn-danger" href="{{ route('showRemoveEmployeeFromShift', ['id' => $raw->shift_employees_id]) }}" ><i class="fas fa-minus-circle m-r-5"></i> Remove Employee From Shift</a>
+                                        <a class="btn btn-primary" href="{{route('showAddEmployeeInShift')}}" ><i class="fas fa-plus-circle m-r-5"></i> Add Employee From Shift</a>
                                     </td>
                                     </tr>
                                     @endforeach
@@ -187,7 +191,8 @@
         </div>
         <!-- /Page Wrapper -->
 
-
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
@@ -196,7 +201,6 @@
         $(document).ready(function() {
             $('.selectpicker').selectpicker();
         });
-
         $(document).ready(function(){
             $('#desigTable').DataTable();
         });

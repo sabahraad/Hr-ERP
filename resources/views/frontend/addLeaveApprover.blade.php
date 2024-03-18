@@ -127,6 +127,8 @@
 
         $(document).ready(function() {
             var jwtToken = "{{ $jwtToken }}";
+            var baseUrl = "{{ $baseUrl }}";
+
             $('#msform').submit(function(e) {
                 e.preventDefault();
 
@@ -141,7 +143,7 @@
                 };
 
                 $.ajax({
-                        url: 'https://hrm.aamarpay.dev/api/add-approvers', 
+                        url: baseUrl + '/add-approvers', 
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
@@ -160,7 +162,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     $.ajax({
-                                        url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
+                                        url: baseUrl +'/approvers-list/'+dept_id,
                                         type: 'GET',
                                         headers: {
                                                 'Authorization': 'Bearer ' + jwtToken
@@ -233,6 +235,95 @@
                         }
                 });
             });
+
+            $('#desigDelete').submit(function(e) {
+                e.preventDefault();
+                var approvers_id = $('#approvers_id').val();
+                // console.log(approvers_id);
+                var formData = new FormData(this);
+
+                $.ajax({
+                        url: baseUrl +'/delete-approvers/'+approvers_id, 
+                        type: 'DELETE',
+                        data: formData,
+                        headers: {
+                            'Authorization': 'Bearer ' + jwtToken
+                        },
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            var dept_id = response.data;
+                            console.log(dept_id)
+                            $('#delete_designation').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Leave Approver successfully deleted',
+                                text: 'You have successfully deleted a Leave Approver',
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
+                                        type: 'GET',
+                                        headers: {
+                                                'Authorization': 'Bearer ' + jwtToken
+                                            },
+                                        success: function(response) {
+                                            var table = $('#desigTable').DataTable();
+                                            table.clear().draw();
+                                            var rowNum = 1;
+
+                                            // Iterate through the data and populate the table
+                                            response.data.forEach(function(item) {
+                                                var rowData = [
+                                                    rowNum,
+                                                    '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
+                                                    '<td data-empid="' + item.emp_id + '">' + item.approver_name + '</td>',
+                                                    '<td >' + item.priority + '</td>',
+                                                    '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
+                                                ];
+                                                table.row.add(rowData);
+                                                rowNum++;
+                                            });
+                                            
+                                            table.draw();
+                                        },
+                                        error: function(xhr, textStatus, errorThrown) {
+                                            if (xhr.status == 404) {
+                                                var table = $('#desigTable').DataTable();
+                                                table.clear().draw();
+                                                Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'No Leave Approver Found for this Department',
+                                                    });
+                                            } else {
+                                                console.log('Error in API call');
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status === 422) {
+                                var errors = xhr.responseJSON.error;
+                                var errorMessage = "<ul>";
+                                for (var field in errors) {
+                                    errorMessage += "<li>" + errors[field][0] + "</li>";
+                                }
+                                errorMessage += "</ul>";
+                                
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Validation Error',
+                                    html: errorMessage
+                                });
+                            }
+                        }
+                    });
+            });
         });
 
     $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
@@ -241,96 +332,4 @@
         $('#approvers_id').val(approvers_id);
     });
   
-    $(document).ready(function() {
-        var jwtToken = "{{ $jwtToken }}";
-    $('#desigDelete').submit(function(e) {
-        e.preventDefault();
-        var approvers_id = $('#approvers_id').val();
-        // console.log(approvers_id);
-        var formData = new FormData(this);
-
-        $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/delete-approvers/'+approvers_id, 
-                type: 'DELETE',
-                data: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + jwtToken
-                },
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    var dept_id = response.data;
-                    console.log(dept_id)
-                    $('#delete_designation').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Leave Approver successfully deleted',
-                        text: 'You have successfully deleted a Leave Approver',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
-                                type: 'GET',
-                                headers: {
-                                        'Authorization': 'Bearer ' + jwtToken
-                                    },
-                                success: function(response) {
-                                    var table = $('#desigTable').DataTable();
-                                    table.clear().draw();
-                                    var rowNum = 1;
-
-                                    // Iterate through the data and populate the table
-                                    response.data.forEach(function(item) {
-                                        var rowData = [
-                                            rowNum,
-                                            '<td data-deptid="' + item.deptId + '">' + item.deptName + '</td>',
-                                            '<td data-empid="' + item.emp_id + '">' + item.approver_name + '</td>',
-                                            '<td >' + item.priority + '</td>',
-                                            '<div class="dropdown dropdown-action"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.approvers_id+'"></i></a></div></div>'
-                                        ];
-                                        table.row.add(rowData);
-                                        rowNum++;
-                                    });
-                                    
-                                    table.draw();
-                                },
-                                error: function(xhr, textStatus, errorThrown) {
-                                    if (xhr.status == 404) {
-                                        var table = $('#desigTable').DataTable();
-                                        table.clear().draw();
-                                        Swal.fire({
-                                                icon: 'error',
-                                                title: 'No Leave Approver Found for this Department',
-                                            });
-                                    } else {
-                                        console.log('Error in API call');
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errorMessage
-                        });
-                    }
-                }
-            });
-        });
-    });
-
 </script>

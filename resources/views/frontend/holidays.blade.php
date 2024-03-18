@@ -172,17 +172,15 @@
     <script>
         $(document).ready(function() {
             $('#holidayTable').DataTable();
-        });
-
-        $(document).ready(function() {
             var jwtToken = "{{ $jwtToken }}";
+            var baseUrl = "{{ $baseUrl }}";
             $('#msform').submit(function(e) {
                 e.preventDefault();
 
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: 'https://hrm.aamarpay.dev/api/add-holiday', 
+                    url: baseUrl + '/add-holiday', 
                     type: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + jwtToken
@@ -219,13 +217,9 @@
                     }
                 });
             });
-        });
 
-
-
-        $(document).ready(function() {
-        $('.dropdown-item[data-bs-target="#edit_holiday"]').click(function() {
-            // Get the dept_id from the clicked element's data-id attribute
+            $('.dropdown-item[data-bs-target="#edit_holiday"]').click(function() {
+                // Get the dept_id from the clicked element's data-id attribute
                 var holidays_id = $(this).find('.fa-pencil').data('id');
 
                 // Log the dept_id to the console
@@ -245,21 +239,13 @@
                 // Show the modal
                 $('#edit_holiday').modal('show');
             });
-        });
 
-
-
-        $(document).ready(function() {
-            var jwtToken = "{{ $jwtToken }}";
             $('#editSubmit').submit(function(e) {
                 e.preventDefault();
                 var holidays_id = $('#holidays_id').val();
-                console.log(holidays_id);
-
                 var formData = new FormData(this);
-
                 $.ajax({
-                    url: 'https://hrm.aamarpay.dev/api/edit/holiday/'+holidays_id, 
+                    url: baseUrl + '/edit/holiday/'+holidays_id, 
                     type: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + jwtToken
@@ -275,7 +261,7 @@
                             showConfirmButton: false, 
                         });
                         setTimeout(function() {
-                                location.reload(); // This will refresh the current page
+                                location.reload();
                             }, 200);
 
                     },
@@ -297,10 +283,7 @@
                     }
                 });
             });
-        });
 
-
-        $(document).ready(function() {
             $('.dropdown-item[data-bs-target="#delete_holiday"]').click(function() {
                 // Get the dept_id from the clicked element's data-id attribute
                 var holidays_id = $(this).find('.fa-regular').data('id');
@@ -309,14 +292,7 @@
                 var trElement = $(this).closest('tr');
                 $('#holidays_id').val(holidays_id);
             });
-        });
 
-
-
-
-
-        $(document).ready(function() {
-            var jwtToken = "{{ $jwtToken }}";
             $('#holidayDelete').submit(function(e) {
                 e.preventDefault();
                 var holidays_id = $('#holidays_id').val();
@@ -324,7 +300,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: 'https://hrm.aamarpay.dev/api/delete/holiday/'+holidays_id, 
+                    url: baseUrl + '/delete/holiday/'+holidays_id, 
                     type: 'POST',
                     data: formData,
                     headers: {

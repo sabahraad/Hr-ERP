@@ -99,74 +99,73 @@
 		<!-- /Main Wrapper -->
         <script src="{{ asset('plugins/morris/morris.min.js') }}"></script>
         <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
-        <script src="{{ asset('js/chart.js') }}"></script>
         <script >
-        $(document).ready(function() {
-    var jwtToken = "{{ $jwtToken }}";
-    
-    $.ajax({
-        url: 'https://hrm.aamarpay.dev/api/chart-details', 
-        type: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + jwtToken
-        },
-        success: function(reportData) {
-            console.log(reportData);
+			$(document).ready(function() {
+				var jwtToken = "{{ $jwtToken }}";
+				var baseUrl = "{{ $baseUrl }}";
+				$.ajax({
+					url: baseUrl + '/chart-details', 
+					type: 'GET',
+					headers: {
+						'Authorization': 'Bearer ' + jwtToken
+					},
+					success: function(reportData) {
+						console.log(reportData);
 
-            // Convert the data to Morris Bar Chart format
-            var morrisData = [];
-            
-            for (var date in reportData.data) {
-                if (reportData.data.hasOwnProperty(date)) {
-                    var entry = {
-                        y: date
-                    };
+						// Convert the data to Morris Bar Chart format
+						var morrisData = [];
+						
+						for (var date in reportData.data) {
+							if (reportData.data.hasOwnProperty(date)) {
+								var entry = {
+									y: date
+								};
 
-                    // Check if it's a holiday
-                    if (reportData.data[date].total_attendance === 0 && reportData.data[date].Weekend === 0) {
-                        entry.h = reportData.data[date].Holiday;
-                        entry.label = 'Holiday';
-                    } 
-                    // Check if it's a weekend
-                    else if (reportData.data[date].Weekend === 1) {
-                        entry.w = 1;
-                        entry.label = 'Weekend';
-                    } 
-                    // It's a regular day with attendance and absent data
-                    else {
-                        entry.a = reportData.data[date].total_attendance;
-                        entry.b = reportData.data[date].total_absent;
-                        entry.label = 'Present/Absent';
-                    }
+								// Check if it's a holiday
+								if (reportData.data[date].total_attendance === 0 && reportData.data[date].Weekend === 0) {
+									entry.h = reportData.data[date].Holiday;
+									entry.label = 'Holiday';
+								} 
+								// Check if it's a weekend
+								else if (reportData.data[date].Weekend === 1) {
+									entry.w = 1;
+									entry.label = 'Weekend';
+								} 
+								// It's a regular day with attendance and absent data
+								else {
+									entry.a = reportData.data[date].total_attendance;
+									entry.b = reportData.data[date].total_absent;
+									entry.label = 'Present/Absent';
+								}
 
-                    morrisData.push(entry);
-                }
-            }
+								morrisData.push(entry);
+							}
+						}
 
-            // Initialize Morris Bar Chart
-            Morris.Bar({
-                element: 'bar-charts',
-                redrawOnParentResize: true,
-                data: morrisData,  // Use the converted data
-                xkey: 'y',
-                ykeys: ['a', 'b'],
-                labels: ['Present', 'Absent'],
-                barColors: ['#ff9b44', '#fc6075'],
-                resize: true,
-                redraw: true,
-                xLabelAngle: 25,
-                yLabelFormat: function(y) {
-                    return y.toFixed(0);  // Format Y-axis values as integers
-                },
-                yLabelInterval: 2
-            });
-        },
-        error: function(error) {
-            // Handle any errors
-            console.error(error);
-        }
-    });
-});
+						// Initialize Morris Bar Chart
+						Morris.Bar({
+							element: 'bar-charts',
+							redrawOnParentResize: true,
+							data: morrisData,  // Use the converted data
+							xkey: 'y',
+							ykeys: ['a', 'b'],
+							labels: ['Present', 'Absent'],
+							barColors: ['#ff9b44', '#fc6075'],
+							resize: true,
+							redraw: true,
+							xLabelAngle: 25,
+							yLabelFormat: function(y) {
+								return y.toFixed(0);  // Format Y-axis values as integers
+							},
+							yLabelInterval: 2
+						});
+					},
+					error: function(error) {
+						// Handle any errors
+						console.error(error);
+					}
+				});
+			});
     </script>
     </body>
 </html>
