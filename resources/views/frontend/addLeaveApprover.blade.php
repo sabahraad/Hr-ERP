@@ -264,7 +264,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     $.ajax({
-                                        url: 'https://hrm.aamarpay.dev/api/approvers-list/'+dept_id,
+                                        url: baseUrl + '/approvers-list/'+dept_id,
                                         type: 'GET',
                                         headers: {
                                                 'Authorization': 'Bearer ' + jwtToken
