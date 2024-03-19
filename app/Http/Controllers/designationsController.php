@@ -16,22 +16,15 @@ class designationsController extends Controller
     public function addDesignations(Request $request){
         $dept_id = $request->dept_id;
         $validator= Validator::make($request->all(), [
-            'desigTitle' => [
-                'required',
-                Rule::unique('designations')->where(function ($query) use ($dept_id) {
-                    return $query->where('dept_id', $dept_id);
-                })
-            ],
-            'details'  => 'string',
-            'dept_id' => 'required|integer'
+            'desigTitle' => 'required|string',
+            'details'  => 'required'
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors(),
             ], 422);
         }
-
         $company_id= auth()->user()->company_id;
 
         $data= new Designation;
@@ -57,9 +50,7 @@ class designationsController extends Controller
             return response()->json([
                 'message' => 'Please Add Designation First',
             ],Response::HTTP_NOT_FOUND);
-
         }else{
-
             return response()->json([
                 'message' => 'Designation List',
                 'data' => $data,
@@ -96,21 +87,32 @@ class designationsController extends Controller
                 'message'=> 'Something Went Wrong'
             ],Response::HTTP_BAD_GATEWAY);
         }
-
-
     }
 
     public function deleteDesignations($id){
-        
         Designation::find($id)->delete();
         return response()->json([
             'message' => 'Designation Deleted'
         ]);
-
     }
 
     public function designationNameList($id){
         $data = Designation::where('dept_id',$id)->pluck('desigTitle','designation_id');
         return $data;
+    }
+
+    public function designationDetails($id){
+        $data = Designation::find($id);
+        if(!$data){
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],200);
+        }
     }
 }

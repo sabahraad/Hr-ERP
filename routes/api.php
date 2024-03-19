@@ -133,6 +133,7 @@ Route::post('/add-designations', [App\Http\Controllers\designationsController::c
 Route::get('/designations-list/{id}', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
 Route::post('/edit/designations/{id}', [App\Http\Controllers\designationsController::class, 'editDesignations'])->name('editDesignations');
 Route::delete('/delete/designations/{id}', [App\Http\Controllers\designationsController::class, 'deleteDesignations'])->name('deleteDesignations');
+Route::get('/designationDetails/{id}', [App\Http\Controllers\designationsController::class, 'designationDetails']);
 
 //IP
 Route::post('/add-IP', [App\Http\Controllers\IpController::class, 'addIP'])->name('addIP');
