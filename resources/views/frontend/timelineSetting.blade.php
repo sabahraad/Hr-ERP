@@ -136,12 +136,12 @@
                                 <label class="col-form-label">fetch Time <span class="text-danger">*</span></label>
                                 <select name="fetch_time" id="fetch_time" class="form-select" required>
                                     <option selected disabled>Open this to select fetch Time</option>
-                                    <option value="10 mins">10 minute</option>
-                                    <option value="15 mins">15 minute</option>
-                                    <option value="30 mins">30 minute</option>
-                                    <option value="60 mins">1 hour</option>
-                                    <option value="120 mins">2 hour</option>
-                                    <option value="180 mins">3 hour</option>
+                                    <option value="10">10 minute</option>
+                                    <option value="15">15 minute</option>
+                                    <option value="30">30 minute</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="120">2 hour</option>
+                                    <option value="180">3 hour</option>
                                 </select>
                             </div>
                         </div>
@@ -188,12 +188,12 @@
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">fetch Time <span class="text-danger">*</span></label>
                                                 <select name="fetch_time" id="fetch_time" class="form-select" required>
-                                                    <option value="10 mins">10 minute</option>
-                                                    <option value="15 mins">15 minute</option>
-                                                    <option value="30 mins">30 minute</option>
-                                                    <option value="60 mins">1 hour</option>
-                                                    <option value="120 mins">2 hour</option>
-                                                    <option value="180 mins">3 hour</option>
+                                                    <option value="10">10 minute</option>
+                                                    <option value="15">15 minute</option>
+                                                    <option value="30">30 minute</option>
+                                                    <option value="60">1 hour</option>
+                                                    <option value="120">2 hour</option>
+                                                    <option value="180">3 hour</option>
                                                 </select>
                                             </div>
                                         </div>
