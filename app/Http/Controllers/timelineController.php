@@ -16,7 +16,7 @@ class timelineController extends Controller
 
     public function addTimeline(Request $request){
         $validator = Validator::make($request->all(), [
-            'fetch_time' => 'required|string',
+            'fetch_time' => 'required|integer',
             'emp_id' => 'required|unique:timeline_settings'
         ]);
         

@@ -65,8 +65,8 @@
                                         <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_department"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $department['dept_id'] }}"></i> Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $department['dept_id'] }}"></i> Delete</a>
+                                                <a class="dropdown-item edit-dept" href="#" data-bs-toggle="modal" data-bs-target="#edit_department" data-id="{{ $department['dept_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a>
+                                                <a class="dropdown-item delete-dept" href="#" data-bs-toggle="modal" data-bs-target="#delete_department"  data-id="{{ $department['dept_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                             </div>
                                             </div>
                                         </td>
@@ -245,26 +245,47 @@
             });
         });
 
-        $('.dropdown-item[data-bs-target="#edit_department"]').click(function() {
-        // Get the dept_id from the clicked element's data-id attribute
-            var deptId = $(this).find('.fa-pencil').data('id');
-            console.log('deptTitle:', deptId);
-            // Log the dept_id to the console
-            // console.log(deptId);
-            var trElement = $(this).closest('tr');
+        $(document).on('click', '.edit-dept', function(){
+            var dept_id = $(this).data('id');
+            console.log(dept_id,'ok');
+            $.ajax({
+                url: baseUrl + '/deptDetails/'+dept_id, 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(response) {
+                    console.log(response.data);
+                    $('#deptName').val(response.data.deptTitle);
+                    $('#details').val(response.data.details);
+                    $('#dept_id').val(response.data.dept_id);
+                    // Show the modal
+                    $('#edit_department').modal('show');
 
-            // Find the 'td' elements within the 'tr'
-            var deptTitle = trElement.find('td:eq(1)').text();
-            var details = trElement.find('td:eq(2)').text();
-
-            // Log the data to the console
-            // console.log('deptTitle:', deptTitle);
-            // console.log('details:', details);
-            $('#deptName').val(deptTitle);
-            $('#details').val(details);
-            $('#dept_id').val(deptId);
-            // Show the modal
-            $('#edit_department').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
+                }
+            });
         });
 
         $('#editSubmit').submit(function(e) {
@@ -314,19 +335,17 @@
                 });
         });
 
-        $('.dropdown-item[data-bs-target="#delete_department"]').click(function() {
-            // Get the dept_id from the clicked element's data-id attribute
-            var deptId = $(this).find('.fa-regular').data('id');
-            // Log the dept_id to the console
-            // console.log(deptId);
-            var trElement = $(this).closest('tr');
-            $('#dept_id').val(deptId);
+
+        $(document).on('click', '.delete-dept', function(){
+            var dept_id = $(this).data('id');
+            console.log(dept_id,'ok');
+            $('#dept_id').val(dept_id);
         });
 
         $('#deptDelete').submit(function(e) {
             e.preventDefault();
             var dept_id = $('#dept_id').val();
-            // console.log(dept_id);
+            console.log(dept_id);
             var formData = new FormData(this);
 
             $.ajax({

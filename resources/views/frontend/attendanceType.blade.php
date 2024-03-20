@@ -133,6 +133,7 @@
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
     $('#msform').submit(function(e) {
         e.preventDefault();
         var location_based = document.getElementById('location_based').checked ? 1 : 0;
@@ -151,7 +152,7 @@
         console.log(data);
         
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-attendance-type',
+                url: baseUrl + '/add-attendance-type',
                 type: 'POST',
                 contentType: 'application/json',
                 headers: {

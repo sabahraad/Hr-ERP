@@ -126,12 +126,14 @@ Route::post('/add-department', [App\Http\Controllers\departmentController::class
 Route::get('/department-list', [App\Http\Controllers\departmentController::class, 'showDepartment'])->name('showDepartment');
 Route::post('/edit/department/{id}', [App\Http\Controllers\departmentController::class, 'editDepartment'])->name('editDepartment');
 Route::delete('/delete/department/{id}', [App\Http\Controllers\departmentController::class, 'deleteDepartment'])->name('deleteDepartment');
+Route::get('/deptDetails/{id}', [App\Http\Controllers\departmentController::class, 'deptDetails']);
 
 //designations
 Route::post('/add-designations', [App\Http\Controllers\designationsController::class, 'addDesignations'])->name('addDesignations');
 Route::get('/designations-list/{id}', [App\Http\Controllers\designationsController::class, 'showDesignations'])->name('showDesignations');
 Route::post('/edit/designations/{id}', [App\Http\Controllers\designationsController::class, 'editDesignations'])->name('editDesignations');
 Route::delete('/delete/designations/{id}', [App\Http\Controllers\designationsController::class, 'deleteDesignations'])->name('deleteDesignations');
+Route::get('/designationDetails/{id}', [App\Http\Controllers\designationsController::class, 'designationDetails']);
 
 //IP
 Route::post('/add-IP', [App\Http\Controllers\IpController::class, 'addIP'])->name('addIP');

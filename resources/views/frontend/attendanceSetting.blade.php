@@ -105,6 +105,7 @@
 <script>
         $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
+        var baseUrl = "{{ $baseUrl }}";
     $('#msform').submit(function(e) {
         e.preventDefault();
 
@@ -124,7 +125,7 @@
         console.log(data);
 
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/add-office-hour', 
+                url: baseUrl + '/add-office-hour', 
                 type: 'POST',
                 contentType: 'application/json',
                 headers: {

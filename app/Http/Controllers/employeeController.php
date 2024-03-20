@@ -142,6 +142,7 @@ class employeeController extends Controller
                 ->join("users", "users.id", "=", "employees.id")
                 ->join("departments","departments.dept_id","=","employees.dept_id")
                 ->join("designations","designations.designation_id","=","employees.designation_id")
+                ->orderBy('employees.updated_at','desc')
                 ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle']);
         return response()->json([
             'message'=> 'Employee List',
@@ -175,7 +176,7 @@ class employeeController extends Controller
         }
         $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
-        $joining_date = Carbon::createFromFormat('d-m-Y', $request->joining_date)->format('Y-m-d');
+        $joining_date = $request->joining_date;
         if(!$userInfo){
             return response()->json([
                 'message' => 'User Not Found',
@@ -219,9 +220,10 @@ class employeeController extends Controller
         $data->save();
 
         if($request->has('salary')){
+            $joiningDate = date('Y-m-d', strtotime($joining_date));
             $sal = Salary::where('emp_id',$data->emp_id)->first();
             $sal->salary = $request->salary ?? $sal->salary;
-            $sal->joining_date = $joining_date; 
+            $sal->joining_date = $joiningDate ?? $sal->joining_date; 
             $sal->save();
         }
 
@@ -300,9 +302,10 @@ class employeeController extends Controller
     }
 
     public function employeeDetails($id){
-        $data = Employee::where('emp_id',$id)
+        $data = Employee::where('employees.emp_id',$id)
                 ->join("users", "users.id", "=", "employees.id")
-                ->get(['employees.*', 'users.email']);
+                ->join("salaries","salaries.emp_id","=","employees.emp_id")
+                ->get(['employees.*', 'users.email','salaries.salary']);
         if(!$data){
             return response()->json([
                 'message'=>'No data found'

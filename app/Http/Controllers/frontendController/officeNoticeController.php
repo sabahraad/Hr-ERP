@@ -5,14 +5,16 @@ use App\Models\officeNotice;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\BaseUrl;
 
 class officeNoticeController extends Controller
 {
     public function officeNotice(){
         $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/notice-list',
+        CURLOPT_URL => $baseUrl.'/notice-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -28,7 +30,7 @@ class officeNoticeController extends Controller
 
         curl_close($curl);
         $dataArray = json_decode($response,true);
-        return view('frontend.officeNotice',compact('dataArray'), ['jwtToken' => $access_token]); 
+        return view('frontend.officeNotice',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]); 
     }
 
     public function addOfficeNotice(){

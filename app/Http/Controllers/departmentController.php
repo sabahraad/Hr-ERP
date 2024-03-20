@@ -5,6 +5,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Company;
 use Illuminate\Http\Response;
 use App\Models\Department;
+use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,13 +20,8 @@ class departmentController extends Controller
         $company_id= auth()->user()->company_id;
 
         $validator= Validator::make($request->all(), [
-            'deptTitle' => [
-                'required',
-                Rule::unique('departments')->where(function ($query) use ($company_id) {
-                    return $query->where('company_id', $company_id);
-                })
-            ],
-            'details'  => 'string',
+            'deptTitle' => 'required|string',
+            'details'  => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -112,5 +108,19 @@ class departmentController extends Controller
         return $data;
     }
 
+    public function deptDetails($id){
+        $data = Department::find($id);
+        if(!$data){
+            return response()->json([
+                'message'=>'NO Data Found',
+                'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Department Details',
+                'data'=>$data
+            ],200);
+        }
+    }
     
 }

@@ -11,6 +11,7 @@ use App\Models\officeLocation;
 use App\Models\Shift;
 use App\Models\ShiftEmployee;
 use App\Models\ShiftWeekend;
+use App\Models\TimelineSetting;
 use App\Models\User;
 use App\Models\Weekend;
 use Carbon\Carbon;
@@ -177,6 +178,12 @@ class attendanceController extends Controller
                 }
             }
             
+            $fatch_time = TimelineSetting::where('emp_id',$emp_id)->value('fetch_time');
+            if(!$fatch_time){
+                $timeLine = false;
+            }else{
+                $timeLine = true;
+            }
             
             if($takePresent == 1){
                 $data = new Attendance();
@@ -193,7 +200,9 @@ class attendanceController extends Controller
 
                 return response()->json([
                     'message' => 'Attendance Accepted Successfully',
-                    'data' => $data
+                    'data' => $data,
+                    'timeLine' => $timeLine,
+                    'fatch_time' => $fatch_time
                 ], 201);
             }                    
         }
@@ -367,14 +376,22 @@ class attendanceController extends Controller
                 }
             }
         }
+        $fatch_time = TimelineSetting::where('emp_id',$emp_id)->value('fetch_time');
+        if(!$fatch_time){
+            $timeLine = false;
+        }else{
+            $timeLine = true;
+        }
         if(!$data){
             return response()->json([
-                'message'=> 'No attendance details found for '.$date
+                'message'=> 'No attendance details found for '.$date,
             ],404);
         }else{
             return response()->json([
                 'message'=>'Attendance details for '.$date,
-                'data'=> $data
+                'data'=> $data,
+                'timeLine' => $timeLine,
+                'fatch_time' => $fatch_time
             ],200);
         }
 

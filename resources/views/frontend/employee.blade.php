@@ -56,6 +56,7 @@
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>DOB</th>
+                                <th>Joining Date</th>
                                 <th>Department</th>
                                 <th>Designation</th>
                                 <th class="text-end no-sort">Action</th>
@@ -63,6 +64,7 @@
                         </thead>
                         <tbody>
                             @foreach ($dataArray['data'] as $employee)
+                            
                             <tr>
                                 <td>{{$employee['emp_id']}}</td>
                                 <td>
@@ -74,6 +76,7 @@
                                 <td>{{$employee['email']}}</td>
                                 <td>{{$employee['phone_number'] ?? 'N/A'}}</td>
                                 <td>{{$employee['dob'] ?? 'N/A'}}</td>
+                                <td>{{$employee['joining_date'] ?? 'N/A'}}</td>
                                 <td>{{$employee['deptTitle']}}</td>
                                 <td>{{$employee['desigTitle']}}</td>
                                 <td class="text-end">
@@ -523,11 +526,13 @@
                         icon: 'success',
                         title: 'Employee added successful',
                         text: 'Your Employee registration was successful!',
-                        showConfirmButton: false, // Hide the OK button
-                        }); 
-                        setTimeout(function() {
-                            location.reload(); // This will refresh the current page
-                        }, 100000);
+                        showConfirmButton: true, // Show the OK button initially
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Reload the page after the user clicks OK
+                            location.reload(); 
+                        }
+                    });
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 422) {
@@ -631,8 +636,6 @@
                     var genderValue = response.data[0].gender;
                     var dept_id = response.data[0].dept_id;
                     var desig_id = response.data[0].designation_id;
-                    console.log(desig_id,'==============================raad');
-
                     $.ajax({
                         url: baseUrl + '/department-name-list', 
                         type: 'GET',

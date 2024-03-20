@@ -227,7 +227,7 @@
 			event.preventDefault(); // Prevent the form from submitting normally
                 
             var dept_id = $('#dept_id').val();
-            console.log(dept_id);
+            // console.log(dept_id);
 
 			$.ajax({
 			url: baseUrl + '/designations-list/'+dept_id,
@@ -247,7 +247,7 @@
                         '<td data-deptid="' + item.designation_id + '">' + item.desigTitle + '</td>',
                         '<td >' + item.details + '</td>',
                         '<td data-deptid="' + item.dept_id + '">' + item.deptTitle + '</td>',
-                        '<div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_designation"><i class="fa-solid fa-pencil m-r-5" data-id="'+item.designation_id+'""></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.designation_id+'"></i> Delete</a></div></div>'
+                        '<div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item edit-desig" href="#" data-bs-toggle="modal" data-bs-target="#edit_designation" data-id="'+item.designation_id+'"><i class="fa-solid fa-pencil m-r-5" "></i> Edit</a><a class="dropdown-item delete-desig" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" data-id="'+item.designation_id+'"><i class="fa-regular fa-trash-can m-r-5" ></i> Delete</a></div></div>'
                     ];
                     table.row.add(rowData);
                     rowNum++;
@@ -303,21 +303,48 @@
                 });
         });
 
-        $(document).on('click', '.dropdown-item[data-bs-target="#edit_designation"]', function() {
-            var designation_id = $(this).find('.fa-solid.fa-pencil').data('id');
-            var trElement = $(this).closest('tr');
-            // Find the 'td' elements within the 'tr'
-            var desigTitle = trElement.find('td:eq(1)').text();
-            var details = trElement.find('td:eq(2)').text();
-            // Log the data to the console
-            console.log('desigTitle:', desigTitle);
-            console.log('details:', details);
-            $('#desigTitle').val(desigTitle);
-            $('#details').val(details);
-            $('#designation_id').val(designation_id);
-            // Show the modal
-            $('#edit_designation').modal('show');
+        $(document).on('click', '.edit-desig', function(){
+            var designation_id = $(this).data('id');
+            $.ajax({
+                url: baseUrl + '/designationDetails/'+designation_id, 
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                success: function(response) {
+                    console.log(response.data);
+                    $('#desigTitle').val(response.data.desigTitle);
+                    $('#details').val(response.data.details);
+                    $('#designation_id').val(response.data.designation_id);
+                    // Show the modal
+                    $('#edit_designation').modal('show');
+
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.error;
+                        var errorMessage = "<ul>";
+                        for (var field in errors) {
+                            errorMessage += "<li>" + errors[field][0] + "</li>";
+                        }
+                        errorMessage += "</ul>";
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
+                }
+            });
         });
+        
 
         $('#editSubmit').submit(function(e) {
             e.preventDefault();
@@ -364,8 +391,8 @@
                 });
         });
 
-        $(document).on('click', '.dropdown-item[data-bs-target="#delete_designation"]', function() {
-            var designation_id = $(this).find('.fa-regular.fa-trash-can').data('id');
+        $(document).on('click', '.delete-desig', function(){
+            var designation_id = $(this).data('id');
             $('#designation_id').val(designation_id);
         });
 
