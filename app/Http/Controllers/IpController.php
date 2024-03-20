@@ -23,11 +23,15 @@ class IpController extends Controller
     
     public function addIP(Request $request){
         $validator = Validator::make($request->all(), $this->validationRules);
-
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()
             ], 422);
+        }
+        if ($request->ip == [] || $request->ip == [null]) {
+            return response()->json([
+                'error' => 'IP address is required.'
+            ], 400);
         }
 
         $company_id= auth()->user()->company_id;

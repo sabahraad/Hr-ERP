@@ -190,7 +190,7 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response,'ok');
                     Swal.fire({
                         icon: 'success',
                         title: 'IP/WIfi added successful',
@@ -264,6 +264,7 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
+                    // console.log(response,'ok');
                     Swal.fire({
                         icon: 'success',
                         title: 'IP/Wifi Edited successfully',
@@ -288,6 +289,12 @@
                             icon: 'error',
                             title: 'Validation Error',
                             html: errorMessage
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.error
                         });
                     }
                 }
