@@ -295,13 +295,12 @@ $(".previous").click(function(){
 
 
 $(document).ready(function() {
+	var baseUrl = "{{ $baseUrl }}";
     $('#msform').submit(function(e) {
         e.preventDefault();
-
         var formData = new FormData(this);
-
         $.ajax({
-                url: 'https://hrm.aamarpay.dev/api/register', // Assuming your backend route is '/register'
+                url: baseUrl + '/register', // Assuming your backend route is '/register'
                 type: 'POST',
                 data: formData,
                 contentType: false,

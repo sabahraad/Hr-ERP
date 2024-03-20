@@ -22,7 +22,8 @@ class AuthController extends Controller
     }
 
     public function registrationForm(){
-        return view('frontend.registration');
+        $baseUrl = $this->baseUrl;
+        return view('frontend.registration', ['baseUrl' => $baseUrl]);
     }
 
     public function loginForm(){
@@ -116,7 +117,6 @@ class AuthController extends Controller
     
 
     public function registration(Request $request){
-
         $validator = Validator::make($request->all(), [
             'companyName' => 'required|string|unique:companies',
             'address' => 'required|string',
@@ -181,7 +181,4 @@ class AuthController extends Controller
     public function test(){
         return view('frontend.test');
     }
-
-    
-
 }
