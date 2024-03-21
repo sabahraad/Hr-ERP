@@ -151,7 +151,10 @@ class expensesController extends Controller
 
     public function allExpensesList(){
         $company_id = auth()->user()->company_id;
-        $data = Expenses::where('company_id',$company_id)->get();
+        $data = Expenses::where('expenses.company_id',$company_id)
+                        ->join("employees","employees.emp_id","=","expenses.emp_id")
+                        ->join("expenses_catagories","expenses.expenses_catagories_id","=","expenses_catagories.expenses_catagories_id")
+                        ->get(['employees.*','expenses.*','expenses_catagories.catagory']);
         if(count($data) == 0 ){
             return response()->json([
                 'message'=>'No data available',
