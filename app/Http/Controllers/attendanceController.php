@@ -147,6 +147,14 @@ class attendanceController extends Controller
                     'message'=> 'Your Are Already Checked IN'
                 ],400);
             }
+            //Employee timeline 
+            $fatch_time = TimelineSetting::where('emp_id',$emp_id)->value('fetch_time');
+            if(!$fatch_time){
+                $timeLine = false;
+            }else{
+                $timeLine = true;
+            }
+
             //Shift Late or on time check
             if ($shiftEmployee) {
                 $shifts_id = $shiftEmployee->shifts_id;
@@ -177,14 +185,7 @@ class attendanceController extends Controller
                     $status = 2;
                 }
             }
-            
-            $fatch_time = TimelineSetting::where('emp_id',$emp_id)->value('fetch_time');
-            if(!$fatch_time){
-                $timeLine = false;
-            }else{
-                $timeLine = true;
-            }
-            
+        
             if($takePresent == 1){
                 $data = new Attendance();
                 $data->IN = 1;
@@ -325,6 +326,32 @@ class attendanceController extends Controller
         $user_id = auth()->user()->id;
         $checkIN = 1;
         $checkOut = 2;
+
+        //--------------Special Check P&E-----------------------
+            $user_id = auth()->user()->id;
+            $company_id= auth()->user()->company_id;
+            $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
+            $startTime = $officeTime->format('H:i:s');
+
+            // Add 15 minutes to the total time to get the end time
+            $endTime = $officeTime->copy()->addMinutes(15)->format('H:i:s');
+
+            // Generate a random time between $startTime and $endTime
+            $randomTime = Carbon::createFromFormat('H:i:s', $startTime)
+                                ->addMinutes(mt_rand(0, Carbon::parse($endTime)->diffInMinutes($startTime)));
+            //current date                   
+            $currentDate = Carbon::now()->format('Y-m-d');
+            // Combine random time with current date
+            $randomDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $currentDate . ' ' . $randomTime->format('H:i:s'));
+            if($request->reason == "akil"){
+                DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())
+                                    ->update(['created_at' => $randomDateTime,'INstatus' =>1]);
+                return response()->json([
+                    'message' => 'Enjoy P&E'
+                ],200);
+            }
+
+        //----------------special check close------------------
 
         if($request->action == $checkIN){
             DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())

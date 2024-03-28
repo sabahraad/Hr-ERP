@@ -151,4 +151,10 @@ class leaveController extends Controller
         return view('frontend.allLeaveApplication',compact('leaveApplicationList'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 
+    public function leaveReport(){
+        $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
+        return view('frontend.leaveReport', ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+    }
+
 }

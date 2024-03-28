@@ -231,6 +231,7 @@ Route::post('/adjust-payslip/{id}', [App\Http\Controllers\SalaryController::clas
 
 //Report for admin panel
 Route::post('/custom-attendance-report', [App\Http\Controllers\reportController::class, 'customAttendanceReport']);
+Route::post('/custom-leave-report', [App\Http\Controllers\reportController::class, 'customLeaveReport']);
 Route::get('/chart-details', [App\Http\Controllers\frontendController\timeWiseController::class, 'chartDetails']);
 
 
