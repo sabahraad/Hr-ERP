@@ -617,6 +617,7 @@
 
         $(document).on('click', '.edit-employee', function(){
             var empId = $(this).data('id');
+            // console.log(empId);
             $.ajax({
                 url: baseUrl + '/employee-details/'+empId, 
                 type: 'GET',
@@ -624,7 +625,7 @@
                     'Authorization': 'Bearer ' + jwtToken
                 },
                 success: function(response) {
-                    console.log(response.data[0]);
+                    // console.log(response);
                     $('#name').val(response.data[0].name.trim());
                     $('#email').val(response.data[0].email);
                     $('#phoneNumber').val(response.data[0].phone_number);

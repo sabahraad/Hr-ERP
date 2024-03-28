@@ -222,9 +222,18 @@ class employeeController extends Controller
         if($request->has('salary')){
             $joiningDate = date('Y-m-d', strtotime($joining_date));
             $sal = Salary::where('emp_id',$data->emp_id)->first();
-            $sal->salary = $request->salary ?? $sal->salary;
-            $sal->joining_date = $joiningDate ?? $sal->joining_date; 
-            $sal->save();
+            if($sal){
+                $sal->salary = $request->salary ?? $sal->salary;
+                $sal->joining_date = $joiningDate ?? $sal->joining_date; 
+                $sal->save();
+            }else{
+                $sal = new Salary();
+                $sal->salary = $request->salary;
+                $sal->joining_date = $joining_date; 
+                $sal->emp_id = $data->emp_id; 
+                $sal->company_id = $data->company_id; 
+                $sal->save();
+            }
         }
 
         return response()->json([
@@ -302,10 +311,14 @@ class employeeController extends Controller
     }
 
     public function employeeDetails($id){
-        $data = Employee::where('employees.emp_id',$id)
-                ->join("users", "users.id", "=", "employees.id")
-                ->join("salaries","salaries.emp_id","=","employees.emp_id")
-                ->get(['employees.*', 'users.email','salaries.salary']);
+        $data = Employee::where('employees.emp_id', $id)
+                        ->join("users", "users.id", "=", "employees.id")
+                        ->leftJoin("salaries", "salaries.emp_id", "=", "employees.emp_id")
+                        ->get(['employees.*', 'users.email', 'salaries.salary']);
+        // $data = Employee::where('employees.emp_id',$id)
+        //         ->join("users", "users.id", "=", "employees.id")
+        //         ->join("salaries","salaries.emp_id","=","employees.emp_id")
+        //         ->get(['employees.*', 'users.email','salaries.salary']);//
         if(!$data){
             return response()->json([
                 'message'=>'No data found'

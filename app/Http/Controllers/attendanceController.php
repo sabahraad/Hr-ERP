@@ -602,10 +602,25 @@ class attendanceController extends Controller
                     'message'=> 'Outside Office location'
                 ],200);
             }
-        }else{
+        }
+
+        if(in_array("wifi_based",$attendanceType)){
+            $ip = IP::where('company_id',$company_id)->value('ip');
+            $ipList=json_decode($ip);
+            if (in_array($request->ip(), $ipList)) {
+                return response()->json([
+                    'message'=> 'Inside Office location'
+                ],200);
+            }else{
+                return response()->json([
+                    'message'=> 'Outside Office location'
+                ],200);
+            }
+        }
+        if(in_array("remote",$attendanceType)){
             return response()->json([
-                'message'=> 'Office Location is not set.'
-            ],403);
+                'message'=> 'Inside Office location'
+            ],200);
         }
     }
 }

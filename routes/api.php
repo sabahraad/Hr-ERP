@@ -197,6 +197,8 @@ Route::delete('/delete-approvers/{id}', [App\Http\Controllers\approversControlle
 Route::post('/approve-expense', [App\Http\Controllers\expensesController::class, 'approveExpense']);
 Route::get('/all-expenses-list', [App\Http\Controllers\expensesController::class, 'allExpensesList']);
 Route::delete('/delete-expenses/{id}', [App\Http\Controllers\expensesController::class, 'deleteExpenses']);
+Route::get('/expense-details/{id}', [App\Http\Controllers\expensesController::class, 'expenseDetails']);
+
 
 //attendanceAddedByHR
 Route::post('/attendance-add-by-HR', [App\Http\Controllers\attendanceController::class, 'attendanceAddedByHR']);
