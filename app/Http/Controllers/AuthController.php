@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
+use App\Models\Salary;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Department;
@@ -96,6 +97,12 @@ class AuthController extends Controller
         $employee->designation_id = $desig->designation_id;
         $employee->company_id = $data->company_id;
         $employee->save();
+
+        $sal = new Salary();
+        $sal->salary = 000000;
+        $sal->emp_id = $employee->emp_id; 
+        $sal->company_id = $data->company_id; 
+        $sal->save();
         
         return response()->json([
             'message' => 'Company Successfully Registered',

@@ -171,7 +171,7 @@ class expensesController extends Controller
     public function approveExpense(Request $request){
         $validator = Validator::make($request->all(), [
             'expenses_id' => 'required|integer',
-            'status' => 'required|integer|in:1,2'
+            'status' => 'required|integer|in:1,2,0'
         ]);
         
         if ($validator->fails()) {
@@ -181,26 +181,30 @@ class expensesController extends Controller
         }
         $approved = 1;
         $rejected = 2;
+        $pending = 0;
         if($request->status == $approved){
             Expenses::where('expenses_id', $request->expenses_id)->update(['status' => 'approved']);
-            $data = Expenses::find($request->expenses_id);
             return response()->json([
                 'message'=>'Expense Approved Successfully',
-                'data'=>$data,
+                'data'=>$approved,
             ],200);
         }elseif($request->status == $rejected){
             Expenses::where('expenses_id', $request->expenses_id)->update(['status' => 'rejected']);
-            $data = Expenses::find($request->expenses_id);
             return response()->json([
                 'message'=>'Expense rejected',
-                'data'=>$data,
+                'data'=>$rejected,
+            ],200);
+        }elseif($request->status == $pending){
+            Expenses::where('expenses_id', $request->expenses_id)->update(['status' => 'pending']);
+            return response()->json([
+                'message'=>'Expense pending',
+                'data'=>$pending
             ],200);
         }else{
             return response()->json([
                 'message'=>'Something Went Wrong'
             ],400);
         }
-
     }
 
     public function catagoryList(){
@@ -217,6 +221,24 @@ class expensesController extends Controller
                 'message'=>'Catagory List',
                 'data'=>$data
 
+            ],200);
+        }
+    }
+
+    public function expenseDetails($id){
+        $data = Expenses::where('expenses.expenses_id',$id)
+                        ->join("employees","employees.emp_id","=","expenses.emp_id")
+                        ->join("expenses_catagories","expenses.expenses_catagories_id","=","expenses_catagories.expenses_catagories_id")
+                        ->get(['employees.*','expenses.*','expenses_catagories.catagory']);
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Expenses Details',
+                'data'=>$data
             ],200);
         }
     }

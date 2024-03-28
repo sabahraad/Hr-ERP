@@ -83,11 +83,11 @@
                                         </td>
                                         <td>
                                             @if($raw['status'] == "pending")
-                                                <span style="color: green;">Pending</span>
+                                                <span style="color: gray;">Pending</span>
                                             @elseif($raw['status'] == "approved")
-                                                <span style="color: red;">Approved</span>
+                                                <span class="badge badge-success">Approved</span>
                                             @else
-                                                <span style="color: gray;">Declined</span>
+                                                <span class="badge badge-danger">Declined</span>
                                             @endif 
                                         </td>
                                         <td>
@@ -119,7 +119,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Leave Application</h5>
+                            <h5 class="modal-title">Edit Expense</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -130,12 +130,12 @@
                                 <div class="input-block mb-3">
                                     <label class="col-form-label">Employee Name</label>
                                     <input id ="name" class="form-control" name="name" type="text" disabled>
-                                    <label class="col-form-label">leave start date</label>
-                                    <input id ="start_date" class="form-control" name="start_date" type="text" disabled>
-                                    <label class="col-form-label">leave end date</label>
-                                    <input id ="end_date" class="form-control" name="end_date" type="text" disabled>
-                                    <label class="col-form-label">Reason</label>
-                                    <input id ="reason" class="form-control" name="reason" type="text" disabled>
+                                    <label class="col-form-label">Catagory</label>
+                                    <input id ="catagory" class="form-control" name="catagory" type="text" disabled>
+                                    <label class="col-form-label">Description</label>
+                                    <input id ="description" class="form-control" name="description" type="text" disabled>
+                                    <label class="col-form-label">total_amount</label>
+                                    <input id ="total_amount" class="form-control" name="total_amount" type="text" disabled>
                                     <label class="col-form-label">Status<span class="text-danger">*</span></label>
                                     <select name="status" class="select">
                                         <option selected disabled>Open this to select your action</option>
@@ -143,7 +143,7 @@
                                         <option value="2">Decline</option>
                                         <option value="0">Pending</option>
                                     </select>
-                                    <input id ="leaveApplicationId" class="form-control" name="leaveApplicationId" type="hidden">
+                                    <input id ="expenses_id" class="form-control" name="expenses_id" type="hidden">
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Save</button>
@@ -200,9 +200,10 @@
         var jwtToken = "{{ $jwtToken }}";
         var baseUrl = "{{ $baseUrl }}";
         $(document).on('click', '.edit-leaveApplication', function(){
-            var leaveApplicationID = $(this).data('id');
+            var expenses_id = $(this).data('id');
+            console.log(expenses_id);
             $.ajax({
-                url: baseUrl + '/leave-application-details/' +leaveApplicationID, 
+                url: baseUrl + '/expense-details/' +expenses_id, 
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken
@@ -210,10 +211,10 @@
                 success: function(response) {
                     console.log(response.data[0]);
                     $('#name').val(response.data[0].name.trim());
-                    $('#start_date').val(response.data[0].start_date);
-                    $('#end_date').val(response.data[0].end_date);
-                    $('#reason').val(response.data[0].reason);
-                    $('#leaveApplicationId').val(leaveApplicationID);
+                    $('#catagory').val(response.data[0].catagory);
+                    $('#description').val(response.data[0].description);
+                    $('#total_amount').val(response.data[0].total_amount);
+                    $('#expenses_id').val(expenses_id);
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
@@ -237,13 +238,13 @@
 
         $('#editSubmit').submit(function(e) {
             e.preventDefault();
-            var leaveApplicationId = $('#leaveApplicationId').val();
+            var expenses_id = $('#expenses_id').val();
             // console.log(leaveApplicationId);
 
             var formData = new FormData(this);
 
             $.ajax({
-                    url: baseUrl +'/leave-approved-by-HR', 
+                    url: baseUrl +'/approve-expense', 
                     type: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + jwtToken
@@ -255,7 +256,7 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 icon: 'info',
-                                title: 'Leave application status made pending',
+                                title: 'Expense status made pending',
                                 showConfirmButton: true,  // Set to true to show the "OK" button
                                 allowOutsideClick: false, // Prevent closing by clicking outside the modal
                             }).then((result) => {
@@ -267,7 +268,7 @@
                         } else if (response.data == 1) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Leave application approved successfully',
+                                title: 'Expense approved successfully',
                                 showConfirmButton: true,  // Set to true to show the "OK" button
                                 allowOutsideClick: false, // Prevent closing by clicking outside the modal
                             }).then((result) => {
@@ -279,7 +280,7 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Leave application rejected successfully',
+                                title: 'Expense rejected successfully',
                                 showConfirmButton: true,  // Set to true to show the "OK" button
                                 allowOutsideClick: false, // Prevent closing by clicking outside the modal
                             }).then((result) => {

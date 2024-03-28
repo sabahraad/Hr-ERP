@@ -68,6 +68,13 @@
 							</li>
 
 							<li class="menu-title"> 
+								<span>Expense</span>
+							</li>
+							<li> 
+								<a href="{{route('expenseList')}}"><i class="las la-coins"></i><span>Expense List</span></a>
+							</li>
+
+							<li class="menu-title"> 
 								<span>Settings</span>
 							</li>
 							<li class="submenu">
