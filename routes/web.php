@@ -68,7 +68,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //custom report 
     Route::get('/custom-report', [App\Http\Controllers\frontendController\timelineController::class, 'customReport'])->name('customReport');
+    Route::get('/leave-report', [App\Http\Controllers\frontendController\leaveController::class, 'leaveReport'])->name('leaveReport');
 
+    
     //dashboard
     Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
 
