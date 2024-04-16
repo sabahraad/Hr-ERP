@@ -144,22 +144,20 @@ class leaveController extends Controller
             ],403);
         }
         
-
+        // dd($dateList);
         //delete holiday from the list
         $holiday=Holiday::where('company_id',$company_id)->get();
-        foreach($holiday as $raw){
-            $data=$raw->date;
-            $dateListWithoutHoliday = array_filter($dateList, function($value) use ($data) {
-                return $value !== $data ;
-            });
-            $dateList = $dateListWithoutHoliday;
+        foreach($holiday as $raw){            
+            $data=json_decode($raw->date);
+            $remainingDates = array_diff($dateList, $data);
+            $dateList = $remainingDates;
         }
         //get date and Day as key value pair
-        foreach ($dateListWithoutHoliday as $date) {
+        foreach ($dateList as $date) {
             $carbonDate = Carbon::parse($date);
             $dayNames[] = $carbonDate->format('l'); // 'l' format gives the full day name
         }
-        $keyValueDateList = array_combine( $dateListWithoutHoliday,$dayNames);
+        $keyValueDateList = array_combine( $dateList,$dayNames);
 
         $weekend=Weekend::where('company_id',$company_id)->first();
         $data=$weekend->getAttributes();
