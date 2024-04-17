@@ -19,8 +19,12 @@ class holidayController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
 
-        $dateList = $this->calculateDateRange($request->start_date, $request->end_date);
+        $dateList = $this->calculateDateRange($startDate,$endDate);
         $filteredDates = $this->filterWeekendDates($dateList);
 
         $jsonData = json_encode(array_values($filteredDates));
@@ -35,8 +39,12 @@ class holidayController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
 
-        $dateList = $this->calculateDateRange($request->start_date, $request->end_date);
+        $dateList = $this->calculateDateRange($startDate, $endDate);
         $filteredDates = $this->filterWeekendDates($dateList);
 
         $jsonData = json_encode(array_values($filteredDates));
@@ -48,8 +56,7 @@ class holidayController extends Controller
     private function validateHolidayRequest($request)
     {
         return Validator::make($request->all(), [
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'date_range' => 'required',
             'reason' => 'required|string'
         ]);
     }

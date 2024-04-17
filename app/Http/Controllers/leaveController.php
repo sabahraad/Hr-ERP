@@ -452,7 +452,12 @@ class leaveController extends Controller
             
             $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
             // hoilday check
-            $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
+            $currentDateString = $currentDate->toDateString();
+            $isHoliday = Holiday::where('company_id', $company_id)
+                ->whereJsonContains('date', $currentDateString)
+                ->exists();
+            // dd($isHoliday);
+            // $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
 
             // leave check
             $isLeave = leaveApplication::where('dateArray', 'like', "%{$currentDate->toDateString()}%")->where('status',1)->where('emp_id',$emp_id)->exists();
@@ -514,7 +519,11 @@ class leaveController extends Controller
             $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
 
             // hoilday check
-            $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
+            $currentDateString = $currentDate->toDateString();
+            $isHoliday = Holiday::where('company_id', $company_id)
+                ->whereJsonContains('date', $currentDateString)
+                ->exists();
+            // $isHoliday = Holiday::where('date', $currentDate->toDateString())->where('company_id',$company_id)->exists();
 
             // leave check
             $isLeave = leaveApplication::where('dateArray', 'like', "%{$currentDate->toDateString()}%")->where('status',1)->where('emp_id',$emp_id)->exists();
