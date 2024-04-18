@@ -1,5 +1,6 @@
 @include('frontend.header')
 @include('frontend.navbar')
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -38,7 +39,7 @@
                                 </thead>
                                 <tbody>
                                 @if($dataArray === null || empty($dataArray['data']))
-                                <tr><td colspan="5" class="text-center">No Holidays is available</td></tr>
+                                
                                 @else
                                     @foreach($dataArray['data'] as $key =>$holiday)
                                     <tr class="holiday-upcoming">
@@ -82,11 +83,11 @@
                                     <label class="col-form-label">Holiday Name <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="reason">
                                 </div>
-                                <div class="input-block mb-3">
-                                    <label class="col-form-label">Holiday Date <span class="text-danger">*</span></label>
-                                    <!-- <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" ></div> -->
-                                    <div class="cal-icon"><input class="form-control " name="date" type="date"></div>
-                                </div>
+                                <br>
+                                    <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
+                                    <input type="text"  id="date_range" class="form-control" name="date_range">
+                                <br>
+                                
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>
                                 </div>
@@ -168,17 +169,31 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     <script>
+        $(function() {
+        $('input[name="date_range"]').daterangepicker({
+            // opens: 'left',
+            // autoApply: true,
+            locale: {
+            format: 'YYYY-MM-DD'
+        }
+        }, function(start, end, label) {
+            console.log("A date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+        });
+
         $(document).ready(function() {
+            console.log('ok');
             $('#holidayTable').DataTable();
             var jwtToken = "{{ $jwtToken }}";
             var baseUrl = "{{ $baseUrl }}";
             $('#msform').submit(function(e) {
+                console.log('ok');
                 e.preventDefault();
 
                 var formData = new FormData(this);
-
                 $.ajax({
                     url: baseUrl + '/add-holiday', 
                     type: 'POST',

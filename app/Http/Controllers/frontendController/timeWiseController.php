@@ -64,7 +64,10 @@ class timeWiseController extends Controller
                 $isWeekend = Weekend::where(strtolower(Carbon::parse($currentDate)->format('l')), 1)
                                     ->where('company_id', $company_id)
                                     ->exists();
-                $isHoliday = Holiday::where('date', $currentDate)->where('company_id',$company_id)->exists();
+                $isHoliday = Holiday::where('company_id', $company_id)
+                ->whereJsonContains('date',$currentDate)
+                ->exists();
+                // $isHoliday = Holiday::where('date', $currentDate)->where('company_id',$company_id)->exists();
                 if($isWeekend){
                     $results[$currentDate] = [
                         'total_attendance' => 0,

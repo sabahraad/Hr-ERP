@@ -56,14 +56,16 @@ class AuthController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response,true);
-     
+        // dd($response);
+        if($response == null){
+            $request->session()->flush();
+            return redirect()->route('loginForm');
+        }
         if($response['status'] == 200){
             $request->session()->flush();
             return redirect()->route('loginForm');
         }else{
-            return response()->json([
-                'message' => ' Something Went Wrong'
-            ],400);
+            return redirect()->route('loginForm');
         }
         
     }
