@@ -39,7 +39,7 @@
                                 </thead>
                                 <tbody>
                                 @if($dataArray === null || empty($dataArray['data']))
-                                <tr><td colspan="5" class="text-center">No Holidays is available</td></tr>
+                                
                                 @else
                                     @foreach($dataArray['data'] as $key =>$holiday)
                                     <tr class="holiday-upcoming">
@@ -185,14 +185,15 @@
         });
 
         $(document).ready(function() {
+            console.log('ok');
             $('#holidayTable').DataTable();
             var jwtToken = "{{ $jwtToken }}";
             var baseUrl = "{{ $baseUrl }}";
             $('#msform').submit(function(e) {
+                console.log('ok');
                 e.preventDefault();
 
                 var formData = new FormData(this);
-
                 $.ajax({
                     url: baseUrl + '/add-holiday', 
                     type: 'POST',
