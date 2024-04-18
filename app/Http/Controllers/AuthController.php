@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
 use App\Models\Salary;
 use App\Models\User;
@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Mockdetails;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -171,6 +172,41 @@ class AuthController extends Controller
             'message'=>'List of People who have try to Mock',
             'data'=>$data
         ],200);
+    }
+
+    
+    public function passwordChange(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string',
+            'password' => 'required|string|confirmed|min:6'    
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        // Retrieve user by email
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            // Compare hashed passwords
+            if (Hash::check($request->old_password, $user->password)) {
+                // Update user's password
+                $user->password = bcrypt($request->password);
+                $user->save();
+                //destroy old token
+                return response()->json([
+                    'message' => 'Authentication successful'
+                ], 200);
+            }
+        }else{
+            // Authentication failed
+            return response()->json([
+                'message' => 'Old Password Does Not Matched',
+            ], 400);
+        }
+
+        
     }
 
    

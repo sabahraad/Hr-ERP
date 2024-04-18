@@ -279,7 +279,7 @@
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="{{route('company')}}">Profile</a>
-							<!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
+							<a class="dropdown-item" href="{{route('showPasswordChange')}}">Password Change</a>
 							<a class="dropdown-item" href="{{route('logout')}}">Logout</a>
 						</div>
 					</li>

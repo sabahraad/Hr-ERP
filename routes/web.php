@@ -21,9 +21,11 @@ Route::get('/registration-form', [App\Http\Controllers\frontendController\AuthCo
 Route::post('/registration', [App\Http\Controllers\frontendController\AuthController::class, 'registration'])->name('registration');
 Route::post('/login', [App\Http\Controllers\frontendController\AuthController::class, 'login'])->name('login');
 Route::get('/logout', [App\Http\Controllers\frontendController\AuthController::class, 'logout'])->name('logout');
-Route::get('/test', [App\Http\Controllers\frontendController\AuthController::class, 'test'])->name('test');
+
 
 Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], function () {
+    Route::get('/password-change', [App\Http\Controllers\frontendController\AuthController::class, 'showPasswordChange'])->name('showPasswordChange');
+
     Route::get('/company', [App\Http\Controllers\frontendController\companyController::class, 'company'])->name('company');
     Route::get('/department',[App\Http\Controllers\frontendController\departmentController::class, 'department'])->name('department');
     Route::get('/holidays', [App\Http\Controllers\frontendController\HolidaysController::class, 'holidays'])->name('holidays');

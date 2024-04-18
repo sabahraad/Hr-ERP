@@ -65,11 +65,7 @@
 										<div class="col">
 											<label class="col-form-label">Password</label>
 										</div>
-										<div class="col-auto">
-											<a class="text-muted" href="forgot-password.html">
-												Forgot password?
-											</a>
-										</div>
+										
 									</div>
 									<div class="position-relative">
 										<input class="form-control" type="password" name="password" id="password">
