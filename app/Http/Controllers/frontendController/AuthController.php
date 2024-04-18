@@ -9,7 +9,6 @@ use App\Models\Designation;
 use App\Models\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use App\Utils\BaseUrl;
 
 class AuthController extends Controller
@@ -108,7 +107,8 @@ class AuthController extends Controller
                 'access_token' => $access_token,
                 'role' => $data['user']['role'],
                 'company_id' => $data['user']['company_id'],
-                'name' => $data['user']['name']
+                'name' => $data['user']['name'],
+                'email' =>$data['user']['email'],
             ]);
         }else{
             $access_token = session('access_token');
@@ -183,4 +183,11 @@ class AuthController extends Controller
     public function test(){
         return view('frontend.test');
     }
+
+    public function showPasswordChange(){
+        $access_token = session('access_token');
+        $baseUrl = $this->baseUrl;
+        return view('frontend.passwordChange', ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+    }
+
 }

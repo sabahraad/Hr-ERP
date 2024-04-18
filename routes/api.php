@@ -26,6 +26,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('/forget-password', [App\Http\Controllers\forgetPasswordEmailController::class, 'forgetPassword']);
+    Route::post('/password-change', [App\Http\Controllers\AuthController::class, 'passwordChange'])->name('passwordChange');
 
     //User Deatils
     Route::post('/refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
