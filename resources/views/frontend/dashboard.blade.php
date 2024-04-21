@@ -154,9 +154,9 @@
 							resize: true,
 							redraw: true,
 							xLabelAngle: 25,
-							yLabelFormat: function(y) {
-								return y.toFixed(0);  // Format Y-axis values as integers
-							},
+							// yLabelFormat: function(y) {
+							// 	return y.toFixed(0);  // Format Y-axis values as integers
+							// },
 							yLabelInterval: 2
 						});
 					},
