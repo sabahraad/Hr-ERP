@@ -6,6 +6,7 @@ use App\Models\Expenses;
 use App\Models\ExpensesCatagory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class expensesController extends Controller
 {
@@ -241,5 +242,29 @@ class expensesController extends Controller
                 'data'=>$data
             ],200);
         }
+    }
+
+    public function expenseReportDetails(Request $request){
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
+        $company_id = auth()->user()->company_id;
+        $result =Employee::select(
+            'employees.emp_id',
+            'employees.name',
+            'departments.deptTitle as department',
+            'designations.desigTitle as designation',
+            DB::raw('(SELECT SUM(total_amount) FROM expenses WHERE emp_id = employees.emp_id AND created_at BETWEEN "'.$startDate.'" AND "'.$endDate.'") as total_amount_sum')
+        )
+        ->join('departments', 'employees.dept_id', '=', 'departments.dept_id')
+        ->join('designations', 'employees.designation_id', '=', 'designations.designation_id')
+        ->where('employees.company_id', $company_id)
+        ->havingRaw('total_amount_sum IS NOT NULL')
+        ->get();
+        return response()->json([
+            'message'=> 'Expense Report Details',
+            'data'=>$result
+        ],200);
     }
 }
