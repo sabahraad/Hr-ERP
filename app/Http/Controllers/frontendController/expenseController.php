@@ -30,4 +30,10 @@ class expenseController extends Controller
         $dataArray = json_decode($response,true);
         return view('frontend.expense',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
+
+    public function expensesReport(){
+        $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
+        return view('frontend.expensesReport', ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+    }
 }

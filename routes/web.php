@@ -91,10 +91,11 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     //remove employee from shift
     Route::get('/show-remove-employee-from-shift/{id}', [App\Http\Controllers\frontendController\shiftController::class, 'showRemoveEmployeeFromShift'])->name('showRemoveEmployeeFromShift');
     Route::post('/remove-employee-from-shift', [App\Http\Controllers\frontendController\shiftController::class, 'removeEmployeeFromShift'])->name('removeEmployeeFromShift');
-    //
-    Route::get('/expense-list', [App\Http\Controllers\frontendController\expenseController::class, 'expenseList'])->name('expenseList');
-
     
+    //Expenses
+    Route::get('/expense-list', [App\Http\Controllers\frontendController\expenseController::class, 'expenseList'])->name('expenseList');
+    Route::get('/expense-report', [App\Http\Controllers\frontendController\expenseController::class, 'expensesReport'])->name('expensesReport');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');

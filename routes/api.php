@@ -60,6 +60,8 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/create-expenses', [App\Http\Controllers\expensesController::class, 'createExpenses']);
     Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
     Route::get('/catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
+    Route::post('/expense-report-details', [App\Http\Controllers\expensesController::class, 'expenseReportDetails']);
+
 
     //Per month calculation for App
     Route::post('/month-wise-off-day-list', [App\Http\Controllers\leaveController::class, 'monthWiseOffDayList']);
