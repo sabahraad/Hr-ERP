@@ -16,6 +16,7 @@ class reportController extends Controller
         $result = DB::table('employees')
                     ->select(
                         'employees.name',
+                        'employees.emp_id',
                         'employees.officeEmployeeID',
                         'departments.deptTitle',
                         'designations.desigTitle',
@@ -42,7 +43,7 @@ class reportController extends Controller
                     ->where('employees.company_id', '=', $company_id)
                     ->whereDate('attendances.created_at', '>=', $startDate)
                     ->whereDate('attendances.created_at', '<=', $endDate)
-                    ->groupBy('employees.name', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle',
+                    ->groupBy('employees.name','employees.emp_id', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle',
                     'leave_days.total_days')
                     ->get();
                 
@@ -54,7 +55,9 @@ class reportController extends Controller
         }else{
             return response()->json([
                 'message'=>'Attendance Report',
-                'data'=>$result
+                'data'=>$result,
+                'startDate' => $startDate,
+                'endDate' => $endDate
             ],200);
         }
     }

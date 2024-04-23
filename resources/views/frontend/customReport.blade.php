@@ -33,6 +33,11 @@
     .select2-selection__arrow {
         height: 38px !important;
     }
+    /* Custom class for clickable rows */
+    .clickable-row {
+        cursor: pointer;
+        /* Add any additional styling as needed */
+    }
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -79,6 +84,7 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Employee Name</th>
+                                        <th>Employee ID</th>
                                         <th>Department</th>
                                         <th>Designation</th>
                                         <th>Total Present Days</th>
@@ -112,6 +118,7 @@
 <script>
 
     $(document).ready(function() {
+        $('head title').text('Attendance Report');
         $('#desigTable').DataTable({
         dom: 'Bfrtip', 
         buttons: [
@@ -155,9 +162,10 @@
                         console.log(response.data);
                         var key = 0;
                         response.data.forEach(function(item) {
-                            table.row.add([
+                            var rowNode = table.row.add([
                                 key+1,
                                 item.name,
+                                item.emp_id,
                                 item.deptTitle,
                                 item.desigTitle,
                                 item.total_present_days,
@@ -166,8 +174,19 @@
                                 item.ontime_checkout_days,
                                 item.early_checkout_days,
                                 item.total_leave_days
-                            ]).draw(false);
+                            ]).draw(false).node();
+                            $(rowNode).addClass('clickable-row'); // Add clickable-row class to the row
                             key++;
+                        });
+                         // Add click event listener to rows with class 'clickable-row'
+                         $('#desigTable tbody').off('click').on('click', 'tr.clickable-row', function () {
+                            console.log('ok'); // Check if this logs 'ok' when clicking a row
+                            var rowData = table.row(this).data();
+                            var emp_id = rowData[2]; // Assuming employee ID is in the third column
+                            // Define the base URL in JavaScript
+                            var baseUrl = "{{ url('/') }}"; // Or use "{{ env('APP_URL') }}" if available
+
+                            window.location.href = baseUrl + '/individual-attendance-report/' + emp_id + '/' + response.startDate + '/' + response.endDate;
                         });
                     },
                     error: function(xhr, status, error) {
