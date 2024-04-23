@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-
+use App\Models\Expenses;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Carbon; 
 use App\Utils\BaseUrl;
 
 class expenseController extends Controller
@@ -35,5 +35,19 @@ class expenseController extends Controller
         $access_token = session('access_token');
         $baseUrl = BaseUrl::get();
         return view('frontend.expensesReport', ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+    }
+
+    public function individualExpenseReport($id,$startDate,$endDate){
+        
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+        $result = Expenses::where('expenses.emp_id',$id)
+                        ->join("employees","employees.emp_id","=","expenses.emp_id")
+                        ->join("expenses_catagories","expenses.expenses_catagories_id","=","expenses_catagories.expenses_catagories_id")
+                        ->whereBetween('expenses.created_at', [$startDate, $endDate])
+                        ->where('expenses.status','=','approved')
+                        ->get(['employees.*','expenses.*','expenses_catagories.catagory']);
+                        
+        return view('frontend.individualExpenseReport',compact('result'));
     }
 }
