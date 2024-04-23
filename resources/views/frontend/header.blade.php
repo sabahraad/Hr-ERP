@@ -8,7 +8,6 @@
         <meta name="author" content="Sabah Raad">
         <title>Time Wise </title>
 		
-		
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
 

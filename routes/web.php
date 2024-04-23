@@ -70,6 +70,8 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
 
     //custom report 
     Route::get('/custom-report', [App\Http\Controllers\frontendController\timelineController::class, 'customReport'])->name('customReport');
+    Route::get('/individual-attendance-report/{id}/{startDate}/{endDate}', [App\Http\Controllers\frontendController\attendanceController::class, 'individualAttendanceReport'])->name('individualAttendanceReport');
+
     Route::get('/leave-report', [App\Http\Controllers\frontendController\leaveController::class, 'leaveReport'])->name('leaveReport');
 
     
@@ -95,6 +97,7 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     //Expenses
     Route::get('/expense-list', [App\Http\Controllers\frontendController\expenseController::class, 'expenseList'])->name('expenseList');
     Route::get('/expense-report', [App\Http\Controllers\frontendController\expenseController::class, 'expensesReport'])->name('expensesReport');
+    Route::get('/individual-expense-report/{id}/{startDate}/{endDate}', [App\Http\Controllers\frontendController\expenseController::class, 'individualExpenseReport'])->name('individualExpenseReport');
 
 });
  //dept excel download

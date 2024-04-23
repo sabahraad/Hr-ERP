@@ -255,7 +255,7 @@ class expensesController extends Controller
             'employees.name',
             'departments.deptTitle as department',
             'designations.desigTitle as designation',
-            DB::raw('(SELECT SUM(total_amount) FROM expenses WHERE emp_id = employees.emp_id AND created_at BETWEEN "'.$startDate.'" AND "'.$endDate.'") as total_amount_sum')
+            DB::raw('(SELECT SUM(total_amount) FROM expenses WHERE emp_id = employees.emp_id AND status = "approved" AND created_at BETWEEN "'.$startDate.'" AND "'.$endDate.'") as total_amount_sum')
         )
         ->join('departments', 'employees.dept_id', '=', 'departments.dept_id')
         ->join('designations', 'employees.designation_id', '=', 'designations.designation_id')
@@ -264,7 +264,9 @@ class expensesController extends Controller
         ->get();
         return response()->json([
             'message'=> 'Expense Report Details',
-            'data'=>$result
+            'data'=>$result,
+            'startDate'=>$startDate,
+            'endDate'=>$endDate
         ],200);
     }
 }
