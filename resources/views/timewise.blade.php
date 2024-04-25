@@ -64,7 +64,7 @@
                                         </ul>
                                     </div>
                                     <div class="try-free-link">
-                                        <a class="btn btn-primary right-header-button" href="{{route('registrationForm')}}" target="_blank"  role="button">Registration Now</a>
+                                        <a class="btn btn-primary right-header-button" href="{{route('registrationForm')}}" target="_blank"  role="button">Get Started</a>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
                 <div class="container">
                     <h2>The Processes more <span> important from TimeWise Here! </span></h2>
                     <p>Manage all your people in one place.</p>
-                    <a class="btn btn-primary starting-free scrollTo" href="#contactus" role="button">Get Started For Free</a>
+                    <a class="btn btn-primary starting-free scrollTo" href="{{route('registrationForm')}}" role="button">Get Started For Free</a>
                 </div>
             </div>
 
@@ -181,7 +181,7 @@
 										</div>
 									</div>
                                     <h4>Advanced Features</h4>
-                                    <p>Advanced features tools like graphs, charts, invoices, video & audio call's, projects, etc.</p>
+                                    <p>Advanced features tools like graphs, leave management, expense, payroll, report generate, etc.</p>
                                 </div>
                                 <div class="feature-left-content"  data-aos="fade-right" data-aos-duration="2000">
 									<div class="feat-box">
@@ -190,13 +190,13 @@
 										</div>
 									</div>
                                     <h4>More Flexible</h4>
-                                    <p>Advanced features tools like graphs, charts, invoices, video & audio call's, projects, etc.</p>
+                                    <p>Advanced features tools like graphs, leave management, expense, payroll, report generate, etc.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12 " >
                             <div class="feature-image" data-aos="fade-up" data-aos-duration="2000">
-                                <img src="{{asset('images/featurebackground.png')}}" alt="features">
+                                <img src="{{asset('images/featurebackground-01.png')}}" alt="features">
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-12 ">
@@ -245,25 +245,30 @@
                                     <div class="card-body">
                                         <img src="{{asset('images/handshake.png')}}" alt="employee-management">
                                         <h4>Employee Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <p>Employee Management integrates employee handling,
+                                            department structuring, and role definition, 
+                                            optimizing operations for productivity.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 d-flex">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/people.png')}}" alt="payroll-management">
+                                        <img src="{{asset('images/people copy.png')}}" alt="payroll-management">
                                         <h4>Payroll Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <p>This system streamlines payroll processes, enhances transparency,
+                                            and promotes financial stability within the organization.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 d-flex">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/innovation.png')}}" alt="project-management">
-                                        <h4>Project Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <img src="{{asset('images/leave-management-1.png')}}" alt="project-management">
+                                        <h4>Leave Management</h4>
+                                        <p>This system streamlines leave processes,
+                                        ensures efficient resource management, and empowers employees with flexible 
+                                        and structured leave options</p>
                                     </div>
                                 </div>
                             </div>
@@ -272,18 +277,22 @@
                             <div class="col-lg-4 col-md-4 d-flex">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/notes.png')}}" alt="tas-management">
-                                        <h4>Task Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <img src="{{asset('images/shift-management-timecheck.png')}}" alt="shift-management">
+                                        <h4>Shift Management</h4>
+                                        <p>This system efficiently allocates shifts, ensures fair workload distribution,
+                                         and empowers employees with predictable and organized work hours, 
+                                         enhancing overall productivity and team satisfaction.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4  d-flex">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/management.png')}}" alt="jobs-management">
-                                        <h4>Jobs Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <img src="{{asset('images/employee-tracking.png')}}" alt="jobs-management">
+                                        <h4>Employee Track</h4>
+                                        <p>This system provides insights into work progress, tracks attendance,
+                                            and optimizes task allocation, fostering a transparent and proactive 
+                                            work environment.</p>
                                     </div>
                                 </div>
                             </div>
@@ -291,8 +300,10 @@
                                 <div class="management card flex-fill">
                                     <div class="card-body">
                                         <img src="{{asset('images/timing.png')}}" alt="leads-management">
-                                        <h4>Leads Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <h4>Attendance</h4>
+                                        <p>This system automates attendance capture, facilitates monitoring,
+                                             and ensures compliance with organizational policies, contributing 
+                                             to productivity and operational efficiency.</p>
                                     </div>
                                 </div>
                             </div>
@@ -301,9 +312,11 @@
                             <div class="col-lg-4 col-md-4 d-flex" data-aos="fade-up" data-aos-duration="14000">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/client.png')}}" alt="clients-management">
-                                        <h4>Clients Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <img src="{{asset('images/people.png')}}" alt="clients-management">
+                                        <h4>Expense Management</h4>
+                                        <p>This system automates expense reporting, facilitates approval workflows, 
+                                            and provides insights for budgeting and cost control, optimizing financial
+                                             management across the organization.</p>
                                     </div>
                                 </div>
                             </div>
@@ -313,7 +326,8 @@
                                     <div class="card-body">
                                         <img src="{{asset('images/accounts.png')}}" alt="account-management">
                                         <h4>Account Management</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <p>This system automates account monitoring, enhancing overall 
+                                            financial management and accountability within the organization.</p>
                                     </div>
                                 </div>
                             </div>
@@ -321,8 +335,9 @@
                                 <div class="management card flex-fill">
                                     <div class="card-body">
                                         <img src="{{asset('images/customer-care.png')}}" alt="ticket-system">
-                                        <h4>Ticket System</h4>
-                                        <p>It is a long established fact that a will be distracted.</p>
+                                        <h4>Support</h4>
+                                        <p>24/7 Support Management ensures round-the-clock availability for 
+                                        customer inquiries, streamlining issue resolution at any time. </p>
                                     </div>
                                 </div>
                             </div>
@@ -343,27 +358,7 @@
                         </div>
 
                         <h3 class="common-content-header">Simple, Fair and Affordable<span>Prices for all.</span></h3>
-                        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ad minim veniam.</p> -->
                     </div>
-                    <!-- <div class="pricing-monthly" data-aos="fade-up" data-aos-duration="2000">
-                        <div class="price-month">
-                            <p>Monthly</p>
-                        </div>
-                        <div class="price-image">
-                            <label class="toggle-switch" for="status7">
-								<input type="checkbox" class="toggle-switch-input" id="status7" checked="">
-								<span class="toggle-switch-label">
-									<span class="toggle-switch-indicator"></span>
-								</span>
-							</label>
-                        </div>
-                        <div class="price-annual">
-                            <p>Annually</p>
-                        </div>
-                        <div class="price-discount">
-                            <a class="btn btn-primary" href="#" role="button" id="discount">Save 30%</a>
-                        </div>
-                    </div> -->
 
                     <div class="plan-list" data-aos="fade-up" data-aos-duration="2000">
                         <div class="row">
@@ -389,11 +384,14 @@
                                         
                                         <ul class="project-plan">
                                             <li> 1 - 20 Users</li>
-                                            <li>Excluding VAT & Tax</li>
+                                            <li>Excl. VAT & Tax</li>
+                                            <li>Free Update</li>
+                                            <li>24/7 Support</li>
                                             <li>No Installation Charge*</li>
+                                            <li>No hidden Charges*</li>
                                         </ul>
-                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
-                                        <p class="plancharges">No hidden Charges</p>
+                                        <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -418,11 +416,14 @@
                                         <em> BDT 80 per user</em>
                                         <ul class="project-plan">
                                             <li> 1 - 50 Users</li>
-                                            <li>Excluding VAT & Tax</li>
+                                            <li>Excl. VAT & Tax</li>
+                                            <li>Free Update</li>
+                                            <li>24/7 Support</li>
                                             <li>No Installation Charge*</li>
+                                            <li>No hidden Charges*</li>
                                         </ul>
-                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
-                                        <p class="plancharges">No hidden Charges</p>
+                                        <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -447,11 +448,14 @@
                                         <em> BDT 60 per user</em>
                                         <ul class="project-plan">
                                             <li> 1 - 100 Users</li>
-                                            <li>Excluding VAT & Tax</li>
+                                            <li>Excl. VAT & Tax</li>
+                                            <li>Free Update</li>
+                                            <li>24/7 Support</li>
                                             <li>No Installation Charge*</li>
+                                            <li>No hidden Charges*</li>
                                         </ul>
-                                        <a class="btn btn-primary price-plan" href="javascript:void(0)" role="button">Registration Now</a>
-                                        <p class="plancharges">No hidden Charges</p>
+                                        <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -476,11 +480,14 @@
                                         <em> Price Negotiable </em>
                                         <ul class="project-plan">
                                             <li> 1 - 100 ++ Users</li>
-                                            <li>Excluding VAT & Tax</li>
+                                            <li>Excl. VAT & Tax</li>
+                                            <li>Free Update</li>
+                                            <li>24/7 Support</li>
                                             <li>No Installation Charge*</li>
+                                            <li>No hidden Charges*</li>
                                         </ul>
-                                        <a class="btn btn-primary price-plan" href="#" role="button">Registration Now</a>
-                                        <p class="plancharges">No hidden Charges</p>
+                                        <a class="btn btn-primary price-plan btn-sm" href="#contactus" role="button">Contact US</a>
+                                        
                                     </div>
                                 </div>
                             </div>
