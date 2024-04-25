@@ -312,7 +312,7 @@
                             <div class="col-lg-4 col-md-4 d-flex" data-aos="fade-up" data-aos-duration="14000">
                                 <div class="management card flex-fill">
                                     <div class="card-body">
-                                        <img src="{{asset('images/people.png')}}" alt="clients-management">
+                                        <img src="{{asset('images/expense.png')}}" alt="clients-management">
                                         <h4>Expense Management</h4>
                                         <p>This system automates expense reporting, facilitates approval workflows, 
                                             and provides insights for budgeting and cost control, optimizing financial

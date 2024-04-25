@@ -37,9 +37,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @if($dataArray === null || empty($dataArray['data']))
-                                <tr><td colspan="4" class="text-center">No leave is available</td></tr>
-                                @else
                                     @foreach($dataArray['data'] as $key =>$leave)
                                     <tr>
                                         <td>{{$key+1}}</td>
@@ -56,7 +53,7 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                @endif
+                               
                                 </tbody>
                             </table>
                         </div>
