@@ -54,6 +54,7 @@
                                 <th>Employee ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Office Employee ID</th>
                                 <th>Mobile</th>
                                 <th>DOB</th>
                                 <th>Joining Date</th>
@@ -74,6 +75,7 @@
                                     </h2>
                                 </td>
                                 <td>{{$employee['email']}}</td>
+                                <td>{{$employee['officeEmployeeID'] ?? 'N/A'}}</td>
                                 <td>{{$employee['phone_number'] ?? 'N/A'}}</td>
                                 <td>{{$employee['dob'] ?? 'N/A'}}</td>
                                 <td>{{$employee['joining_date'] ?? 'N/A'}}</td>
@@ -124,6 +126,13 @@
                             <div class="input-block mb-3">
                                 <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" name="email">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="input-block mb-3">
+                                <label class="col-form-label">Office Employee ID <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="officeEmployeeID">
                             </div>
                         </div>
 
@@ -263,15 +272,6 @@
 </div>
 <!-- /Add Employee in bulk Modal -->
 
-
-
-
-
-
-
-
-
-
 <!-- Edit Employee Modal -->
 <div id="edit_employee" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -305,7 +305,12 @@
                                             </div>
                                         </div>
 
-                                        
+                                        <div class="col-sm-12">
+                                            <div class="input-block mb-3">
+                                                <label class="col-form-label">Office Employee ID <span class="text-danger">*</span></label>
+                                                <input class="form-control" type="text" name="officeEmployeeID" id="officeEmployeeID">
+                                            </div>
+                                        </div>
 
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
@@ -628,6 +633,7 @@
                     // console.log(response);
                     $('#name').val(response.data[0].name.trim());
                     $('#email').val(response.data[0].email);
+                    $('#officeEmployeeID').val(response.data[0].officeEmployeeID);
                     $('#phoneNumber').val(response.data[0].phone_number);
                     $('#dob').val(response.data[0].dob);
                     $('#salary').val(response.data[0].salary);
