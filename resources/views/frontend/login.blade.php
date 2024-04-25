@@ -8,10 +8,10 @@
         <meta name="author" content="Dreamguys - Bootstrap Admin Template">
 		<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Include CSRF token -->
 
-        <title>Login</title>
+        <title>Timewise-Login</title>
 		
 		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Icon-512x512.png') }}">
 		
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
@@ -29,17 +29,13 @@
 
     </head>
 	
-    <body class="account-page" style="background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);">
+    <body class="account-page" style="background:  linear-gradient(277.57deg, #6258a6 0%, #82cae8 100%);">
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
 			<div class="account-content">
 				<div class="container">
 				<!-- {{asset('images/logo.png')}} -->
-					<!-- Account Logo -->
-					<div class="account-logo">
-						<a href="admin-dashboard.html"><img src="{{asset('images/aamarPay-02.png')}}" style="width:50%" alt="Dreamguy's Technologies"></a>
-					</div>
-					<!-- /Account Logo -->
+					
 					
 					<div class="account-box">
 						<div class="account-wrapper">
@@ -50,7 +46,12 @@
 							</div>
 						@endif
 
-							<h3 class="account-title">Login</h3>
+						<!-- Account Logo -->
+						<div class="account-logo">
+							<a href="#"><img src="{{asset('/images/TimeWise-Logo.png')}}" style="width:30%"></a>
+						</div>
+						<!-- /Account Logo -->	
+
 							<p class="account-subtitle">Access to our dashboard</p>
 							
 							<!-- Account Form -->
