@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
     <head>
-        <meta charset="utf-8">
+	<meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Iime Wise">
-		<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
-        <meta name="author" content="Sabah Raad">
-        <title>Time Wise </title>
+        <meta name="description" content="Best HR Solution">
+		<meta name="keywords" content="HR Solution,TimeWise,Bangladesh,Human Resources Management,HR Software,Time Management,Payroll Management,Employee Management,Attendance Tracking
+                                      ,Leave Management,Performance Evaluation,Bangladeshi HR Solution,HR Automation,HRIS (Human Resources Information System),Time Tracking,Employee Engagement
+                                      ,HR Technology,Compliance Management,Bangladeshi Businesses,HR AnalyticsComplete HR Solution, HRIS, Cost Effective HR Solution, SME Friendly HR Solution,
+                                      SME Friendly HRIS, Human Resource Management system for enterprises.">
+        <meta name="author" content="aamarDigital Solution Limited">
 		
 
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Icon-512x512.png') }}">
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
@@ -35,8 +37,8 @@
 		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <style> 
 [data-topbar=light] body .header {
-  background: #ff9b44;
-  background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);
+  background: #6564ad;
+  background: linear-gradient(277.57deg, #6258a6 0%, #82cae8 100%);
 }
 </style>
 		 
@@ -51,10 +53,10 @@
 				<!-- Logo -->
                 <div class="header-left">
                      <a href="admin-dashboard.html" class="logo">
-						<img src="{{asset('images/logo.png')}}" width="40" height="40" alt="Logo">
+						<img src="{{asset('images/TimeWise-Logo-white.png')}}" alt="Logo">
 					</a>
-					<a href="{{ asset('images/logo.png') }}" class="logo2">
-						<img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="Logo">
+					<a href="{{ asset('images/TimeWise-Logo-white.png') }}" class="logo2">
+						<img src="{{ asset('images/TimeWise-Logo-white.png') }}"alt="Logo">
 					</a>
                 </div>
 				<!-- /Logo -->
@@ -77,201 +79,9 @@
 				
 				<!-- Header Menu -->
 				<ul class="nav user-menu">
-					<!-- Notifications -->
-					<!-- <li class="nav-item dropdown">
-						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-							<i class="fa-regular fa-bell"></i> <span class="badge rounded-pill">3</span>
-						</a>
-						<div class="dropdown-menu notifications">
-							<div class="topnav-dropdown-header">
-								<span class="notification-title">Notifications</span>
-								<a href="javascript:void(0)" class="clear-noti"> Clear All </a>
-							</div>
-							<div class="noti-content">
-								<ul class="notification-list">
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="chat-block d-flex">
-												<span class="avatar flex-shrink-0">
-													<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-												</span>
-												<div class="media-body flex-grow-1">
-													<p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
-													<p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="chat-block d-flex">
-												<span class="avatar flex-shrink-0">
-													<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-												</span>
-												<div class="media-body flex-grow-1">
-													<p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
-													<p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="chat-block d-flex">
-												<span class="avatar flex-shrink-0">
-													<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-												</span>
-												<div class="media-body flex-grow-1">
-													<p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
-													<p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="chat-block d-flex">
-												<span class="avatar flex-shrink-0">
-													<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-												</span>
-												<div class="media-body flex-grow-1">
-													<p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
-													<p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="chat-block d-flex">
-												<span class="avatar flex-shrink-0">
-													<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-												</span>
-												<div class="media-body flex-grow-1">
-													<p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
-													<p class="noti-time"><span class="notification-time">2 days ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="topnav-dropdown-footer">
-								<a href="activities.html">View all Notifications</a>
-							</div>
-						</div>
-					</li> -->
-					<!-- /Notifications -->
-					
-					<!-- Message Notifications -->
-					<!-- <li class="nav-item dropdown">
-						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-							<i class="fa-regular fa-comment"></i> <span class="badge rounded-pill">8</span>
-						</a>
-						<div class="dropdown-menu notifications">
-							<div class="topnav-dropdown-header">
-								<span class="notification-title">Messages</span>
-								<a href="javascript:void(0)" class="clear-noti"> Clear All </a>
-							</div>
-							<div class="noti-content">
-								<ul class="notification-list">
-									<li class="notification-message">
-										<a href="chat.html">
-											<div class="list-item">
-												<div class="list-left">
-													<span class="avatar">
-														<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-													</span>
-												</div>
-												<div class="list-body">
-													<span class="message-author">Richard Miles </span>
-													<span class="message-time">12:28 AM</span>
-													<div class="clearfix"></div>
-													<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="chat.html">
-											<div class="list-item">
-												<div class="list-left">
-													<span class="avatar">
-														<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-													</span>
-												</div>
-												<div class="list-body">
-													<span class="message-author">John Doe</span>
-													<span class="message-time">6 Mar</span>
-													<div class="clearfix"></div>
-													<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="chat.html">
-											<div class="list-item">
-												<div class="list-left">
-													<span class="avatar">
-														<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-													</span>
-												</div>
-												<div class="list-body">
-													<span class="message-author"> Tarah Shropshire </span>
-													<span class="message-time">5 Mar</span>
-													<div class="clearfix"></div>
-													<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="chat.html">
-											<div class="list-item">
-												<div class="list-left">
-													<span class="avatar">
-														<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-													</span>
-												</div>
-												<div class="list-body">
-													<span class="message-author">Mike Litorus</span>
-													<span class="message-time">3 Mar</span>
-													<div class="clearfix"></div>
-													<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="chat.html">
-											<div class="list-item">
-												<div class="list-left">
-													<span class="avatar">
-														<img src="{{ asset('images/favicon.png') }}" alt="User Image">
-													</span>
-												</div>
-												<div class="list-body">
-													<span class="message-author"> Catherine Manseau </span>
-													<span class="message-time">27 Feb</span>
-													<div class="clearfix"></div>
-													<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-												</div>
-											</div>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="topnav-dropdown-footer">
-								<a href="chat.html">View all Messages</a>
-							</div>
-						</div>
-					</li> -->
-					<!-- /Message Notifications -->
-
 					<li class="nav-item dropdown has-arrow main-drop">
 						<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-							<span class="user-img"><img src="{{ asset('images/favicon.png') }}" alt="User Image">
+								<!-- <span class="user-img"><img src="{{ asset('images/TimeWise-Logo.png') }}"  width="60" height="60" alt="User Image"> -->
 							<span class="status online"></span></span>
 							<!-- <span>{{auth()->user()}}</span> -->
 							<span>{{ session('name') }}</span>

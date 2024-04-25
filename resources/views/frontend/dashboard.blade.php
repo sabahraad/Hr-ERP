@@ -150,7 +150,7 @@
 							xkey: 'y',
 							ykeys: ['a', 'b'],
 							labels: ['Present', 'Absent'],
-							barColors: ['#ff9b44', '#fc6075'],
+							barColors: ['#645faa', '#fc6075'],
 							resize: true,
 							redraw: true,
 							xLabelAngle: 25,
