@@ -4,7 +4,7 @@
 <style>
     .dt-button{
       color: white !important;
-      background-color: #ff9b44 !important;
+      background-color: #6564ad !important;
       cursor: pointer;
       border-radius: 5px;
       border: none;
@@ -68,6 +68,7 @@
                                     <tr>
                                         <th class="width-thirty">#</th>
                                         <th>Designation </th>
+                                        <th>Designation ID</th>
                                         <th>Details</th>
                                         <th>Department </th>
                                         <th >Action</th>
@@ -245,6 +246,7 @@
                     var rowData = [
                         rowNum,
                         '<td data-deptid="' + item.designation_id + '">' + item.desigTitle + '</td>',
+                        '<td >' + item.designation_id  + '</td>',
                         '<td >' + item.details + '</td>',
                         '<td data-deptid="' + item.dept_id + '">' + item.deptTitle + '</td>',
                         '<div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item edit-desig" href="#" data-bs-toggle="modal" data-bs-target="#edit_designation" data-id="'+item.designation_id+'"><i class="fa-solid fa-pencil m-r-5" "></i> Edit</a><a class="dropdown-item delete-desig" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" data-id="'+item.designation_id+'"><i class="fa-regular fa-trash-can m-r-5" ></i> Delete</a></div></div>'

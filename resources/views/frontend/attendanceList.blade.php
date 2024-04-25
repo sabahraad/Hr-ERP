@@ -10,7 +10,7 @@
         }
     .dt-button{
       color: white !important;
-      background-color: #ff9b44 !important;
+      background-color: #6564ad !important;
       cursor: pointer;
       border-radius: 5px;
       border: none;

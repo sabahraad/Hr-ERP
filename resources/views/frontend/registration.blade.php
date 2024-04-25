@@ -1,6 +1,18 @@
 <html>
 <head>
 <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css?family=Montserrat') }}">
+<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Best HR Solution">
+		<meta name="keywords" content="HR Solution,TimeWise,Bangladesh,Human Resources Management,HR Software,Time Management,Payroll Management,Employee Management,Attendance Tracking
+                                      ,Leave Management,Performance Evaluation,Bangladeshi HR Solution,HR Automation,HRIS (Human Resources Information System),Time Tracking,Employee Engagement
+                                      ,HR Technology,Compliance Management,Bangladeshi Businesses,HR AnalyticsComplete HR Solution, HRIS, Cost Effective HR Solution, SME Friendly HR Solution,
+                                      SME Friendly HRIS, Human Resource Management system for enterprises.">
+        <meta name="author" content="aamarDigital Solution Limited">
+        <title>Timewise-Registration</title>
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Icon-512x512.png') }}">
 </head>
 <style>
 /*basic reset*/
@@ -8,11 +20,12 @@
 
 html {
 	height: 100%;
-	background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);
+	
 }
 
 body {
 	font-family: montserrat, arial, verdana;
+	background:  linear-gradient(277.57deg, #6258a6 0%, #82cae8 100%);
 	
 }
 /*form styles*/
@@ -136,13 +149,20 @@ body {
 <!-- multistep form -->
 <form id="msform" action="{{route('registration')}}" method="post" style="width: 718px;">
     @csrf
+	
   <!-- progressbar -->
   <ul id="progressbar">
     <li class="active">Account Setup</li>
     <li>HR Profile</li>
   </ul>
+  
   <!-- fieldsets -->
   <fieldset>
+	<!-- Account Logo -->
+	<div class="account-logo ">
+		<a href="#"><img src="{{asset('/images/TimeWise-Logo.png')}}" style="width:30%;margin-bottom:10px"></a>
+	</div>
+	<!-- /Account Logo -->	
     <h2 class="fs-title">Create your account</h2>
     <h3 class="fs-subtitle">This is step 1</h3>
     <input type="text" name="companyName" placeholder="companyName" />
@@ -154,6 +174,11 @@ body {
   </fieldset>
 
   <fieldset>
+	<!-- Account Logo -->
+	<div class="account-logo ">
+		<a href="#"><img src="{{asset('/images/TimeWise-Logo.png')}}" style="width:30%;margin-bottom:10px"></a>
+	</div>
+	<!-- /Account Logo -->	
     <h2 class="fs-title">HR Details</h2>
     <h3 class="fs-subtitle">We will never sell it</h3>
     <input type="text" name="name" placeholder="name" />

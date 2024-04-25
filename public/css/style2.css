@@ -2366,13 +2366,14 @@ i.fa.fa-check {
     font-style: normal;
 }
 .project-plan {
-    font-weight: 600;
+    font-weight: 400;
+    font-family: 'Source Sans Pro';
     text-align: left;
     padding-top: 15px;
-    color: #6d83c0;
+    color: #475374;
     margin: auto;
     max-width: 80%;
-    font-size: 15px;
+    font-size: 13px;
 }
 .project-plan span {
     display: block;
