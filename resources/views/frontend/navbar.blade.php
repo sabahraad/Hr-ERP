@@ -6,12 +6,9 @@
 							<li class="menu-title"> 
 								<span>Main</span>
 							</li>
-							<li class="submenu">
-								<a href="#"><i class="la la-dashboard"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="{{route('dashboard')}}">Admin Dashboard</a></li>
-									<!-- <li><a href="employee-dashboard.html">Employee Dashboard</a></li> -->
-								</ul>
+							<li>
+								<a href="{{route('dashboard')}}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
+								
 							</li>
 
 							<li class="menu-title"> 
@@ -29,35 +26,25 @@
 							<li class="menu-title"> 
 								<span>Employees</span>
 							</li>
-							<li class="submenu">
-								<a href="#" ><i class="la la-users"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a class="" href="{{route('employee')}}">All Employees</a></li>
-								</ul>
+							<li>
+								<a href="{{route('employee')}}" ><i class="la la-users"></i> <span> All Employees</span></a>
+								
 							</li>
 
 							<li class="menu-title"> 
 								<span>Leave</span>
 							</li>
-							<li class="submenu">
-								<a href="#"><i class="la la-ticket"></i> <span> Leave </span> <span class="menu-arrow"></span></a>
-								<ul> 	
-									<!-- <li><a href="{{route('leaveList')}}">Leave Type</a></li>
-									<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li> -->
-									<li><a href="{{route('allLeaveApplication')}}">Leave Application List</a></li>
-								</ul>
+							<li>
+								<a href="{{route('allLeaveApplication')}}"><i class="la la-ticket"></i> <span> Leave Application List </span></a>
+								
 							</li>
 							
 							<li class="menu-title"> 
 								<span>Attendance</span>
 							</li>
-							<li class="submenu">
-								<a href="#"><i class="la la-houzz"></i> <span>Attendance </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<!-- <li><a href="{{route('attendanceSetting')}}">Attendance Settitngs</a></li>
-									<li><a href="{{route('attendanceType')}}">Attendance Type</a></li> -->
-									<li><a href="{{route('attendanceList')}}">Attendance List</a></li>
-								</ul>
+							<li>
+								<a href="{{route('attendanceList')}}"><i class="la la-houzz"></i> <span>Attendance List</span></a>
+								
 							</li>
 
 							<li class="menu-title"> 
