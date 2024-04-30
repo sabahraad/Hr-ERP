@@ -2058,7 +2058,7 @@ input[type=file].form-control {
 
 .header {
   background: #323156;
-  background: linear-gradient(to right, #323156 0%, #fc6075 100%);
+  background: linear-gradient(277.57deg, #6258a6 0%, #82cae8 100%);
   border-bottom: 1px solid transparent;
   height: 60px;
   z-index: 1044;
@@ -9574,3 +9574,15 @@ th.width-64 {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+@media only screen and (max-width: 992px) {
+  .hlogo {
+      max-width: 10%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .hlogo {
+    max-width: 15%;
+  }
+}
