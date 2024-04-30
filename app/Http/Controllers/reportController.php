@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\Weekend;
+use App\Models\Holiday;
 
 class reportController extends Controller
 {
@@ -13,7 +16,78 @@ class reportController extends Controller
         $dateParts = explode(' - ', $date);
         $startDate = $dateParts[0];
         $endDate = $dateParts[1];
-        $result = DB::table('employees')
+
+        // Array to hold working days
+        $workingDays = [];
+
+        $currentDate = Carbon::parse($startDate);
+        $endDateTime = Carbon::parse($endDate);
+
+        // Loop through each date in the range
+        while ($currentDate <= $endDateTime) {
+            $currentDateString = $currentDate->toDateString();
+
+            // Check if the current date is a weekend, holiday, or leave day
+            $isWeekend = Weekend::where(strtolower($currentDate->format('l')), 1)->where('company_id',$company_id)->exists();
+
+            // Check if current date is a holiday
+            $isHoliday = Holiday::where('company_id', $company_id)
+                ->whereJsonContains('date', $currentDateString)
+                ->exists();
+
+            // Add to working days if it's not a weekend, holiday, or leave day
+            if (!$isWeekend && !$isHoliday ) {
+                $workingDays[] = $currentDateString;
+            }
+            // Move to the next day
+            $currentDate->addDay();
+        }
+
+        // Count the number of working days
+        $workingDaysCount = count($workingDays);
+
+        if($request->dept_id){
+            $result = DB::table('employees')
+                    ->select(
+                        'employees.name',
+                        'employees.emp_id',
+                        'employees.officeEmployeeID',
+                        'departments.deptTitle',
+                        'designations.desigTitle',
+                        DB::raw('COUNT(*) AS total_present_days'),
+                        DB::raw('SUM(CASE WHEN attendances.INstatus = 1 THEN 1 ELSE 0 END) AS ontime_checkIN_days'),
+                        DB::raw('SUM(CASE WHEN attendances.INstatus = 2 THEN 1 ELSE 0 END) AS late_checkIN_days'),
+                        DB::raw('SUM(CASE WHEN attendances.OUTstatus = 1 THEN 1 ELSE 0 END) AS ontime_checkout_days'),
+                        DB::raw('SUM(CASE WHEN attendances.OUTstatus = 2 THEN 1 ELSE 0 END) AS early_checkout_days'),
+                        DB::raw('COALESCE(leave_days.total_days, 0) AS total_leave_days')
+                    )
+                    ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
+                    ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
+                    ->join('attendances', 'employees.emp_id', '=', 'attendances.emp_id')
+                    ->leftJoin(DB::raw('(
+                            SELECT emp_id, SUM(IF(MONTH(date), 1, 0)) AS total_days
+                            FROM (
+                                SELECT emp_id, JSON_UNQUOTE(JSON_EXTRACT(dateArray, CONCAT(\'$[\', numbers.n, \']\'))) AS date
+                                FROM leave_applications
+                                JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS numbers
+                                WHERE DATE_FORMAT(JSON_UNQUOTE(JSON_EXTRACT(dateArray, CONCAT(\'$[\', numbers.n, \']\'))), \'%Y-%m\') = \'2024-02\'
+                            ) AS subquery
+                            GROUP BY emp_id
+                        ) AS leave_days'), 'employees.emp_id', '=', 'leave_days.emp_id')
+                    ->where('employees.company_id', '=', $company_id)
+                    ->where('employees.dept_id','=',$request->dept_id)
+                    ->whereDate('attendances.created_at', '>=', $startDate)
+                    ->whereDate('attendances.created_at', '<=', $endDate)
+                    ->groupBy('employees.name','employees.emp_id', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle',
+                    'leave_days.total_days')
+                    ->get();
+            foreach ($result as $item) {
+                // Add the 'workingDays' key with the value of 30 to each item
+                $item->absentDays = $workingDaysCount - $item->total_present_days;
+                $item->workingDays = $workingDaysCount;
+            }
+        }else{
+            $result = DB::table('employees')
                     ->select(
                         'employees.name',
                         'employees.emp_id',
@@ -46,6 +120,13 @@ class reportController extends Controller
                     ->groupBy('employees.name','employees.emp_id', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle',
                     'leave_days.total_days')
                     ->get();
+            foreach ($result as $item) {
+                // Add the 'workingDays' key with the value of 30 to each item
+                $item->absentDays = $workingDaysCount - $item->total_present_days;
+                $item->workingDays = $workingDaysCount;
+            }
+        }
+        
                 
         if(count($result) == 0){
             return response()->json([

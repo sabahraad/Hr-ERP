@@ -64,15 +64,27 @@
 
                 <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
                     <div class="card-body ">
-                        <form id="myForm">
-                            @csrf
-                            <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
-                                <input type="text"  id="date_range" class="form-control" name="date_range">
-                            <br>
-                            <div class="form-group" style="margin-top: 18px;">
-                                <input type="submit" name="submit" value="Search" class="btn btn-primary">
-                            </div>
-                        </form>
+                            <form id="myForm" class="row">
+                                @csrf
+                                <div class="col-md-6">
+                                    <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
+                                        <input type="text"  id="date_range" class="form-control" name="date_range">
+                                    <br>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputText4" class="col-form-label">Select Department</label><br>
+                                    <select name="dept_id" id="dept_id" class="form-control ">
+                                    <option selected disabled>Open this to select Department</option>
+                                        @foreach ($dept['data'] as $raw)
+                                            <option value="{{$raw['dept_id']}}">{{$raw['deptTitle']}}</option>
+                                        @endforeach
+                                    </select>
+                                    <br>
+                                </div>
+                                <div class="form-group" style="margin-top: 18px;">
+                                    <input type="submit" style="display: block; width:250px" name="submit" value="Search" class="btn btn-primary mx-auto">
+                                </div>
+                            </form>
                     </div>
                 </div>
 
@@ -87,7 +99,9 @@
                                         <th>Employee ID</th>
                                         <th>Department</th>
                                         <th>Designation</th>
+                                        <th>Total Working Days</th>
                                         <th>Total Present Days</th>
+                                        <th>Total Absent Days</th>
                                         <th>Ontime CheckIN Days</th>
                                         <th>Late CheckIN Days</th>
                                         <th>Ontime Checkout Days</th>
@@ -146,6 +160,8 @@
             e.preventDefault();
 
             var formData = new FormData(this);
+            var r = formData.get('dept_id');
+            console.log(r);
 
             $.ajax({
                     url: baseUrl + '/custom-attendance-report', 
@@ -168,7 +184,9 @@
                                 item.emp_id,
                                 item.deptTitle,
                                 item.desigTitle,
+                                item.workingDays,
                                 item.total_present_days,
+                                item.absentDays,
                                 item.ontime_checkIN_days,
                                 item.late_checkIN_days,
                                 item.ontime_checkout_days,

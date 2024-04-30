@@ -53,10 +53,10 @@
 				<!-- Logo -->
                 <div class="header-left">
                      <a href="admin-dashboard.html" class="logo">
-						<img src="{{asset('images/TimeWise-Logo-white.png')}}" alt="Logo">
+						<img src="{{asset('images/TimeWise-Logo-white.png')}}" alt="Logo" style="max-width: 40%;">
 					</a>
-					<a href="{{ asset('images/TimeWise-Logo-white.png') }}" class="logo2">
-						<img src="{{ asset('images/TimeWise-Logo-white.png') }}"alt="Logo">
+					<a href="{{ asset('images/TimeWise-Logo-white.png') }}" class="logo2" style="max-width: 40%;">
+						<img src="{{ asset('images/TimeWise-Logo-white.png') }}"alt="Logo" style="max-width: 40%;">
 					</a>
                 </div>
 				<!-- /Logo -->
