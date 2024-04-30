@@ -30,7 +30,7 @@ jobs:
           script: |
             cd /www/wwwroot/timewisehr.com
             git stash
-            git pull origin dev
+            git pull origin main
             composer install
             chown -R www:www *
             find /www/wwwroot/timewisehr.com -type d -print0 | xargs -0 chmod 0755
