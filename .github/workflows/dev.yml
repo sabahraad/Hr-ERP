@@ -33,3 +33,4 @@ jobs:
             git pull origin dev
             composer install
             php artisan migrate
+            php artisan storage:link
