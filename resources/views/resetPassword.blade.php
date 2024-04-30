@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
 
 <!-- Main CSS -->
-<link rel="stylesheet" href="{{ asset('css/style3.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 		
 		 
     </head>
