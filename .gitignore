@@ -1,5 +1,6 @@
 /.phpunit.cache
 /node_modules
+!/public/images/.gitignore
 /public/build
 /public/hot
 /public/storage
@@ -17,5 +18,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-public 
-!public/images/TimeWise-Logo*
+# public
