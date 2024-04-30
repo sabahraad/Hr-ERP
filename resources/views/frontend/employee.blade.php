@@ -70,8 +70,8 @@
                                 <td>{{$employee['emp_id']}}</td>
                                 <td>
                                     <h2 class="table-avatar">
-                                        <a href="profile.html" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
-                                        <a href="profile.html">{{$employee['name']}}</a>
+                                        <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
+                                        <a href="#">{{$employee['name']}}</a>
                                     </h2>
                                 </td>
                                 <td>{{$employee['email']}}</td>
