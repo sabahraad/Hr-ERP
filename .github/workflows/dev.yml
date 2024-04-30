@@ -30,6 +30,6 @@ jobs:
           script: |
             cd /www/wwwroot/hrm.aamarpay.dev
             git stash
-            git pull office dev
+            git pull origin dev
             composer install
             php artisan migrate
