@@ -106,7 +106,6 @@
                                         <th>Late CheckIN Days</th>
                                         <th>Ontime Checkout Days</th>
                                         <th>Early Checkout Days</th>
-                                        <th>leave</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -191,7 +190,6 @@
                                 item.late_checkIN_days,
                                 item.ontime_checkout_days,
                                 item.early_checkout_days,
-                                item.total_leave_days
                             ]).draw(false).node();
                             $(rowNode).addClass('clickable-row'); // Add clickable-row class to the row
                             key++;
