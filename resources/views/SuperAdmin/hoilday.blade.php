@@ -44,8 +44,8 @@
                                 <td>{{$holiday->reason ?? 'N/A'}}</td>
                                 <td>{{$holiday->date ?? 'N/A'}}</td>
                                 <td>
-                                    <a class="btn btn-info" href="#" data-bs-toggle="modal" data-bs-target="#edit_holiday"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $holiday->holidays_id }}"></i> Edit</a>
-                                    <a class="btn btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#delete_holiday"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $holiday->holidays_id }}"></i> Delete</a>
+                                    <a class="btn btn-info edit_holiday" href="#" data-bs-toggle="modal" data-bs-target="#edit_holiday" data-id="{{ $holiday->holidays_id }}"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="btn btn-danger delete_holiday" href="#" data-bs-toggle="modal" data-bs-target="#delete_holiday" data-id="{{ $holiday->holidays_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -107,10 +107,9 @@
                                     <input class="form-control" id="holidayName" type="text" name="reason">
                                 </div>
                                 <div class="input-block mb-3">
-                                    <label class="col-form-label">Holiday Date <span class="text-danger">*</span></label>
-                                    <div class="cal-icon"><input class="form-control " name="date" type="date"></div>
-
-                                    <!-- <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" ></div> -->
+                                
+                                    <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
+                                    <input type="text"  id="date_range" class="form-control" name="date_range">
                                 </div>
                                 <input id ="holidays_id" class="form-control" name="holidays_id" type="hidden">
                                 <div class="submit-section">
@@ -153,6 +152,7 @@
             <!-- /Delete Holiday Modal -->
 
             <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script> 
 $(document).ready(function() {
@@ -173,4 +173,185 @@ $(document).ready(function() {
         });
 })
 
+var jwtToken = "{{ $jwtToken }}";
+var baseUrl = "{{ $baseUrl }}";
+$('#msform').submit(function(e) {
+    console.log('ok');
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    $.ajax({
+        url: baseUrl + '/add-holiday', 
+        type: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + jwtToken
+        },
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            console.log(response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Holiday added successful',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload(); 
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.error;
+                var errorMessage = "<ul>";
+                for (var field in errors) {
+                    errorMessage += "<li>" + errors[field][0] + "</li>";
+                }
+                errorMessage += "</ul>";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: errorMessage
+                });
+            }
+        }
+    });
+});
+
+$(document).on('click', '.edit_holiday', function(){
+    var holidays_id = $(this).data('id');
+    console.log(holidays_id);
+    $.ajax({
+        url: baseUrl + '/holiday-details/'+holidays_id, 
+        type: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + jwtToken
+        },
+        success: function(response) {
+            console.log(response);
+            $('#holidayName').val(response.data.reason);
+            $('#holidayDate').val(response.data.date);
+            $('#holidays_id').val(holidays_id);
+            // Show the modal
+            $('#edit_holiday').modal('show');
+            
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.error;
+                var errorMessage = "<ul>";
+                for (var field in errors) {
+                    errorMessage += "<li>" + errors[field][0] + "</li>";
+                }
+                errorMessage += "</ul>";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: errorMessage
+                });
+            }
+        }
+    });
+
+});                
+$('#editSubmit').submit(function(e) {
+    e.preventDefault();
+    var holidays_id = $('#holidays_id').val();
+    // console.log(holidays_id);
+    var formData = new FormData(this);
+    $.ajax({
+        url: baseUrl + '/edit/holiday/'+holidays_id, 
+        type: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + jwtToken
+        },
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Holiday Edited successfully',
+                text: 'Your holiday edit was successful!',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload(); 
+                }
+            });
+
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.error;
+                var errorMessage = "<ul>";
+                for (var field in errors) {
+                    errorMessage += "<li>" + errors[field][0] + "</li>";
+                }
+                errorMessage += "</ul>";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: errorMessage
+                });
+            }
+        }
+    });
+});
+$(document).on('click', '.delete_holiday', function(){
+    var holidays_id = $(this).data('id');
+    $('#holidays_id').val(holidays_id);
+});
+
+
+$('#holidayDelete').submit(function(e) {
+    e.preventDefault();
+    var holidays_id = $('#holidays_id').val();
+    console.log(holidays_id);
+    var formData = new FormData(this);
+
+    $.ajax({
+        url: baseUrl + '/delete/holiday/'+holidays_id, 
+        type: 'POST',
+        data: formData,
+        headers: {
+            'Authorization': 'Bearer ' + jwtToken
+        },
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Holiday successfully deleted',
+                text: 'You have successfully deleted a holiday',
+                showConfirmButton: false, 
+            });
+            setTimeout(function() {
+                location.reload(); // This will refresh the current page
+            },200);
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.error;
+                var errorMessage = "<ul>";
+                for (var field in errors) {
+                    errorMessage += "<li>" + errors[field][0] + "</li>";
+                }
+                errorMessage += "</ul>";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: errorMessage
+                });
+            }
+        }
+    });
+});
 </script>

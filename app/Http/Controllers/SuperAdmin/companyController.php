@@ -3,21 +3,27 @@
 namespace App\Http\Controllers\SuperAdmin;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Company;
+use App\Models\Holiday;
+use App\Utils\BaseUrl;
 use Illuminate\Http\Request;
 
 class companyController extends Controller
 {
     public function companyList(){
-        $data = DB::table('companies')->whereNull('deleted_at')
+
+        $data = Company::whereNull('deleted_at')
                     ->orderBy('company_id','desc')
                     ->get();
         return view('SuperAdmin.companyList',compact('data')); 
     }
 
     public function holidayList(){
-        $data = DB::table('holidays')->whereNull('company_id')
+        $access_token = session('access_token');
+        $baseUrl = BaseUrl::get();
+        $data = Holiday::whereNull('company_id')
         ->orderBy('holidays_id','desc')
         ->get();
-        return view('SuperAdmin.hoilday',compact('data'));
+        return view('SuperAdmin.hoilday',compact('data'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 }
