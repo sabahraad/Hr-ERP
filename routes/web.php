@@ -25,7 +25,6 @@ Route::get('/logout', [App\Http\Controllers\frontendController\AuthController::c
 
 Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], function () {
     Route::get('/password-change', [App\Http\Controllers\frontendController\AuthController::class, 'showPasswordChange'])->name('showPasswordChange');
-
     Route::get('/company', [App\Http\Controllers\frontendController\companyController::class, 'company'])->name('company');
     Route::get('/department',[App\Http\Controllers\frontendController\departmentController::class, 'department'])->name('department');
     Route::get('/holidays', [App\Http\Controllers\frontendController\HolidaysController::class, 'holidays'])->name('holidays');
@@ -109,3 +108,10 @@ Route::get('/export-desig-data', [App\Http\Controllers\frontendController\design
 Route::get('/resetPassword', [App\Http\Controllers\forgetPasswordEmailController::class, 'resetPassword'])->name('resetPassword');
 Route::get('/privacy-policy', [App\Http\Controllers\frontendController\companyController::class, 'privacyPolicy']);
 
+
+Route::group(['prefix' => 'super-admin','middleware' => ['super_admin_check' ,'prevent-back-history']], function () {
+    //dashboard
+    Route::get('/dashboard', [App\Http\Controllers\SuperAdmin\dashboardController::class, 'dashboard'])->name('super-admin.dashboard');
+    Route::get('/company-list', [App\Http\Controllers\SuperAdmin\companyController::class, 'companyList'])->name('super-admin.companyList');
+    Route::get('/holiday-list', [App\Http\Controllers\SuperAdmin\companyController::class, 'holidayList'])->name('super-admin.holidayList');
+});
