@@ -90,13 +90,20 @@ class holidayController extends Controller
 
     private function storeHoliday($date, $reason)
     {
-        $holiday = new Holiday();
-        $holiday->date = $date;
-        $holiday->reason = $reason;
-        $holiday->company_id = auth()->user()->company_id;
-        $holiday->save();
-
-        return $holiday;
+        if(auth()->user()->role == 3){
+            $holiday = new Holiday();
+            $holiday->date = $date;
+            $holiday->reason = $reason;
+            $holiday->save();
+            return $holiday;
+        }else{
+            $holiday = new Holiday();
+            $holiday->date = $date;
+            $holiday->reason = $reason;
+            $holiday->company_id = auth()->user()->company_id;
+            $holiday->save();
+            return $holiday;
+        }
     }
 
     private function updateHolidayData($id, $date, $reason)
