@@ -171,6 +171,7 @@ Route::delete('/delete/weekend', [App\Http\Controllers\weekendController::class,
 Route::post('add-holiday', [App\Http\Controllers\holidayController::class, 'createHoliday'])->name('createHoliday');
 Route::post('/edit/holiday/{id}', [App\Http\Controllers\holidayController::class, 'updateHoliday'])->name('updateHoliday');
 Route::post('/delete/holiday/{id}', [App\Http\Controllers\holidayController::class, 'deleteHoliday'])->name('deleteHoliday');
+Route::get('/holiday-details/{id}', [App\Http\Controllers\holidayController::class, 'holidayDetails'])->name('holidayDetails');
 
 //Office-hour / officeSrtting
 Route::post('add-office-hour', [App\Http\Controllers\attendanceSettingsController::class, 'createOfficeHour'])->name('createOfficeHour');

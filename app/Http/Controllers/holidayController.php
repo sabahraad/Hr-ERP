@@ -139,4 +139,19 @@ class holidayController extends Controller
         ]);
     }
 
+    public function holidayDetails($id){
+        $data = Holiday::find($id);
+        if(!$data){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],400);
+        }else{
+            return response()->json([
+                'message'=>'Holiday Details',
+                'data'=>$data
+            ],200);
+        }
+    }
+
 }
