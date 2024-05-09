@@ -15,11 +15,12 @@ class SuperAdminCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!session('access_token') && session('role') !== 3) {
+        if (session()->has('access_token') && !empty(session()->get('access_token')) && session('role') == 3) {
+            return $next($request);
+        }
+        else{
             return redirect('/login')->with('error', 'You do not have permission to log in.');
         }
-
-        return $next($request);
         
     }
 }
