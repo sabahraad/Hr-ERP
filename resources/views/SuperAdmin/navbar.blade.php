@@ -7,27 +7,23 @@
 								<span>Main</span>
 							</li>
 							<li>
-								<a href="{{route('dashboard')}}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
+								<a href="{{route('super-admin.dashboard')}}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
 								
 							</li>
 
 							<li class="menu-title"> 
 								<span>Company</span>
 							</li>
-							<li class="submenu">
-								<a href="#"><i class="la la-institution"></i> <span> Company</span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="{{route('company')}}">Company Details</a></li>
-									<li><a href="{{route('officeLocation')}}">Office Location</a></li>
+							<li>
+								<a href="{{route('super-admin.companyList')}}"><i class="la la-institution"></i> <span> Company List</span></a>
 								
-								</ul>
 							</li>
 							
 							<li class="menu-title"> 
-								<span>Employees</span>
+								<span>Holidays</span>
 							</li>
 							<li>
-								<a href="{{route('employee')}}" ><i class="la la-users"></i> <span> All Employees</span></a>
+								<a href="{{route('super-admin.holidayList')}}" ><i class="la la-users"></i> <span> Set Holiday</span></a>
 								
 							</li>
 
@@ -35,7 +31,7 @@
 								<span>Leave</span>
 							</li>
 							<li>
-								<a href="{{route('allLeaveApplication')}}"><i class="la la-ticket"></i> <span> Leave Application List </span></a>
+								<a href="#"><i class="la la-ticket"></i> <span> Leave Application List </span></a>
 								
 							</li>
 							
@@ -43,7 +39,7 @@
 								<span>Attendance</span>
 							</li>
 							<li>
-								<a href="{{route('attendanceList')}}"><i class="la la-houzz"></i> <span>Attendance List</span></a>
+								<a href="#"><i class="la la-houzz"></i> <span>Attendance List</span></a>
 								
 							</li>
 
@@ -51,14 +47,14 @@
 								<span>Notice</span>
 							</li>
 							<li> 
-								<a href="{{route('officeNotice')}}"><i class="la la-bullhorn"></i> <span> Office Notice</span></a>
+								<a href="#"><i class="la la-bullhorn"></i> <span> Office Notice</span></a>
 							</li>
 
 							<li class="menu-title"> 
 								<span>Expense</span>
 							</li>
 							<li> 
-								<a href="{{route('expenseList')}}"><i class="las la-coins"></i><span>Expense List</span></a>
+								<a href="#"><i class="las la-coins"></i><span>Expense List</span></a>
 							</li>
 
 							<li class="menu-title"> 
@@ -68,32 +64,32 @@
 								<a href="#"><i class="la la-cog"></i> <span> Settings</span> <span class="menu-arrow"></span></a>
 								<ul>
 									<li>
-										<a href="{{route('ShiftList')}}">Shift</a>
+										<a href="#">Shift</a>
 									</li>
 									<li class="submenu">
 										<a href="#"><span>Attendance Settings</span> <span class="menu-arrow"></span></a>
 											<ul>
-												<li><a href="{{route('attendanceSetting')}}">Office Time</a></li>
-												<li><a href="{{route('attendanceType')}}">Attendance Type</a></li>
+												<li><a href="#">Office Time</a></li>
+												<li><a href="#">Attendance Type</a></li>
 											</ul>
 									</li>
 									<li class="submenu">
 										<a href="#"> <span> Leave Settings</span> <span class="menu-arrow"></span></a>
 											<ul>
-												<li><a href="{{route('leaveList')}}">Leave Type</a></li>
-												<li><a href="{{route('leaveApprover')}}">Leave Approver</a></li>
+												<li><a href="#">Leave Type</a></li>
+												<li><a href="#">Leave Approver</a></li>
 											</ul>
 									</li>
-									<li><a href="{{route('ipList')}}">IP/Wifi Settings</a></li>
+									<li><a href="#">IP/Wifi Settings</a></li>
 									<li class="submenu">
 										<a href="#"> <span> Employee Settings</span> <span class="menu-arrow"></span></a>
 											<ul>
-												<li><a href="{{route('department')}}">Departments</a></li>
-												<li><a href="{{route('designation')}}">Designations</a></li>
+												<li><a href="#">Departments</a></li>
+												<li><a href="#">Designations</a></li>
 											</ul>
 									</li>
-									<li><a href="{{route('weekendlist')}}">Weekend</a></li>
-									<li><a href="{{route('holidays')}}">Holiday</a></li>
+									<li><a href="#">Weekend</a></li>
+									<li><a href="#">Holiday</a></li>
 								</ul>
 							</li>
 							
@@ -104,19 +100,19 @@
 							<li class="submenu">
 								<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="{{route('salarySetting')}}">Salary Setting</a></li>
-									<li><a href="{{route('payslip')}}"> Salary List </a></li>
-									<li><a href="{{route('increment')}}"> Increment </a></li>
-									<li><a href="{{route('incrementHistory')}}"> Increment History</a></li>
+									<li><a href="#">Salary Setting</a></li>
+									<li><a href="#"> Salary List </a></li>
+									<li><a href="#"> Increment </a></li>
+									<li><a href="#"> Increment History</a></li>
 								</ul>
 							</li>
 							<li> 
-								<a href="{{route('timelineSetting')}}"><i class="fas fa-clock"></i> <span>Timeline</span></a>
+								<a href="#"><i class="fas fa-clock"></i> <span>Timeline</span></a>
 							</li>
 							<li class="submenu">
 								<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
 								<ul>
-									<li><a href="{{route('expensesReport')}}"> Expense Report </a></li>
+									<li><a href="#"> Expense Report </a></li>
 									<!-- <li><a href="invoice-reports.html"> Invoice Report </a></li>
 									<li><a href="payments-reports.html"> Payments Report </a></li>
 									<li><a href="project-reports.html"> Project Report </a></li>
@@ -124,8 +120,8 @@
 									<li><a href="user-reports.html"> User Report </a></li>
 									<li><a href="employee-reports.html"> Employee Report </a></li>
 									<li><a href="payslip-reports.html"> Payslip Report </a></li> -->
-									<li><a href="{{route('customReport')}}"> Attendance Report </a></li>
-									<li><a href="{{route('leaveReport')}}"> Leave Report </a></li>
+									<li><a href="#"> Attendance Report </a></li>
+									<li><a href="#"> Leave Report </a></li>
 									<!-- <li><a href="daily-reports.html"> Daily Report </a></li> -->
 								</ul>
 							</li>

@@ -68,7 +68,7 @@
 				
 				<!-- Header Title -->
                 <div class="page-title-box">
-					<h3>HR System</h3>
+					<h3>HR System Super Admin Panel</h3>
                 </div>
 				<!-- /Header Title -->
 				
@@ -81,11 +81,11 @@
 								<!-- <span class="user-img"><img src="{{ asset('images/TimeWise-Logo.png') }}"  width="60" height="60" alt="User Image"> -->
 							<span class="status online"></span></span>
 							<!-- <span>{{auth()->user()}}</span> -->
-							<span>{{ session('name') }}</span>
+							<span>Admin</span>
 						</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="{{route('company')}}">Profile</a>
-							<a class="dropdown-item" href="{{route('showPasswordChange')}}">Password Change</a>
+							<a class="dropdown-item" href="#">Profile</a>
+							<a class="dropdown-item" href="#">Password Change</a>
 							<a class="dropdown-item" href="{{route('logout')}}">Logout</a>
 						</div>
 					</li>
@@ -96,7 +96,7 @@
 				<div class="dropdown mobile-user-menu">
 					<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a class="dropdown-item" href="{{route('company')}}"> Profile</a>
+						<a class="dropdown-item" href="#"> Profile</a>
 						<!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
 						<a class="dropdown-item" href="{{route('logout')}}">Logout</a>
 					</div>

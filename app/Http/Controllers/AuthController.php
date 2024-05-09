@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Mockdetails;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TimelineSetting;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -133,10 +134,22 @@ class AuthController extends Controller
                         ->join("departments","departments.dept_id","=","employees.dept_id")
                         ->join("designations","designations.designation_id","=","employees.designation_id")
                         ->get(['employees.*', 'users.email','departments.deptTitle','designations.desigTitle','companies.companyName']);
+        
+        $emp_id = Employee::where('id',$id)->value('emp_id');
+
+        $fatch_time = TimelineSetting::where('emp_id',$emp_id)->value('fetch_time');
+        if(!$fatch_time){
+            $timeLine = false;
+        }else{
+            $timeLine = true;
+        }
+
         return response()->json([
             'message' => 'User Deatils',
             'data' => Auth()->user(),
-            'emp_details'=> $emp_details
+            'emp_details'=> $emp_details,
+            'timeLine' => $timeLine,
+            'fatch_time' => $fatch_time
         ],Response::HTTP_OK);
             
     }

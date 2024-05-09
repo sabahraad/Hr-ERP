@@ -49,10 +49,16 @@
                                         <td >
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_holiday"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Edit</a>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_holiday"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Delete</a>
-                                                </div>
+                                                @if ($holiday['company_id'] != null)
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_holiday"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Edit</a>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_holiday"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Delete</a>
+                                                    </div>
+                                                @else
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <h4>You Can Not Edit This</h4>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

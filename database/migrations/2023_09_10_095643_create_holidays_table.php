@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('holidays_id');
             $table->date('date');
             $table->string('reason');
-            $table->bigInteger('company_id')->unsigned();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

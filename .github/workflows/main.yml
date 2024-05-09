@@ -37,3 +37,4 @@ jobs:
             find /www/wwwroot/timewisehr.com -type f -print0 | xargs -0 chmod 0644
             php artisan migrate
             php artisan storage:link
+            php artisan config:clear

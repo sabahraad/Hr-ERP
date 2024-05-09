@@ -90,13 +90,20 @@ class holidayController extends Controller
 
     private function storeHoliday($date, $reason)
     {
-        $holiday = new Holiday();
-        $holiday->date = $date;
-        $holiday->reason = $reason;
-        $holiday->company_id = auth()->user()->company_id;
-        $holiday->save();
-
-        return $holiday;
+        if(auth()->user()->role == 3){
+            $holiday = new Holiday();
+            $holiday->date = $date;
+            $holiday->reason = $reason;
+            $holiday->save();
+            return $holiday;
+        }else{
+            $holiday = new Holiday();
+            $holiday->date = $date;
+            $holiday->reason = $reason;
+            $holiday->company_id = auth()->user()->company_id;
+            $holiday->save();
+            return $holiday;
+        }
     }
 
     private function updateHolidayData($id, $date, $reason)
@@ -109,135 +116,15 @@ class holidayController extends Controller
         return $holiday;
     }
 
-    // public function createHoliday(Request $request){
-
-    //     $validator = Validator::make($request->all(), [
-    //         'start_date' => 'required|date',
-    //         'end_date' => 'required|date',
-    //         'reason' => 'required|string'
-    //     ]);
-        
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'error' => $validator->errors(),
-    //         ], 422);
-    //     }
-    //     $company_id= auth()->user()->company_id;
-    //     $startDate = Carbon::parse($request->start_date);
-    //     $endDate = Carbon::parse($request->end_date);
-    //     //Holiday Date List
-    //     if(($startDate <= $endDate) == true){
-    //         while ($startDate <= $endDate) {
-    //             $dateList[] = $startDate->toDateString();
-    //             $startDate->addDay();
-    //         }
-    //     }else{
-    //         return response()->json([
-    //             'message'=> 'Holiday End Date Can Not Be Smaller Then The Start Date'
-    //         ],400);
-    //     }
-    //     //get date and Day as key value pair
-    //     foreach ($dateList as $date) {
-    //         $carbonDate = Carbon::parse($date);
-    //         $dayNames[] = $carbonDate->format('l'); // 'l' format gives the full day name
-    //     }
-    //     $keyValueDateList = array_combine( $dateList,$dayNames);
-
-    //     $weekend=Weekend::where('company_id',$company_id)->first();
-    //     $data=$weekend->getAttributes();
-    //     $weekendDayNames = array_keys(array_filter($data, function($value) {
-    //         return $value === 1;
-    //     }));
-    //     $weekendDayNames = array_diff($weekendDayNames, ["company_id"]);
-        
-    //     foreach($weekendDayNames as $raw){
-    //         $dateListWithoutWeekend = array_filter($keyValueDateList, function($value) use ($raw) {
-    //             return $value !== $raw ;
-    //         });
-    //         $keyValueDateList = $dateListWithoutWeekend ;
-    //     }
-    //     $dateArray=array_keys($dateListWithoutWeekend );
-    //     $jsonData = json_encode($dateArray);
-    //     $data=new Holiday();
-    //     $data->date = $jsonData;
-    //     $data->reason = $request->reason;
-    //     $data->company_id = $company_id;
-    //     $data->save();
-
-    //     return response()->json([
-    //         'message'=> 'Holiday Created Successfully',
-    //         'data'=>$data
-    //     ],201);
-    // }
-
-    
-
-    // public function updateHoliday(Request $request,$id){
-
-    //     $validator = Validator::make($request->all(), [
-    //         'start_date' => 'required|date',
-    //         'end_date' => 'required|date',
-    //         'reason' => 'required|string'
-    //     ]);
-        
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'error' => $validator->errors(),
-    //         ], 422);
-    //     }
-    //     $company_id= auth()->user()->company_id;
-    //     $startDate = Carbon::parse($request->start_date);
-    //     $endDate = Carbon::parse($request->end_date);
-    //     //Holiday Date List
-    //     if(($startDate <= $endDate) == true){
-    //         while ($startDate <= $endDate) {
-    //             $dateList[] = $startDate->toDateString();
-    //             $startDate->addDay();
-    //         }
-    //     }else{
-    //         return response()->json([
-    //             'message'=> 'Holiday End Date Can Not Be Smaller Then The Start Date'
-    //         ],400);
-    //     }
-    //     //get date and Day as key value pair
-    //     foreach ($dateList as $date) {
-    //         $carbonDate = Carbon::parse($date);
-    //         $dayNames[] = $carbonDate->format('l'); // 'l' format gives the full day name
-    //     }
-    //     $keyValueDateList = array_combine( $dateList,$dayNames);
-
-    //     $weekend=Weekend::where('company_id',$company_id)->first();
-    //     $data=$weekend->getAttributes();
-    //     $weekendDayNames = array_keys(array_filter($data, function($value) {
-    //         return $value === 1;
-    //     }));
-    //     $weekendDayNames = array_diff($weekendDayNames, ["company_id"]);
-        
-    //     foreach($weekendDayNames as $raw){
-    //         $dateListWithoutWeekend = array_filter($keyValueDateList, function($value) use ($raw) {
-    //             return $value !== $raw ;
-    //         });
-    //         $keyValueDateList = $dateListWithoutWeekend ;
-    //     }
-    //     $dateArray=array_keys($dateListWithoutWeekend );
-    //     $jsonData = json_encode($dateArray);
-    //     $data=Holiday::find($id);
-    //     $data->date = $jsonData;
-    //     $data->reason = $request->reason;
-    //     $data->company_id = $company_id;
-    //     $data->save();
-
-    //     return response()->json([
-    //         'message'=> 'Holiday Updated Successfully',
-    //         'data'=>$data
-    //     ],201);
-
-    // }
-
     public function HolidayList(){
 
         $company_id= auth()->user()->company_id;
-        $data=Holiday::where('company_id',$company_id)->get();
+        $data=Holiday::where(function ($query) use ($company_id) {
+                        $query->where('company_id', $company_id)
+                            ->orWhereNull('company_id');
+                    })
+                    ->get();
+        
         return response()->json([
             'message'=>'Holiday List',
             'data'=>$data
@@ -250,6 +137,21 @@ class holidayController extends Controller
         return response()->json([
             'message' => 'Holiday deleted successfully'
         ]);
+    }
+
+    public function holidayDetails($id){
+        $data = Holiday::find($id);
+        if(!$data){
+            return response()->json([
+                'message'=>'No data found',
+                'data'=>$data
+            ],400);
+        }else{
+            return response()->json([
+                'message'=>'Holiday Details',
+                'data'=>$data
+            ],200);
+        }
     }
 
 }

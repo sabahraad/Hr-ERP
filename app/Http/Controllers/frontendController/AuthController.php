@@ -26,7 +26,7 @@ class AuthController extends Controller
     }
 
     public function loginForm(){
-        if(session()->has('access_token') && session('access_token') !== null){
+        if(session()->has('access_token') && session('access_token') !== null && session('access_token') == 2){
             return redirect()->route('dashboard'); 
         }else{
             return view('frontend.login');
@@ -103,6 +103,10 @@ class AuthController extends Controller
             }
             // dd($data);
             $access_token = $data['access_token'];
+            $role = $data['user']['role'];
+            if($role == 1){
+                return redirect('/login-form')->with('error','You Do Not Have Permission.'); 
+            }
             session([
                 'access_token' => $access_token,
                 'role' => $data['user']['role'],
@@ -110,11 +114,18 @@ class AuthController extends Controller
                 'name' => $data['user']['name'],
                 'email' =>$data['user']['email'],
             ]);
+            if($role == 2){
+                return redirect()->route('dashboard');
+            }else{
+                return redirect()->route('super-admin.dashboard'); 
+            }
         }else{
             $access_token = session('access_token');
+            $role = session('role');
+            return redirect()->route('dashboard'); 
         }
+        // return redirect()->route('dashboard'); 
         
-        return redirect()->route('dashboard'); 
     }
     
 

@@ -15,7 +15,8 @@ class RoleCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->role == 2){
+        $allowedRoles = [2, 3];
+        if(auth()->check() && in_array(auth()->user()->role, $allowedRoles)){
             return $next($request);
         }else{
             return response()->json([

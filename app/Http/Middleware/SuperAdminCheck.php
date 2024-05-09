@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAccessToken
+class SuperAdminCheck
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class CheckAccessToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session()->has('access_token') && !empty(session()->get('access_token')) && session('role') == 2) {
+        if (session()->has('access_token') && !empty(session()->get('access_token')) && session('role') == 3) {
             return $next($request);
         }
         else{
