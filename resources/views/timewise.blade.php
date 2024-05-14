@@ -3,13 +3,18 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Best HR Solution">
+        <meta name="description" content="TimeWise HR Information Solution empowers businesses with a comprehensive HR management system, integrating time tracking, payroll, performance management, and employee self-service. Streamline your HR processes and boost productivity with our intuitive and customizable platform. Try TimeWise today!">
 		<meta name="keywords" content="HR Solution,TimeWise,Bangladesh,Human Resources Management,HR Software,Time Management,Payroll Management,Employee Management,Attendance Tracking
                                       ,Leave Management,Performance Evaluation,Bangladeshi HR Solution,HR Automation,HRIS (Human Resources Information System),Time Tracking,Employee Engagement
                                       ,HR Technology,Compliance Management,Bangladeshi Businesses,HR AnalyticsComplete HR Solution, HRIS, Cost Effective HR Solution, SME Friendly HR Solution,
-                                      SME Friendly HRIS, Human Resource Management system for enterprises.">
+                                      SME Friendly HRIS, Human Resource Management system for enterprises, HRIS
+                                    Human Resources Information System,HR software,HR management system,Employee management software,
+                                    Personnel management system,HRIS solutions,HR technology,HRIS platform,Cloud-based HRIS,
+                                    HRIS features,Employee data management,Payroll integration,,Time and attendance tracking
+                                    Performance management software,Recruitment software,Onboarding software,Employee self-service portal,
+                                    HR analytics,Compliance management.">
         <meta name="author" content="aamarDigital Solution Limited">
-        <title>Time Wise</title>
+        <title>TimeWise</title>
 
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Icon-512x512.png') }}">
