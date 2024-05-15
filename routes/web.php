@@ -76,7 +76,10 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     
     //dashboard
     Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
+    Route::get('/presentEmployeeList', [App\Http\Controllers\frontendController\timeWiseController::class, 'presentEmployeeList'])->name('presentEmployeeList');
+    Route::get('/absentEmployeeList', [App\Http\Controllers\frontendController\timeWiseController::class, 'absentEmployeeList'])->name('absentEmployeeList');
 
+    
     //Shift
     Route::get('/shift-list', [App\Http\Controllers\frontendController\shiftController::class, 'ShiftList'])->name('ShiftList');
     Route::get('/add-shift', [App\Http\Controllers\frontendController\shiftController::class, 'addShift'])->name('addShift');
