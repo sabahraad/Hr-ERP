@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\frontendController;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Employee;
@@ -118,5 +118,38 @@ class timeWiseController extends Controller
             // Log the exception or handle it as needed
             return response()->json(['message' => 'Unexpected Error', 'error' => $e->getMessage()], 500);
         }
+    }
+
+    public function presentEmployeeList(){
+        $company_id = session('company_id');
+        $currentDate = date('Y-m-d');
+        $data = Attendance::select(
+                        'attendances.*',
+                        'employees.name as employee_name',
+                        'editedByEmployee.name as edited_by_name'
+                    )
+                    ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
+                    ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
+                    ->whereDate('attendances.created_at', '>=', $currentDate)
+                    ->whereDate('attendances.created_at', '<=', $currentDate)
+                    ->where('attendances.company_id', $company_id)
+                    ->orderBy('attendances.emp_id')
+                    ->get();
+        return view('frontend.presentEmployeeList',compact('data'));
+    }
+
+    public function absentEmployeeList(){
+        $company_id = session('company_id');
+        $currentDate = date('Y-m-d');
+        $data = Employee::where('company_id', $company_id)
+            ->whereNotExists(function ($query) use ($currentDate) {
+                $query->select(DB::raw(1))
+                    ->from('attendances')
+                    ->whereRaw('attendances.emp_id = employees.emp_id')
+                    ->whereDate('attendances.created_at', $currentDate);
+            })
+            ->pluck('emp_id','name');
+
+        return view('frontend.absentEmployeeList',compact('data'));
     }
 }
