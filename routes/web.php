@@ -117,4 +117,13 @@ Route::group(['prefix' => 'super-admin','middleware' => ['super_admin_check' ,'p
     Route::get('/dashboard', [App\Http\Controllers\SuperAdmin\dashboardController::class, 'dashboard'])->name('super-admin.dashboard');
     Route::get('/company-list', [App\Http\Controllers\SuperAdmin\companyController::class, 'companyList'])->name('super-admin.companyList');
     Route::get('/holiday-list', [App\Http\Controllers\SuperAdmin\companyController::class, 'holidayList'])->name('super-admin.holidayList');
+    
+    Route::get('/package-list', [App\Http\Controllers\SuperAdmin\packageController::class, 'packageList'])->name('super-admin.packageList');
+    
+   
+    Route::post('/create-package', [App\Http\Controllers\SuperAdmin\packageController::class, 'createPackage'])->name('super-admin.createPackage');
+    Route::get('/edit-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'editPackageform'])->name('super-admin.editPackageform');
+    Route::post('/edit-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'editPackage'])->name('super-admin.editPackage');
+    Route::get('/delete-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'deletePackage'])->name('super-admin.deletePackage');
+
 });

@@ -28,10 +28,10 @@
 							</li>
 
 							<li class="menu-title"> 
-								<span>Leave</span>
+								<span>Package</span>
 							</li>
 							<li>
-								<a href="#"><i class="la la-ticket"></i> <span> Leave Application List </span></a>
+								<a href="{{route('super-admin.packageList')}}"><i class="la la-ticket"></i> <span> Package List</span></a>
 								
 							</li>
 							
