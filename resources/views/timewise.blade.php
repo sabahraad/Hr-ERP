@@ -366,8 +366,11 @@
                     </div>
 
                     <div class="plan-list" data-aos="fade-up" data-aos-duration="2000">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3" >
+                    <div class="row">
+
+                        @foreach ($data as $package )
+
+                            <div class="col-lg-3 col-md-3 mb-5" >
                                 <div class="free-plan card">
                                     <div class="card-body price-plans">
                                         <div class="planimagebackground">
@@ -382,126 +385,33 @@
                                         <div class="planimagecircleright">
                                             <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
                                         </div>
-
-                                        <small>Package 1</small>
-                                        <h3>BDT 2000</h3>
-                                        <em>100 BDT per user </em>
-                                        
-                                        <ul class="project-plan">
-                                            <li> 1 - 20 Users</li>
-                                            <li>Excl. VAT & Tax</li>
-                                            <li>Free Update</li>
-                                            <li>24/7 Support</li>
-                                            <li>No Installation Charge*</li>
-                                            <li>No hidden Charges*</li>
-                                        </ul>
+                                            <small>{{$package->package_name}}</small>
+                                           
+                                            @if ($package->package_price == null)
+                                            <h3>Call For Price</h3>
+                                            @else
+                                            <h3>BDT {{$package->package_price}}</h3>
+                                            @endif
+                                            @if ($package->per_user_price == null)
+                                            <em>Price Negotiable</em>
+                                            @else
+                                            <em>{{$package->per_user_price}} BDT per user </em>
+                                            @endif
+                                            
+                                            <ul class="project-plan">
+                                                {!!$package->description!!}
+                                            </ul>
                                         <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
                                         
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3" >
-                                <div class="free-plan card">
-                                    <div class="card-body price-plans">
-                                        <div class="planimagebackground">
-                                            <img src="{{asset('images/plan-Intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagebackground-hidden">
-                                            <img src="{{asset('images/hidden-intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleleft">
-                                            <img src="{{asset('images/plan-circle-top.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleright">
-                                            <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
-                                        </div>
-
-                                        <small>Package 2</small>
-                                        <h3>BDT 4000 </h3>
-                                        <em> BDT 80 per user</em>
-                                        <ul class="project-plan">
-                                            <li> 1 - 50 Users</li>
-                                            <li>Excl. VAT & Tax</li>
-                                            <li>Free Update</li>
-                                            <li>24/7 Support</li>
-                                            <li>No Installation Charge*</li>
-                                            <li>No hidden Charges*</li>
-                                        </ul>
-                                        <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3" >
-                                <div class="free-plan card">
-                                    <div class="card-body price-plans">
-                                        <div class="planimagebackground">
-                                            <img src="{{asset('images/plan-Intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagebackground-hidden">
-                                            <img src="{{asset('images/hidden-intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleleft">
-                                            <img src="{{asset('images/plan-circle-top.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleright">
-                                            <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
-                                        </div>
-
-                                        <small>Package 3</small>
-                                        <h3>BDT 6000</h3>
-                                        <em> BDT 60 per user</em>
-                                        <ul class="project-plan">
-                                            <li> 1 - 100 Users</li>
-                                            <li>Excl. VAT & Tax</li>
-                                            <li>Free Update</li>
-                                            <li>24/7 Support</li>
-                                            <li>No Installation Charge*</li>
-                                            <li>No hidden Charges*</li>
-                                        </ul>
-                                        <a class="btn btn-primary price-plan btn-sm" href="{{route('registrationForm')}}" role="button">Register Now</a>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 "  >
-                                <div class="free-plan card">
-                                    <div class="card-body price-plans">
-                                        <div class="planimagebackground">
-                                            <img src="{{asset('images/plan-Intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagebackground-hidden">
-                                            <img src="{{asset('images/hidden-intersect.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleleft">
-                                            <img src="{{asset('images/plan-circle-top.png')}}" alt="img">
-                                        </div>
-                                        <div class="planimagecircleright">
-                                            <img src="{{asset('images/plan-circle-bottom.png')}}" alt="img">
-                                        </div>
-                                        <div class="recommended-price">Recommended</div>
-                                        <small>Package 4</small>
-                                        <h3 style="font-size: 40px;margin-bottom: 36px;">Call For Price</h3>
-                                        <em> Price Negotiable </em>
-                                        <ul class="project-plan">
-                                            <li> 1 - 100 ++ Users</li>
-                                            <li>Excl. VAT & Tax</li>
-                                            <li>Free Update</li>
-                                            <li>24/7 Support</li>
-                                            <li>No Installation Charge*</li>
-                                            <li>No hidden Charges*</li>
-                                        </ul>
-                                        <a class="btn btn-primary price-plan btn-sm" href="#contactus" role="button">Contact US</a>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                @endforeach
                 </div>
-            </div>
+            </div>  
         </div>
-        <!-- / Pricing List -->
+    </div>
+    <!-- / Pricing List -->
 
         <!-- Our Reviews -->
         <div class="reviews" id="reviews">

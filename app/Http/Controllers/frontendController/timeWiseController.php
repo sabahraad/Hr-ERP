@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\leaveApplication;
 use App\Models\Weekend;
 use App\Models\Holiday;
+use App\Models\Package;
 use Illuminate\Database\QueryException;
 use Exception;
 use Carbon\Carbon;
@@ -16,7 +17,8 @@ use App\Utils\BaseUrl;
 class timeWiseController extends Controller
 {
     public function timeWise(){
-        return view('timewise');
+        $data = Package::all();
+        return view('timewise',compact('data'));
     }
 
     public function dashboard(){
