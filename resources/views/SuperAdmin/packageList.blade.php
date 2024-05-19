@@ -80,7 +80,7 @@
                                             <a class="dropdown-item edit-employee" href="{{route('super-admin.editPackageform', ['id' => $package->packages_id])}}"  data-id="{{ $package->packages_id }}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
-                                            <a class="dropdown-item delete-employee" href="{{route('super-admin.deletePackage', ['id' => $package->packages_id])}}"  data-id="{{ $package->packages_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $package->packages_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
                                 </td>
@@ -146,6 +146,34 @@
     </div>
 </div>
 <!-- /Add Employee Modal -->
+<!-- Delete Employee Modal -->
+<div class="modal custom-modal fade" id="delete_employee" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Category</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+                                        <form action="{{route('super-admin.deletePackage')}}" method="post">
+                                            @csrf
+                                            <input id ="packages_id" class="form-control" name="packages_id" type="hidden">
+                                            <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
+                                        </form>										
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Employee Modal -->
 
 
 <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
@@ -156,6 +184,11 @@ $(document).ready(function() {
         "order": [[ 0, "desc" ]] 
     });
     CKEDITOR.replace('description');
+
+    $(document).on('click', '.delete-employee', function(){
+        var packages_id = $(this).data('id');
+        $('#packages_id').val(packages_id);
+    });
 })
 
 
