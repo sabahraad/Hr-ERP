@@ -9,5 +9,9 @@ class Vendor extends Model
 {
     use HasFactory;
     protected $primaryKey = 'vendors_id';
-
+    
+    public function requisitionCategory()
+    {
+        return $this->belongsTo(RequisitionCategory::class, 'requisition_categories_id', 'requisition_categories_id');
+    }
 }
