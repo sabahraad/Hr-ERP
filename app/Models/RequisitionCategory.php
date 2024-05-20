@@ -15,4 +15,9 @@ class RequisitionCategory extends Model
         return $this->hasMany(Product::class, 'requisition_categories_id', 'requisition_categories_id');
     }
 
+    public function vendors()
+    {
+        return $this->hasMany(Vendor::class, 'requisition_categories_id', 'requisition_categories_id');
+    }
+
 }

@@ -139,6 +139,16 @@ Route::group(['prefix' => 'super-admin','middleware' => ['super_admin_check' ,'p
     Route::post('/delete-product', [App\Http\Controllers\Requisition\productController::class, 'productDelete'])->name('super-admin.productDelete');
     Route::post('/find-product', [App\Http\Controllers\Requisition\productController::class, 'findProduct'])->name('super-admin.findProduct');
 
+    Route::get('/vendor-list', [App\Http\Controllers\Requisition\vendorController::class, 'vendorList'])->name('super-admin.vendorList');
+    Route::post('/create-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'createVendor'])->name('super-admin.createVendor');
+    Route::get('/edit-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorEdit'])->name('super-admin.vendorEdit');
+    Route::post('/update-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorUpdate'])->name('super-admin.vendorUpdate');
+    Route::post('/delete-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'vendorDelete'])->name('super-admin.vendorDelete');
+    Route::post('/find-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'findVendor'])->name('super-admin.findVendor');
+    
+    Route::get('/requisition-list', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionList'])->name('super-admin.requisitionList');
+    Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('super-admin.approveRequisition');
+
 });
 
 
