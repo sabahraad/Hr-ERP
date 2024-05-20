@@ -111,6 +111,7 @@ class AuthController extends Controller
             session([
                 'access_token' => $access_token,
                 'role' => $data['user']['role'],
+                'id' => $data['user']['id'],
                 'company_id' => $data['user']['company_id'],
                 'name' => $data['user']['name'],
                 'email' =>$data['user']['email'],

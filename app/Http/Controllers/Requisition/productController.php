@@ -15,7 +15,7 @@ class productController extends Controller
         $data->product_description = $request->product_description;
         $data->requisition_categories_id = $request->requisition_categories_id;
         $data->save();
-        return redirect()->back()->with('success','Product Created Successfully');
+        return redirect()->route('super-admin.productList')->with('success','Product Created Successfully');
     }
 
     public function productList(){

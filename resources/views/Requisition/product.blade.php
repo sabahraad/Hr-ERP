@@ -56,7 +56,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="inputText4" class="col-form-label">Select Category</label>
-                                <select name="dept_id" id="dept_id" class="select">
+                                <select name="requisition_categories_id" id="requisition_categories_id" class="form-select" required>
                                     <option selected disabled>Open this to select Category</option>
                                     @foreach ($data as $category)
                                         <option value="{{$category->requisition_categories_id}}">{{$category->category_name}}</option>
