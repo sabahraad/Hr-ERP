@@ -26,8 +26,10 @@ class AuthController extends Controller
     }
 
     public function loginForm(){
-        if(session()->has('access_token') && session('access_token') !== null && session('access_token') == 2){
+        if(session()->has('access_token') && session('access_token') !== null && session('role') == 2){
             return redirect()->route('dashboard'); 
+        }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 3){
+            return redirect()->route('super-admin.dashboard'); 
         }else{
             return view('frontend.login');
         }
@@ -71,7 +73,6 @@ class AuthController extends Controller
 
     public function login(Request $request){
         if(!session('access_token')){
-
             $email = $request->email;
             $password = $request->password;
             $baseUrl = $this->baseUrl;
@@ -110,6 +111,7 @@ class AuthController extends Controller
             session([
                 'access_token' => $access_token,
                 'role' => $data['user']['role'],
+                'id' => $data['user']['id'],
                 'company_id' => $data['user']['company_id'],
                 'name' => $data['user']['name'],
                 'email' =>$data['user']['email'],

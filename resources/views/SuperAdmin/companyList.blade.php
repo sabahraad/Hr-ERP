@@ -32,19 +32,20 @@
                 <table class="table table-striped custom-table" id="empTable">
                     <thead>
                         <tr>
-                            <th>Company ID</th>
+                            <th>#</th>
                             <th>Company Name</th>
                             <th>Contact Number</th>
+                            <th>Registration Date</th>
                             <th>Company Details</th>
                             <th>Address</th>
                             <th class="text-end no-sort">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($data as $company)
+                    @foreach ($data as $key => $company)
                             
                             <tr>
-                                <td>{{$company->company_id}}</td>
+                                <td>{{$key+1}}</td>
                                 <td>
                                     <h2 class="table-avatar">
                                         <a href="#" class="avatar"><img src="{{asset($company->logo)}}" alt="User Image"></a>
@@ -52,6 +53,7 @@
                                     </h2>
                                 </td>
                                 <td>{{$company->contactNumber ?? 'N/A'}}</td>
+                                <td>{{$company->created_at ?? 'N/A'}}</td>
                                 <td>{{$company->companyDetails ?? 'N/A'}}</td>
                                 <td>{{$company->address ?? 'N/A'}}</td>
                                 <td class="text-end">

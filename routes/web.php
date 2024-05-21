@@ -124,6 +124,31 @@ Route::group(['prefix' => 'super-admin','middleware' => ['super_admin_check' ,'p
     Route::post('/create-package', [App\Http\Controllers\SuperAdmin\packageController::class, 'createPackage'])->name('super-admin.createPackage');
     Route::get('/edit-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'editPackageform'])->name('super-admin.editPackageform');
     Route::post('/edit-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'editPackage'])->name('super-admin.editPackage');
-    Route::get('/delete-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'deletePackage'])->name('super-admin.deletePackage');
+    Route::post('/delete-package', [App\Http\Controllers\SuperAdmin\packageController::class, 'deletePackage'])->name('super-admin.deletePackage');
+
+    Route::get('/category-list', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryList'])->name('super-admin.categoryList');
+    Route::post('/create-category', [App\Http\Controllers\Requisition\CategoryController::class, 'createCategory'])->name('super-admin.createCategory');
+    Route::get('/edit-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryEdit'])->name('super-admin.categoryEdit');
+    Route::post('/update-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryUpdate'])->name('super-admin.categoryUpdate');
+    Route::post('/delete-category', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryDelete'])->name('super-admin.categoryDelete');
+
+    Route::get('/product-list', [App\Http\Controllers\Requisition\productController::class, 'productList'])->name('super-admin.productList');
+    Route::post('/create-product', [App\Http\Controllers\Requisition\productController::class, 'createProduct'])->name('super-admin.createProduct');
+    Route::get('/edit-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productEdit'])->name('super-admin.productEdit');
+    Route::post('/update-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productUpdate'])->name('super-admin.productUpdate');
+    Route::post('/delete-product', [App\Http\Controllers\Requisition\productController::class, 'productDelete'])->name('super-admin.productDelete');
+    Route::post('/find-product', [App\Http\Controllers\Requisition\productController::class, 'findProduct'])->name('super-admin.findProduct');
+
+    Route::get('/vendor-list', [App\Http\Controllers\Requisition\vendorController::class, 'vendorList'])->name('super-admin.vendorList');
+    Route::post('/create-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'createVendor'])->name('super-admin.createVendor');
+    Route::get('/edit-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorEdit'])->name('super-admin.vendorEdit');
+    Route::post('/update-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorUpdate'])->name('super-admin.vendorUpdate');
+    Route::post('/delete-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'vendorDelete'])->name('super-admin.vendorDelete');
+    Route::post('/find-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'findVendor'])->name('super-admin.findVendor');
+    
+    Route::get('/requisition-list', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionList'])->name('super-admin.requisitionList');
+    Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('super-admin.approveRequisition');
 
 });
+
+

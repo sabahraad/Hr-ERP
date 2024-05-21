@@ -43,8 +43,8 @@ class packageController extends Controller
         return redirect()->route('super-admin.packageList')->with('success','Package Updated');
     }
 
-    public function deletePackage($id){
-        Package::destroy($id);
+    public function deletePackage(Request $request){
+        Package::destroy($request->packages_id);
         return redirect()->back()->with('success','Package Deleted Successfully');
     }
 }

@@ -113,6 +113,12 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/timeline-list', [App\Http\Controllers\timelineController::class, 'timelineList']);
     Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
 
+    //requisition
+    Route::get('/catagory-list', [App\Http\Controllers\Requisition\requisitionController::class, 'catagoryList']);
+    Route::get('/product-list/{id}', [App\Http\Controllers\Requisition\requisitionController::class, 'productList']);
+    Route::post('/requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'requisition']);
+
+
 });
 
 //All the routes are only accessable for HR 
