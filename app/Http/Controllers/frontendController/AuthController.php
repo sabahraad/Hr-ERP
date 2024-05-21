@@ -103,6 +103,10 @@ class AuthController extends Controller
             $response = curl_exec($curl);
             curl_close($curl);
             $data = json_decode($response,true);
+            dd($data);
+            if($data == null){
+                return redirect('/login-form')->with('error','Please try again.'); 
+            }
             if($data['status'] == 401){
                 return redirect('/login-form')->with('error','Invalid credentials. Please try again.'); 
             }
