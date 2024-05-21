@@ -20,7 +20,7 @@ class vendorController extends Controller
         }
         $data->requisition_categories_id = $request->requisition_categories_id;
         $data->save();
-        return redirect()->route('super-admin.vendorList')->with('success','Vendor Created Successfully');
+        return redirect()->route('vendorList')->with('success','Vendor Created Successfully');
     }
 
     public function vendorList(){
@@ -56,11 +56,11 @@ class vendorController extends Controller
             $data->agreement_attachment = 'storage/' . $pdfPath;
         }        
         $data->save();
-        return redirect()->route('super-admin.vendorList')->with('success','Vendor Updated');
+        return redirect()->route('vendorList')->with('success','Vendor Updated');
     }
 
     public function vendorDelete(Request $request){
         Vendor::destroy($request->vendors_id);
-        return redirect()->route('super-admin.vendorList')->with('success','Vendor Deleted Successfully');
+        return redirect()->route('vendorList')->with('success','Vendor Deleted Successfully');
     }
 }

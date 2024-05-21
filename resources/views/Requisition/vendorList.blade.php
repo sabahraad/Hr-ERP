@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')    
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -52,7 +52,7 @@
         <!-- error show -->
         <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
                     <div class="card-body ">
-                        <form action="{{route('super-admin.findVendor')}}" method="post">
+                        <form action="{{route('findVendor')}}" method="post">
                             @csrf
                             <div class="form-group">
                                 <label for="inputText4" class="col-form-label">Select Category</label>
@@ -102,7 +102,7 @@
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-employee" href="{{route('super-admin.vendorEdit',['id' => $vendor->vendors_id])}}">
+                                            <a class="dropdown-item edit-employee" href="{{route('vendorEdit',['id' => $vendor->vendors_id])}}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $vendor->vendors_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
@@ -130,7 +130,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('super-admin.createVendor')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('createVendor')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">
@@ -181,7 +181,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-                                        <form action="{{route('super-admin.vendorDelete')}}" method="post">
+                                        <form action="{{route('vendorDelete')}}" method="post">
                                             @csrf
                                             <input id ="vendors_id" class="form-control" name="vendors_id" type="hidden">
                                             <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>

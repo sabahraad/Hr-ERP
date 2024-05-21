@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')    
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -74,7 +74,7 @@
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-employee" href="{{route('super-admin.categoryEdit',['id'=>$category->requisition_categories_id])}}">
+                                            <a class="dropdown-item edit-employee" href="{{route('categoryEdit',['id'=>$category->requisition_categories_id])}}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $category->requisition_categories_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
@@ -102,7 +102,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('super-admin.createCategory')}}" method="post">
+                <form action="{{route('createCategory')}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">
@@ -136,13 +136,13 @@
 						<div class="modal-content">
 							<div class="modal-body">
 								<div class="form-header">
-									<h3>Delete Package</h3>
+									<h3>Delete Category</h3>
 									<p>Are you sure want to delete?</p>
 								</div>
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-                                        <form action="{{route('super-admin.deletePackage')}}" method="post">
+                                        <form action="{{route('categoryDelete')}}" method="post">
                                             @csrf
                                             <input id ="requisition_categories_id" class="form-control" name="requisition_categories_id" type="hidden">
                                             <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>

@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')    
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -52,7 +52,7 @@
         <!-- error show -->
         <div class="card" style="border: 0;box-shadow: 0 0 20px 0 rgba(76,87,125,.2);">
                     <div class="card-body ">
-                        <form action="{{route('super-admin.findProduct')}}" method="post">
+                        <form action="{{route('findProduct')}}" method="post">
                             @csrf
                             <div class="form-group">
                                 <label for="inputText4" class="col-form-label">Select Category</label>
@@ -96,7 +96,7 @@
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit-employee" href="{{route('super-admin.productEdit',['id' => $product->products_id])}}">
+                                            <a class="dropdown-item edit-employee" href="{{route('productEdit',['id' => $product->products_id])}}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $product->products_id }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
@@ -124,7 +124,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('super-admin.createProduct')}}" method="post">
+                <form action="{{route('createProduct')}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">
@@ -175,7 +175,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-                                        <form action="{{route('super-admin.productDelete')}}" method="post">
+                                        <form action="{{route('productDelete')}}" method="post">
                                             @csrf
                                             <input id ="products_id" class="form-control" name="products_id" type="hidden">
                                             <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>

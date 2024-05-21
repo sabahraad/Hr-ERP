@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -19,7 +19,7 @@
     </div>
         <div class="row">
             <div class="form-body">
-                <form action="{{route('super-admin.productUpdate',['id' => $data->products_id])}}" method="post">
+                <form action="{{route('productUpdate',['id' => $data->products_id])}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">

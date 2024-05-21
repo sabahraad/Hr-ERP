@@ -15,7 +15,7 @@ class productController extends Controller
         $data->product_description = $request->product_description;
         $data->requisition_categories_id = $request->requisition_categories_id;
         $data->save();
-        return redirect()->route('super-admin.productList')->with('success','Product Created Successfully');
+        return redirect()->route('productList')->with('success','Product Created Successfully');
     }
 
     public function productList(){
@@ -47,11 +47,11 @@ class productController extends Controller
         $data->product_description = $request->product_description ?? $data->product_description;
         // $data->requisition_categories_id = $data->requisition_categories_id ?? $data->requisition_categories_id;
         $data->save();
-        return redirect()->route('super-admin.productList')->with('success','Category Updated');
+        return redirect()->route('productList')->with('success','Category Updated');
     }
 
     public function productDelete(Request $request){
         Product::destroy($request->products_id);
-        return redirect()->route('super-admin.productList')->with('success','Category Deleted Successfully');
+        return redirect()->route('productList')->with('success','Category Deleted Successfully');
     }
 }

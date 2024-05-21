@@ -67,5 +67,8 @@ class Kernel extends HttpKernel
         'check_access_token' => \App\Http\Middleware\CheckAccessToken::class,
         'prevent-back-history' => \App\Http\Middleware\PreventBrowserBackHistroy::class,
         'super_admin_check' => \App\Http\Middleware\SuperAdminCheck::class,
+        'admin_check' => \App\Http\Middleware\adminCheck::class,
+        'finance_check' => \App\Http\Middleware\financeCheck::class,
+
     ];
 }

@@ -34,11 +34,11 @@ class CategoryController extends Controller
         $data->category_name = $request->category_name;
         $data->category_description = $request->category_description;
         $data->save();
-        return redirect()->route('super-admin.categoryList')->with('success','Category Updated');
+        return redirect()->route('categoryList')->with('success','Category Updated');
     }
 
     public function categoryDelete(Request $request){
         RequisitionCategory::destroy($request->requisition_categories_id);
-        return redirect()->route('super-admin.categoryList')->with('success','Category Deleted Successfully');
+        return redirect()->route('categoryList')->with('success','Category Deleted Successfully');
     }
 }

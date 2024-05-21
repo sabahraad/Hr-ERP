@@ -83,18 +83,6 @@ class requisitionController extends Controller
             'message'=>'Requisition Added',
             'data'=>$data
         ],201);
-        // requisitions_id
-        // requisition_categories_id
-        // products_id
-        // product_name
-        // quantity
-        // reason
-        // status
-        // pending
-        // rejected
-        // approved
-        // emp_id
-
     }
 
     public function requisitionList(){
@@ -112,11 +100,15 @@ class requisitionController extends Controller
     public function approveRequisition(Request $request){
         $data = Requisition::find($request->requisitions_id);
         $data->status = $request->action;
-        $data->save();
-        if($request->action == "approved"){
-            return redirect()->back()->with('success','Requisition Approved');
+        if($data->save()){
+            if($request->action == "approved"){
+                return redirect()->back()->with('success','Requisition Approved');
+            }else{
+                return redirect()->back()->with('error','Requisition Rejected');
+            }
         }else{
-            return redirect()->back()->with('error','Requisition Rejected');
+            return redirect()->back()->with('error','Data Not Saved');
         }
+        
     }
 }
