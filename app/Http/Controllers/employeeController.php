@@ -182,8 +182,8 @@ class employeeController extends Controller
                 'message' => 'User Not Found',
             ],404);
         }
-        $userInfo->name = $request->name ;
-        $userInfo->email = $request->email;
+        $userInfo->name = $request->name ?? $userInfo->name;
+        $userInfo->email = $request->email ?? $userInfo->email;
         if($request->has('password')){
             $userInfo->password = bcrypt($request->password);
             $userInfo->company_id = $company_id;
@@ -205,16 +205,16 @@ class employeeController extends Controller
             $data->image = $imagePath;
         }
 
-        $user_id = Employee::where('emp_id',$id)->value('id');
-        $data->id = $user_id;
+        // $user_id = Employee::where('emp_id',$id)->value('id');
+        $data->id = $user_id ?? $data->id;
         $data->officeEmployeeID = $request->officeEmployeeID ?? $data->officeEmployeeID;
-        $data->name = $request->name;
+        $data->name = $request->name ?? $data->name;
         $data->gender = $request->gender ?? $data->gender;
         $data->dob = $request->dob ?? $data->dob;
         $data->joining_date = $joining_date ?? $data->joining_date;
         $data->phone_number = $request->phone_number ?? $data->phone_number;
-        $data->dept_id = $request->dept_id;
-        $data->designation_id = $request->designation_id;
+        $data->dept_id = $request->dept_id ?? $data->dept_id;
+        $data->designation_id = $request->designation_id ?? $data->designation_id;
         $data->status = $request->status ?? $data->status;
         $data->company_id = $company_id;
         $data->save();
@@ -229,7 +229,7 @@ class employeeController extends Controller
             }else{
                 $sal = new Salary();
                 $sal->salary = $request->salary;
-                $sal->joining_date = $joining_date; 
+                $sal->joining_date = $joiningDate; 
                 $sal->emp_id = $data->emp_id; 
                 $sal->company_id = $data->company_id; 
                 $sal->save();

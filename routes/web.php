@@ -158,34 +158,3 @@ Route::group(['prefix' => 'admin','middleware' => ['admin_check','prevent-back-h
     Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('approveRequisition');
 
 });
-
-// Route::group(['prefix' => 'finance','middleware' => ['finance_check' ,'prevent-back-history']], function () {
-
-//     //category
-//     Route::get('/category-list', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryList'])->name('categoryList');
-//     Route::post('/create-category', [App\Http\Controllers\Requisition\CategoryController::class, 'createCategory'])->name('createCategory');
-//     Route::get('/edit-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryEdit'])->name('categoryEdit');
-//     Route::post('/update-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryUpdate'])->name('categoryUpdate');
-//     Route::post('/delete-category', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryDelete'])->name('categoryDelete');
-
-//     //product
-//     Route::get('/product-list', [App\Http\Controllers\Requisition\productController::class, 'productList'])->name('productList');
-//     Route::post('/create-product', [App\Http\Controllers\Requisition\productController::class, 'createProduct'])->name('createProduct');
-//     Route::get('/edit-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productEdit'])->name('productEdit');
-//     Route::post('/update-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productUpdate'])->name('productUpdate');
-//     Route::post('/delete-product', [App\Http\Controllers\Requisition\productController::class, 'productDelete'])->name('productDelete');
-//     Route::post('/find-product', [App\Http\Controllers\Requisition\productController::class, 'findProduct'])->name('findProduct');
-
-//     //vendor
-//     Route::get('/vendor-list', [App\Http\Controllers\Requisition\vendorController::class, 'vendorList'])->name('vendorList');
-//     Route::post('/create-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'createVendor'])->name('createVendor');
-//     Route::get('/edit-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorEdit'])->name('vendorEdit');
-//     Route::post('/update-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorUpdate'])->name('vendorUpdate');
-//     Route::post('/delete-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'vendorDelete'])->name('vendorDelete');
-//     Route::post('/find-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'findVendor'])->name('findVendor');
-    
-//     //requisition
-//     Route::get('/requisition-list', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionList'])->name('requisitionList');
-//     Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('approveRequisition');
-
-// });

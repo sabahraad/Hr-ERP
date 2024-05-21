@@ -62,27 +62,6 @@
 							</li>
 
 							<li class="menu-title"> 
-								<span>Requisition</span>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="la la-cog"></i> <span>Requisition Settings</span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li>
-										<a href="{{route('categoryList')}}">Category List</a>
-									</li>
-									<li>
-										<a href="{{route('productList')}}">Product List</a>
-									</li>
-									<li>
-										<a href="{{route('vendorList')}}">Vendor List</a>
-									</li>
-									<li>
-										<a href="{{route('requisitionList')}}">Requisition List</a>
-									</li>
-								</ul>
-							</li>
-
-							<li class="menu-title"> 
 								<span>Settings</span>
 							</li>
 							<li class="submenu">
