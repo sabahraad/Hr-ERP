@@ -730,24 +730,6 @@
         $('#editSubmit').submit(function(e) {
             e.preventDefault();
             var emp_id = $('#empID').val();
-            var salary = $('#salary').val();
-             var name  =     $('#name').val();
-             var email =    $('#email').val();
-             var officeEmployeeID = $('#officeEmployeeID').val();
-             var phoneNumber  =     $('#phoneNumber').val();
-             var dob    =   $('#dob').val();
-              var joining_date   =   $('#salary').val();
-              var selectDept1   =   $('#selectDept1').val();
-              var desig_id1   =   $('#desig_id1').val();
-            console.log(salary,
-name,
-email,
-officeEmployeeID,
-phoneNumber,
-dob,
-joining_date,
-selectDept1,
-desig_id1);
 
             var formData = new FormData(this);
 

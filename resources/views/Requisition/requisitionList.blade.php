@@ -77,7 +77,6 @@
                                     <td>{{$requisition->product_name ?? 'N/A'}}</td>
                                     <td>{{$requisition->quantity ?? 'N/A'}}</td>
                                     <td>{{$requisition->reason ?? 'N/A'}}</td>
-                                    <td>{{$requisition->status ?? 'N/A'}}</td>
                                     <td> @if($requisition->status == 'approved')
                                             <span class="badge badge-success">Approved</span>
                                         @elseif($requisition->status == 'rejected')

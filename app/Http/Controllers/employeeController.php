@@ -225,6 +225,7 @@ class employeeController extends Controller
             if($sal){
                 $sal->salary = $request->salary ?? $sal->salary;
                 $sal->joining_date = $joiningDate ?? $sal->joining_date; 
+                $sal->company_id = $data->company_id;
                 $sal->save();
             }else{
                 $sal = new Salary();
