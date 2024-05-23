@@ -321,6 +321,7 @@ $(".previous").click(function(){
 
 $(document).ready(function() {
 	var baseUrl = "{{ $baseUrl }}";
+	console.log(baseUrl,'k');
     $('#msform').submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
