@@ -31,7 +31,7 @@ jobs:
             cd /www/wwwroot/timewisehr.com
             git stash
             git pull origin main
-            composer install
+            composer update
             chown -R www:www *
             find /www/wwwroot/timewisehr.com -type d -print0 | xargs -0 chmod 0755
             find /www/wwwroot/timewisehr.com -type f -print0 | xargs -0 chmod 0644
