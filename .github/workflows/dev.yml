@@ -31,7 +31,7 @@ jobs:
             cd /www/wwwroot/hrm.aamarpay.dev
             git stash
             git pull origin dev
-            composer update
+            composer install
             chown -R www:www *
             find /www/wwwroot/hrm.aamarpay.dev -type d -print0 | xargs -0 chmod 0755
             find /www/wwwroot/hrm.aamarpay.dev -type f -print0 | xargs -0 chmod 0644
