@@ -111,4 +111,21 @@ class requisitionController extends Controller
         }
         
     }
+
+    public function requisitionListForUser(){
+        $user_id = auth()->user()->id;
+        $emp_id = Employee::where('id', $user_id)->value('emp_id');
+        $data = Requisition::where('emp_id',$emp_id)->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Requisition List',
+                'data'=>$data
+            ],200);
+        }
+    }
 }
