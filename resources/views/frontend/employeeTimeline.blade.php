@@ -46,7 +46,7 @@
                         <div class="col">
                             <h3 class="page-title">Timeline</h3>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
                                 <li class="breadcrumb-item active">Timeline</li>
                             </ul>
                         </div>

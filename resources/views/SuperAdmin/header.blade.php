@@ -52,7 +52,7 @@
 			
 				<!-- Logo -->
                 <div class="header-left">
-                     <a href="admin-dashboard.html" class="logo">
+                     <a href="#" class="logo">
 						<img src="{{asset('images/TimeWise-Logo-white.png')}}" alt="Logo" class="hlogo">
 					</a>
                 </div>

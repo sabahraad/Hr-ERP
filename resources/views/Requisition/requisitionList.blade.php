@@ -82,7 +82,7 @@
                                         @elseif($requisition->status == 'rejected')
                                             <span class="badge badge-danger">Rejected</span>
                                         @else
-                                            <span class="badge badge-secondary">{{ $requisition->status ?? 'N/A' }}</span>
+                                            <span class="badge badge-info">{{ $requisition->status ?? 'N/A' }}</span>
                                         @endif
                                     </td>
                                     <td>

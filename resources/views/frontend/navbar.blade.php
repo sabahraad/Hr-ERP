@@ -321,7 +321,7 @@
 								<p>Dashboard</p>
 								<ul>
 									<li>
-										<a href="admin-dashboard.html">Admin Dashboard</a>
+										<a href="#">Admin Dashboard</a>
 									</li>
 									<li>
 										<a href="employee-dashboard.html">Employee Dashboard</a>
