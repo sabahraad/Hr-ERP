@@ -114,7 +114,6 @@ class SalaryController extends Controller
         $year = $request->year;
         $company_id = auth()->user()->company_id;
         $salary = Salary::where('company_id',$company_id)->get();
-        dd($salary);
         if(count($salary) == 0){
             return response()->json([
                 'message'=>'Please set salary for employee first'
