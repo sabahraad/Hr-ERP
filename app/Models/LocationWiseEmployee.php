@@ -12,7 +12,7 @@ class LocationWiseEmployee extends Model
 
     public function officeLocation()
     {
-        return $this->belongsTo(OfficeLocation::class, 'office_locations_id', 'office_locations_id');
+        return $this->belongsTo(officeLocation::class, 'office_locations_id', 'office_locations_id');
     }
 
 }
