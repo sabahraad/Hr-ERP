@@ -36,6 +36,12 @@
                         <i class="fa-solid fa-download"></i>
                         Export Designation Details
                     </a>
+
+                    <a href="{{route('LoctionWiseEmployeeList')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Employee Into Multi Location
+                    </a>
+
                     <div class="view-icons">
                         <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->

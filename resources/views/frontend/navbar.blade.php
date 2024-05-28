@@ -19,7 +19,6 @@
 								<ul>
 									<li><a href="{{route('company')}}">Company Details</a></li>
 									<li><a href="{{route('officeLocation')}}">Office Location</a></li>
-								
 								</ul>
 							</li>
 							
