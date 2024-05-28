@@ -21,6 +21,6 @@ class CheckAccessToken
         else{
             return redirect('/login')->with('error', 'You do not have permission to log in.');
         }
-        
+
     }
 }
