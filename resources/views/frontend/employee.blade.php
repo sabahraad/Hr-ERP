@@ -670,9 +670,12 @@
                             });
                             console.log(data);
                         },
-                        error: function(error) {
-                            // Handle any errors
-                            console.error(error);
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: xhr.responseJSON.message
+                            });
                         }
                     });
                     

@@ -319,12 +319,12 @@ class employeeController extends Controller
     public function employeeDetails($id){
         $company_id= auth()->user()->company_id;
         $data = Employee::where('employees.emp_id', $id)
-                        ->where('company_id',$company_id)
+                        ->where('employees.company_id',$company_id)
                         ->join("users", "users.id", "=", "employees.id")
                         ->leftJoin("salaries", "salaries.emp_id", "=", "employees.emp_id")
                         ->get(['employees.*', 'users.email', 'salaries.salary']);
       
-        if(!$data){
+        if(count($data) == 0){
             return response()->json([
                 'message'=>'No data found'
             ],404);
