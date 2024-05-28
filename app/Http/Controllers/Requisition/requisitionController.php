@@ -83,18 +83,6 @@ class requisitionController extends Controller
             'message'=>'Requisition Added',
             'data'=>$data
         ],201);
-        // requisitions_id
-        // requisition_categories_id
-        // products_id
-        // product_name
-        // quantity
-        // reason
-        // status
-        // pending
-        // rejected
-        // approved
-        // emp_id
-
     }
 
     public function requisitionList(){
@@ -112,11 +100,32 @@ class requisitionController extends Controller
     public function approveRequisition(Request $request){
         $data = Requisition::find($request->requisitions_id);
         $data->status = $request->action;
-        $data->save();
-        if($request->action == "approved"){
-            return redirect()->back()->with('success','Requisition Approved');
+        if($data->save()){
+            if($request->action == "approved"){
+                return redirect()->back()->with('success','Requisition Approved');
+            }else{
+                return redirect()->back()->with('error','Requisition Rejected');
+            }
         }else{
-            return redirect()->back()->with('error','Requisition Rejected');
+            return redirect()->back()->with('error','Data Not Saved');
+        }
+        
+    }
+
+    public function requisitionListForUser(){
+        $user_id = auth()->user()->id;
+        $emp_id = Employee::where('id', $user_id)->value('emp_id');
+        $data = Requisition::where('emp_id',$emp_id)->get();
+        if(count($data) == 0){
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Requisition List',
+                'data'=>$data
+            ],200);
         }
     }
 }

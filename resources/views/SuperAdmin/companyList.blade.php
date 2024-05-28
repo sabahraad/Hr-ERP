@@ -48,7 +48,11 @@
                                 <td>{{$key+1}}</td>
                                 <td>
                                     <h2 class="table-avatar">
+                                        @if ($company->logo == null )
+                                            <i class="la la-industry"></i>
+                                        @else
                                         <a href="#" class="avatar"><img src="{{asset($company->logo)}}" alt="User Image"></a>
+                                        @endif
                                         <a href="#">{{$company->companyName}}</a>
                                     </h2>
                                 </td>
@@ -80,7 +84,7 @@
 <script> 
 $(document).ready(function() {
     $('#empTable').DataTable({
-        "order": [[ 0, "desc" ]] 
+        "order": [[ 0, "asc" ]] 
     });
 })
 

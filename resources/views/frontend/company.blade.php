@@ -12,7 +12,7 @@
 							<div class="col-sm-12">
 								<h3 class="page-title">Profile</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
 									<li class="breadcrumb-item active">Profile</li>
 								</ul>
 							</div>

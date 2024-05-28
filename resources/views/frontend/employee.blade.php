@@ -730,6 +730,7 @@
         $('#editSubmit').submit(function(e) {
             e.preventDefault();
             var emp_id = $('#empID').val();
+
             var formData = new FormData(this);
 
             $.ajax({

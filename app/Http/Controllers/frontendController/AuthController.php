@@ -30,6 +30,10 @@ class AuthController extends Controller
             return redirect()->route('dashboard'); 
         }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 3){
             return redirect()->route('super-admin.dashboard'); 
+        }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 4){
+            return redirect()->route('requisitionList'); 
+        }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 5){
+            return redirect()->route('requisitionList'); 
         }else{
             return view('frontend.login');
         }
@@ -99,6 +103,9 @@ class AuthController extends Controller
             $response = curl_exec($curl);
             curl_close($curl);
             $data = json_decode($response,true);
+            if($data == null){
+                return redirect('/login-form')->with('error','Please try again.'); 
+            }
             if($data['status'] == 401){
                 return redirect('/login-form')->with('error','Invalid credentials. Please try again.'); 
             }
@@ -118,15 +125,16 @@ class AuthController extends Controller
             ]);
             if($role == 2){
                 return redirect()->route('dashboard');
-            }else{
+            }elseif($role == 3){
                 return redirect()->route('super-admin.dashboard'); 
+            }else{
+                return redirect()->route('requisitionList'); 
             }
         }else{
             $access_token = session('access_token');
             $role = session('role');
             return redirect()->route('dashboard'); 
         }
-        // return redirect()->route('dashboard'); 
         
     }
     

@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')    
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -70,7 +70,7 @@
                     @foreach ($data as $key => $requisition)
                             
                             <tr>
-                                <form action="{{route('super-admin.approveRequisition')}}" method="post">
+                                <form action="{{route('approveRequisition')}}" id="dform{{$key+1}}" method="post">
                                     @csrf
                                     <td>{{$key+1}}</td>
                                     <td>{{$requisition->category_name ?? 'N/A'}}</td>
@@ -82,15 +82,16 @@
                                         @elseif($requisition->status == 'rejected')
                                             <span class="badge badge-danger">Rejected</span>
                                         @else
-                                            <span class="badge badge-secondary">{{ $requisition->status ?? 'N/A' }}</span>
+                                            <span class="badge badge-info">{{ $requisition->status ?? 'N/A' }}</span>
                                         @endif
                                     </td>
                                     <td>
                                         <input name="requisitions_id" value="{{$requisition->requisitions_id}}" hidden>
-                                        <button class="btn btn-outline-success btn-sm" type="submit" name="action" value="approved" >
+                                        <input name="action" id="action{{$key+1}}" value="" hidden>
+                                        <button class="btn btn-outline-success btn-sm" type="button" value="approved" onclick="confirmSA('approved','{{$key+1}}')" >
                                         <i class="fa fa-check-circle"></i> Approve
                                         </button>
-                                        <button class="btn btn-outline-danger btn-sm" type="submit" name="action" value="rejected">
+                                        <button class="btn btn-outline-danger btn-sm" type="button" value="rejected" onclick="confirmSA('rejected','{{$key+1}}')">
                                         <i class="fa fa-times-circle"></i> Reject
                                         </button>
                                     </td>
@@ -116,7 +117,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('super-admin.createCategory')}}" method="post">
+                <form action="{{route('createCategory')}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">
@@ -144,35 +145,9 @@
     </div>
 </div>
 <!-- /Add Employee Modal -->
-<!-- Delete Employee Modal -->
-<div class="modal custom-modal fade" id="delete_employee" role="dialog">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-body">
-								<div class="form-header">
-									<h3>Delete Package</h3>
-									<p>Are you sure want to delete?</p>
-								</div>
-								<div class="modal-btn delete-action">
-									<div class="row">
-										<div class="col-6">
-                                        <form action="{{route('super-admin.deletePackage')}}" method="post">
-                                            @csrf
-                                            <input id ="requisition_categories_id" class="form-control" name="requisition_categories_id" type="hidden">
-                                            <button style="padding: 10px 74px;" type="submit" class="btn btn-primary continue-btn">Delete</button>
-                                        </form>										
-                                    </div>
-                                    <div class="col-6">
-                                        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                    </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Delete Employee Modal -->
+
 <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     CKEDITOR.replace('category_description');
@@ -187,5 +162,23 @@
         var requisition_categories_id = $(this).data('id');
         $('#requisition_categories_id').val(requisition_categories_id);
     });
+
+    function confirmSA(action,key){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(action);
+                $("#action" +key).val(action);
+                $("#dform" +key).submit();
+            }
+        });
+    }
 
 </script>

@@ -101,6 +101,13 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/expense-report', [App\Http\Controllers\frontendController\expenseController::class, 'expensesReport'])->name('expensesReport');
     Route::get('/individual-expense-report/{id}/{startDate}/{endDate}', [App\Http\Controllers\frontendController\expenseController::class, 'individualExpenseReport'])->name('individualExpenseReport');
 
+    //multi location 
+    Route::get('/Loction-wise-employee-list', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'LoctionWiseEmployeeList'])->name('LoctionWiseEmployeeList');
+    Route::post('/Loction-wise-employee-list', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'individualLoctionWiseEmployeeList'])->name('individualLoctionWiseEmployeeList');
+    Route::post('/add-employee-into-location', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'addEmployeeIntoLocation'])->name('addEmployeeIntoLocation');
+    Route::get('/edit-employee-into-location/{id}', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'editEmployeeIntoLocation'])->name('editEmployeeIntoLocation');
+    Route::post('/update-employee-into-location', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'updateEmployeeIntoLocation'])->name('updateEmployeeIntoLocation');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
@@ -126,29 +133,35 @@ Route::group(['prefix' => 'super-admin','middleware' => ['super_admin_check' ,'p
     Route::post('/edit-package/{id}', [App\Http\Controllers\SuperAdmin\packageController::class, 'editPackage'])->name('super-admin.editPackage');
     Route::post('/delete-package', [App\Http\Controllers\SuperAdmin\packageController::class, 'deletePackage'])->name('super-admin.deletePackage');
 
-    Route::get('/category-list', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryList'])->name('super-admin.categoryList');
-    Route::post('/create-category', [App\Http\Controllers\Requisition\CategoryController::class, 'createCategory'])->name('super-admin.createCategory');
-    Route::get('/edit-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryEdit'])->name('super-admin.categoryEdit');
-    Route::post('/update-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryUpdate'])->name('super-admin.categoryUpdate');
-    Route::post('/delete-category', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryDelete'])->name('super-admin.categoryDelete');
-
-    Route::get('/product-list', [App\Http\Controllers\Requisition\productController::class, 'productList'])->name('super-admin.productList');
-    Route::post('/create-product', [App\Http\Controllers\Requisition\productController::class, 'createProduct'])->name('super-admin.createProduct');
-    Route::get('/edit-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productEdit'])->name('super-admin.productEdit');
-    Route::post('/update-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productUpdate'])->name('super-admin.productUpdate');
-    Route::post('/delete-product', [App\Http\Controllers\Requisition\productController::class, 'productDelete'])->name('super-admin.productDelete');
-    Route::post('/find-product', [App\Http\Controllers\Requisition\productController::class, 'findProduct'])->name('super-admin.findProduct');
-
-    Route::get('/vendor-list', [App\Http\Controllers\Requisition\vendorController::class, 'vendorList'])->name('super-admin.vendorList');
-    Route::post('/create-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'createVendor'])->name('super-admin.createVendor');
-    Route::get('/edit-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorEdit'])->name('super-admin.vendorEdit');
-    Route::post('/update-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorUpdate'])->name('super-admin.vendorUpdate');
-    Route::post('/delete-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'vendorDelete'])->name('super-admin.vendorDelete');
-    Route::post('/find-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'findVendor'])->name('super-admin.findVendor');
-    
-    Route::get('/requisition-list', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionList'])->name('super-admin.requisitionList');
-    Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('super-admin.approveRequisition');
-
 });
 
+Route::group(['prefix' => 'admin','middleware' => ['admin_check','prevent-back-history']], function () {
 
+    //category
+    Route::get('/category-list', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryList'])->name('categoryList');
+    Route::post('/create-category', [App\Http\Controllers\Requisition\CategoryController::class, 'createCategory'])->name('createCategory');
+    Route::get('/edit-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryEdit'])->name('categoryEdit');
+    Route::post('/update-category/{id}', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryUpdate'])->name('categoryUpdate');
+    Route::post('/delete-category', [App\Http\Controllers\Requisition\CategoryController::class, 'categoryDelete'])->name('categoryDelete');
+
+    //product
+    Route::get('/product-list', [App\Http\Controllers\Requisition\productController::class, 'productList'])->name('productList');
+    Route::post('/create-product', [App\Http\Controllers\Requisition\productController::class, 'createProduct'])->name('createProduct');
+    Route::get('/edit-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productEdit'])->name('productEdit');
+    Route::post('/update-product/{id}', [App\Http\Controllers\Requisition\productController::class, 'productUpdate'])->name('productUpdate');
+    Route::post('/delete-product', [App\Http\Controllers\Requisition\productController::class, 'productDelete'])->name('productDelete');
+    Route::post('/find-product', [App\Http\Controllers\Requisition\productController::class, 'findProduct'])->name('findProduct');
+
+    //vendor
+    Route::get('/vendor-list', [App\Http\Controllers\Requisition\vendorController::class, 'vendorList'])->name('vendorList');
+    Route::post('/create-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'createVendor'])->name('createVendor');
+    Route::get('/edit-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorEdit'])->name('vendorEdit');
+    Route::post('/update-vendor/{id}', [App\Http\Controllers\Requisition\vendorController::class, 'vendorUpdate'])->name('vendorUpdate');
+    Route::post('/delete-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'vendorDelete'])->name('vendorDelete');
+    Route::post('/find-vendor', [App\Http\Controllers\Requisition\vendorController::class, 'findVendor'])->name('findVendor');
+    
+    //requisition
+    Route::get('/requisition-list', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionList'])->name('requisitionList');
+    Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('approveRequisition');
+
+});

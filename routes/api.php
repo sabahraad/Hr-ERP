@@ -117,7 +117,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/catagory-list', [App\Http\Controllers\Requisition\requisitionController::class, 'catagoryList']);
     Route::get('/product-list/{id}', [App\Http\Controllers\Requisition\requisitionController::class, 'productList']);
     Route::post('/requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'requisition']);
-
+    Route::get('/requisition-list-for-user', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionListForUser']);
 
 });
 

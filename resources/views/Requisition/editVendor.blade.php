@@ -1,5 +1,5 @@
-@include('SuperAdmin.header')
-@include('SuperAdmin.navbar')
+@include('frontend.header')
+@include('Requisition.navbar')    
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -19,7 +19,7 @@
     </div>
         <div class="row">
             <div class="form-body">
-                <form action="{{route('super-admin.vendorUpdate',['id' => $data->vendors_id])}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('vendorUpdate',['id' => $data->vendors_id])}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-sm-12">
