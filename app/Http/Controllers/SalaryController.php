@@ -284,6 +284,4 @@ class SalaryController extends Controller
             ],200);
         }
     }
-
-
 }

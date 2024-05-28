@@ -761,6 +761,13 @@
 
                 },
                 error: function(xhr, status, error) {
+                    if(xhr.status === 404){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.error;
                         var errorMessage = "<ul>";
@@ -809,18 +816,11 @@
                     },200);
                 },
                 error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+                    if (xhr.status === 422) {                        
                         Swal.fire({
                             icon: 'error',
                             title: 'Validation Error',
-                            html: errorMessage
+                            html: xhr.responseJSON.message
                         });
                     }
                 }
