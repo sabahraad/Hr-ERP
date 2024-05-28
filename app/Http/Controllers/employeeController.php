@@ -174,8 +174,8 @@ class employeeController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $userInfo = User::where('id',$user_id)->first();
         $company_id= auth()->user()->company_id;
+        $userInfo = User::where('id',$user_id)->where('company_id',$company_id)->first();
         $joining_date = $request->joining_date;
         if(!$userInfo){
             return response()->json([
@@ -186,7 +186,6 @@ class employeeController extends Controller
         $userInfo->email = $request->email ?? $userInfo->email;
         if($request->has('password')){
             $userInfo->password = bcrypt($request->password);
-            $userInfo->company_id = $company_id;
         }
         $userInfo->save();
 
@@ -303,9 +302,15 @@ class employeeController extends Controller
     }
 
     public function deleteEmployee($id){
-        $user_id = Employee::where('emp_id',$id)->value('id');
-        User::where('id',$user_id)->delete();
-        Employee::where('emp_id',$id)->delete();
+        $company_id= auth()->user()->company_id;
+        $user_id = Employee::where('emp_id',$id)->where('company_id',$company_id)->value('id');
+        if(!$user_id){
+            return response()->json([
+                'message' => 'Something Went Wrong'
+            ],422);
+        }
+        User::where('id',$user_id)->where('company_id',$company_id)->delete();
+        Employee::where('emp_id',$id)->where('company_id',$company_id)->delete();
         return response()->json([
             'message' => 'Employee deleted successfully'
         ]);
@@ -316,10 +321,7 @@ class employeeController extends Controller
                         ->join("users", "users.id", "=", "employees.id")
                         ->leftJoin("salaries", "salaries.emp_id", "=", "employees.emp_id")
                         ->get(['employees.*', 'users.email', 'salaries.salary']);
-        // $data = Employee::where('employees.emp_id',$id)
-        //         ->join("users", "users.id", "=", "employees.id")
-        //         ->join("salaries","salaries.emp_id","=","employees.emp_id")
-        //         ->get(['employees.*', 'users.email','salaries.salary']);//
+      
         if(!$data){
             return response()->json([
                 'message'=>'No data found'
