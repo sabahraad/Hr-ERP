@@ -101,6 +101,13 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/expense-report', [App\Http\Controllers\frontendController\expenseController::class, 'expensesReport'])->name('expensesReport');
     Route::get('/individual-expense-report/{id}/{startDate}/{endDate}', [App\Http\Controllers\frontendController\expenseController::class, 'individualExpenseReport'])->name('individualExpenseReport');
 
+    //multi location 
+    Route::get('/Loction-wise-employee-list', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'LoctionWiseEmployeeList'])->name('LoctionWiseEmployeeList');
+    Route::post('/Loction-wise-employee-list', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'individualLoctionWiseEmployeeList'])->name('individualLoctionWiseEmployeeList');
+    Route::post('/add-employee-into-location', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'addEmployeeIntoLocation'])->name('addEmployeeIntoLocation');
+    Route::get('/edit-employee-into-location/{id}', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'editEmployeeIntoLocation'])->name('editEmployeeIntoLocation');
+    Route::post('/update-employee-into-location', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'updateEmployeeIntoLocation'])->name('updateEmployeeIntoLocation');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
