@@ -110,7 +110,6 @@ class attendanceController extends Controller
         if(in_array("location_based",$attendanceType)){
             $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->get();
             if(count($officeLocation) > 1){
-                dd('not ok');
                 // Fetch all records from the table
                 $records = DB::table('location_wise_employees')->where('company_id',$company_id)->get();
 
