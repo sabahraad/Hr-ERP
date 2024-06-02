@@ -60,10 +60,11 @@ class reportController extends Controller
                         DB::raw('SUM(CASE WHEN attendances.OUTstatus = 1 THEN 1 ELSE 0 END) AS ontime_checkout_days'),
                         DB::raw('SUM(CASE WHEN attendances.OUTstatus = 2 THEN 1 ELSE 0 END) AS early_checkout_days')
                     )
-                    ->join('departments', 'departments.dept_id', '=', $request->dept_id)
+                    ->join('departments', 'departments.dept_id', '=', 'employees.dept_id')
                     ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
                     ->join('attendances', 'employees.emp_id', '=', 'attendances.emp_id')
                     ->where('employees.company_id', '=', $company_id)
+                    ->where('employees.dept_id', '=', $request->dept_id)
                     ->whereDate('attendances.created_at', '>=', $startDate)
                     ->whereDate('attendances.created_at', '<=', $endDate)
                     ->groupBy('employees.name','employees.emp_id', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle'
