@@ -36,6 +36,12 @@
                         <i class="fa-solid fa-download"></i>
                         Export Designation Details
                     </a>
+
+                    <a href="{{route('LoctionWiseEmployeeList')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Employee Into Multi Location
+                    </a>
+
                     <div class="view-icons">
                         <!-- <a href="employees.html" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
                         <a href="employees-list.html" class="list-view btn btn-link active"><i class="fa-solid fa-bars"></i></a> -->
@@ -67,7 +73,7 @@
                             @foreach ($dataArray['data'] as $employee)
                             
                             <tr>
-                                <td>{{$employee['emp_id']}}</td>
+                                <td>{{$loop->iteration}}</td>
                                 <td>
                                     <h2 class="table-avatar">
                                         <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
@@ -664,9 +670,13 @@
                             });
                             console.log(data);
                         },
-                        error: function(error) {
-                            // Handle any errors
-                            console.error(error);
+                        error: function(xhr, status, error) {
+                            console.log(xhr.responseJSON.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: xhr.responseJSON.message
+                            });
                         }
                     });
                     
@@ -708,6 +718,14 @@
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
+                    console.log(xhr.responseJSON.message)
+                    if(xhr.status === 404){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.error;
                         var errorMessage = "<ul>";
@@ -755,6 +773,13 @@
 
                 },
                 error: function(xhr, status, error) {
+                    if(xhr.status === 404){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.error;
                         var errorMessage = "<ul>";
@@ -803,18 +828,11 @@
                     },200);
                 },
                 error: function(xhr, status, error) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.error;
-                        var errorMessage = "<ul>";
-                        for (var field in errors) {
-                            errorMessage += "<li>" + errors[field][0] + "</li>";
-                        }
-                        errorMessage += "</ul>";
-                        
+                    if (xhr.status === 422) {                        
                         Swal.fire({
                             icon: 'error',
                             title: 'Validation Error',
-                            html: errorMessage
+                            html: xhr.responseJSON.message
                         });
                     }
                 }

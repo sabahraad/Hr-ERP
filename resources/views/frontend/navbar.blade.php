@@ -19,7 +19,6 @@
 								<ul>
 									<li><a href="{{route('company')}}">Company Details</a></li>
 									<li><a href="{{route('officeLocation')}}">Office Location</a></li>
-								
 								</ul>
 							</li>
 							
@@ -28,7 +27,10 @@
 							</li>
 							<li>
 								<a href="{{route('employee')}}" ><i class="la la-users"></i> <span> All Employees</span></a>
-								
+							</li>
+
+							<li>
+								<a href="{{route('remoteEmployeeList')}}" ><i class="la la-users"></i> <span>Remote Employee List</span></a>
 							</li>
 
 							<li class="menu-title"> 

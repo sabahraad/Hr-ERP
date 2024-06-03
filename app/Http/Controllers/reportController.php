@@ -64,6 +64,7 @@ class reportController extends Controller
                     ->join('designations', 'designations.designation_id', '=', 'employees.designation_id')
                     ->join('attendances', 'employees.emp_id', '=', 'attendances.emp_id')
                     ->where('employees.company_id', '=', $company_id)
+                    ->where('employees.dept_id', '=', $request->dept_id)
                     ->whereDate('attendances.created_at', '>=', $startDate)
                     ->whereDate('attendances.created_at', '<=', $endDate)
                     ->groupBy('employees.name','employees.emp_id', 'employees.officeEmployeeID', 'departments.deptTitle', 'designations.desigTitle'

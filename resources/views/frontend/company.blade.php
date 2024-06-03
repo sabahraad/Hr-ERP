@@ -98,7 +98,6 @@
 											<ul class="personal-info">
 												<li>
 													<div class="title">Name</div>
-													
 													<div class="text">{{$userDetails['emp_details'][0]['name']}}</div>
 												</li>
 												<li>

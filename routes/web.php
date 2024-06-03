@@ -108,6 +108,13 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/edit-employee-into-location/{id}', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'editEmployeeIntoLocation'])->name('editEmployeeIntoLocation');
     Route::post('/update-employee-into-location', [App\Http\Controllers\frontendController\locationWiseEmployeeController::class, 'updateEmployeeIntoLocation'])->name('updateEmployeeIntoLocation');
 
+    //Remote Employee
+    Route::get('/remote-employee-list', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'remoteEmployeeList'])->name('remoteEmployeeList');
+    Route::post('/add-employee-into-remote', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'addEmployeeIntoRemote'])->name('addEmployeeIntoRemote');
+    Route::get('/edit-employee-into-remote/{id}', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'editEmployeeIntoRemote'])->name('editEmployeeIntoRemote');
+    Route::post('/update-employee-into-remote', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'updateEmployeeIntoRemote'])->name('updateEmployeeIntoRemote');
+    Route::post('/delete-employee-into-remote', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'deleteEmployeeIntoRemote'])->name('deleteEmployeeIntoRemote');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
