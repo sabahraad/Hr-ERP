@@ -59,7 +59,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::get('/expenses-list', [App\Http\Controllers\expensesController::class, 'expensesList']);
     Route::post('/create-expenses', [App\Http\Controllers\expensesController::class, 'createExpenses']);
     Route::post('/edit-expenses/{id}', [App\Http\Controllers\expensesController::class, 'editExpenses']);
-    Route::get('/expense-catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
+    Route::get('/catagory-list', [App\Http\Controllers\expensesController::class, 'catagoryList']);
     Route::post('/expense-report-details', [App\Http\Controllers\expensesController::class, 'expenseReportDetails']);
 
 
@@ -114,7 +114,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/store-timeline-track', [App\Http\Controllers\timelineController::class, 'storeTimelineTrack']);
 
     //requisition
-    Route::get('/catagory-list', [App\Http\Controllers\Requisition\requisitionController::class, 'catagoryList']);
+    Route::get('/requisition-catagory-list', [App\Http\Controllers\Requisition\requisitionController::class, 'catagoryList']);
     Route::get('/product-list/{id}', [App\Http\Controllers\Requisition\requisitionController::class, 'productList']);
     Route::post('/requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'requisition']);
     Route::get('/requisition-list-for-user', [App\Http\Controllers\Requisition\requisitionController::class, 'requisitionListForUser']);
