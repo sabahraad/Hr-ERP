@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\IP;
 use App\Models\LocationWiseEmployee;
 use App\Models\officeLocation;
+use App\Models\RemoteEmployee;
 use App\Models\Shift;
 use App\Models\ShiftEmployee;
 use App\Models\ShiftWeekend;
@@ -94,91 +95,97 @@ class attendanceController extends Controller
             }
         }
         //Attendance check
-        $attendanceType = AttendanceType::where('company_id',$company_id)->first();
-        $data=$attendanceType->getAttributes();
-        $attendanceType = array_keys(array_filter($data, function($value) {
-            return $value === 1;
-        }));
-        if(count($attendanceType) == 0){
-            return response()->json([
-                'message' => 'Please Set the Attendance Type First.'
-            ],422);
-        }
-        if(in_array("remote",$attendanceType)){
+        $empIdExists = RemoteEmployee::whereRaw("JSON_SEARCH(employee_ids, 'one', ?, NULL, '$[*].emp_id') IS NOT NULL", [$emp_id])
+        ->exists();
+        if($empIdExists){
+            //remote check 
             $takePresent = 1;
-        }
-        if(in_array("location_based",$attendanceType)){
-            $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->get();
-            if(count($officeLocation) > 1){
-                // Fetch all records from the table
-                $records = DB::table('location_wise_employees')->where('company_id',$company_id)->get();
+        }else{
+            $attendanceType = AttendanceType::where('company_id',$company_id)->first();
+            $data=$attendanceType->getAttributes();
+            $attendanceType = array_keys(array_filter($data, function($value) {
+                return $value === 1;
+            }));
+            if(count($attendanceType) == 0){
+                return response()->json([
+                    'message' => 'Please Set the Attendance Type First.'
+                ],422);
+            }
+            if(in_array("remote",$attendanceType)){
+                $takePresent = 1;
+            }
+            if(in_array("location_based",$attendanceType)){
+                $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->get();
+                if(count($officeLocation) > 1){
+                    // Fetch all records from the table
+                    $records = DB::table('location_wise_employees')->where('company_id',$company_id)->get();
 
-                $filteredRecords = $records->filter(function ($record) use ($emp_id) {
-                    $employeeIds = json_decode($record->employee_ids, true);
-                    foreach ($employeeIds as $employee) {
-                        if (isset($employee['emp_id']) && $employee['emp_id'] == $emp_id) {
-                            return true;
+                    $filteredRecords = $records->filter(function ($record) use ($emp_id) {
+                        $employeeIds = json_decode($record->employee_ids, true);
+                        foreach ($employeeIds as $employee) {
+                            if (isset($employee['emp_id']) && $employee['emp_id'] == $emp_id) {
+                                return true;
+                            }
                         }
+                        return false;
+                    });
+                    // Extract only the office_locations_id from the filtered results
+                    $officeLocationIds = $filteredRecords->map(function ($record) {
+                        return $record->office_locations_id;
+                    });
+                    if($officeLocationIds->isEmpty()){
+                        return response()->json([
+                            'message' => 'Please Assign a location to this user.'
+                        ],422);
                     }
-                    return false;
-                });
-                // Extract only the office_locations_id from the filtered results
-                $officeLocationIds = $filteredRecords->map(function ($record) {
-                    return $record->office_locations_id;
-                });
-                if($officeLocationIds->isEmpty()){
-                    return response()->json([
-                        'message' => 'Please Assign a location to this user.'
-                    ],422);
-                }
 
-                $result = officeLocation::where('office_locations_id',$officeLocationIds)->first();
-                // dd($result);
-                // Convert latitude and longitude from degrees to radians
-                $targetLat = deg2rad($result->latitude);
-                $targetLong = deg2rad($result->longitude);
-                $radius = $result->radius;
-                // dd($targetLat,$targetLong,$radius);
-            }else{
-                $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->first();
-                $targetLat = deg2rad($officeLocation->latitude);
-                $targetLong = deg2rad($officeLocation->longitude);
-                $radius = $officeLocation->radius;
+                    $result = officeLocation::where('office_locations_id',$officeLocationIds)->first();
+                    // dd($result);
+                    // Convert latitude and longitude from degrees to radians
+                    $targetLat = deg2rad($result->latitude);
+                    $targetLong = deg2rad($result->longitude);
+                    $radius = $result->radius;
+                    // dd($targetLat,$targetLong,$radius);
+                }else{
+                    $officeLocation = officeLocation::where('company_id',$company_id)->where('status',1)->first();
+                    $targetLat = deg2rad($officeLocation->latitude);
+                    $targetLong = deg2rad($officeLocation->longitude);
+                    $radius = $officeLocation->radius;
+                }
+                // Radius of the Earth in km
+                $earthRadius = 6371;
+            // Convert latitude and longitude from degrees to radians
+                $userLat = deg2rad($request->latitude);
+                $userLong = deg2rad($request->longitude);
+                // Calculate the change in coordinates
+                $latDiff = $targetLat - $userLat;
+                $longDiff = $targetLong - $userLong;
+                // Haversine formula
+                $a = sin($latDiff/2) * sin($latDiff/2) + cos($userLat) * cos($targetLat) * sin($longDiff/2) * sin($longDiff/2);
+                $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+                $distance = $earthRadius * $c;
+                
+                if($distance <= $radius){
+                    $takePresent = 1;
+                }else{
+                    return response()->json([
+                        'message'=> 'You are presently away from the office premises.'
+                    ],403);
+                }
             }
-            // Radius of the Earth in km
-            $earthRadius = 6371;
-           // Convert latitude and longitude from degrees to radians
-            $userLat = deg2rad($request->latitude);
-            $userLong = deg2rad($request->longitude);
-            // Calculate the change in coordinates
-            $latDiff = $targetLat - $userLat;
-            $longDiff = $targetLong - $userLong;
-            // Haversine formula
-            $a = sin($latDiff/2) * sin($latDiff/2) + cos($userLat) * cos($targetLat) * sin($longDiff/2) * sin($longDiff/2);
-            $c = 2 * atan2(sqrt($a), sqrt(1-$a));
-            $distance = $earthRadius * $c;
-            
-            if($distance <= $radius){
-                $takePresent = 1;
-            }else{
-                return response()->json([
-                    'message'=> 'You are presently away from the office premises.'
-                ],403);
-            }
-        }
-        if(in_array("wifi_based",$attendanceType)){
-            $ip = IP::where('company_id',$company_id)->value('ip');
-            $ipList=json_decode($ip);
-            if (in_array($request->ip(), $ipList)) {
-                $takePresent = 1;
-            }else{
-                return response()->json([
-                    'message'=> 'Please connect to the office network'
-                ],403);
-            }
+            if(in_array("wifi_based",$attendanceType)){
+                $ip = IP::where('company_id',$company_id)->value('ip');
+                $ipList=json_decode($ip);
+                if (in_array($request->ip(), $ipList)) {
+                    $takePresent = 1;
+                }else{
+                    return response()->json([
+                        'message'=> 'Please connect to the office network'
+                    ],403);
+                }
+            }  
         }
         
-
         if($request->action == $checkIN){
             //Current date attendance check
             $attendance = Attendance::where('emp_id',$emp_id)->whereDate('created_at', '=', Carbon::today()->toDateString())->value('IN');

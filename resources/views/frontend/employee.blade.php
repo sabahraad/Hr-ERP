@@ -73,7 +73,7 @@
                             @foreach ($dataArray['data'] as $employee)
                             
                             <tr>
-                                <td>{{$employee['emp_id']}}</td>
+                                <td>{{$loop->iteration}}</td>
                                 <td>
                                     <h2 class="table-avatar">
                                         <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
@@ -671,6 +671,7 @@
                             console.log(data);
                         },
                         error: function(xhr, status, error) {
+                            console.log(xhr.responseJSON.message);
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Validation Error',
@@ -717,6 +718,14 @@
                     $('#edit_employee').modal('show');
                 },
                 error: function(xhr, status, error) {
+                    console.log(xhr.responseJSON.message)
+                    if(xhr.status === 404){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: xhr.responseJSON.message
+                        });
+                    }
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.error;
                         var errorMessage = "<ul>";
