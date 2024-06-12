@@ -115,7 +115,10 @@ class requisitionController extends Controller
     public function requisitionListForUser(){
         $user_id = auth()->user()->id;
         $emp_id = Employee::where('id', $user_id)->value('emp_id');
-        $data = Requisition::where('emp_id',$emp_id)->get();
+        $data = Requisition::where('emp_id', $emp_id)
+                        ->join('requisition_categories', 'requisitions.requisition_categories_id', '=', 'requisition_categories.requisition_categories_id')
+                        ->select('requisitions.*', 'requisition_categories.category_name as category_name')
+                        ->get();
         if(count($data) == 0){
             return response()->json([
                 'message'=>'No Data Found',
@@ -128,4 +131,24 @@ class requisitionController extends Controller
             ],200);
         }
     }
+
+    public function requisitionDetails($id){
+        // $user_id = auth()->user()->id;
+        // $emp_id = Employee::where('id', $user_id)->value('emp_id');
+        $data = Requisition::where('requisitions_id', $id)
+                        ->join('requisition_categories', 'requisitions.requisition_categories_id', '=', 'requisition_categories.requisition_categories_id')
+                        ->select('requisitions.*', 'requisition_categories.category_name as category_name')
+                        ->first();
+        if(!$data){
+            return response()->json([
+                'message'=>'No Data Found',
+                'data'=>$data
+            ],200);
+        }else{
+            return response()->json([
+                'message'=>'Requisition Details',
+                'data'=>$data
+            ],200);
+        }
+    } 
 }
