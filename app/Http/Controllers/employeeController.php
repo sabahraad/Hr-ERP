@@ -254,7 +254,7 @@ class employeeController extends Controller
     private function updateSalary($salary, $emp_id, $company_id, $joining_date)
     {
         $sal = Salary::where('emp_id', $emp_id)->first();
-        $joining_date = $request->joining_date ? $this->parseDate($request->joining_date) : null;
+        $joining_date =  $joining_date ? $this->parseDate( $joining_date) : null;
 
         if ($sal) {
             $sal->salary = $salary ?? $sal->salary;
