@@ -22,22 +22,22 @@
                         Add Employee
                     </a>
 
-                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_bulk" id="addEmployeeButton" style="margin-right: 19px;">
+                    <a href="#" class="btn add-btn add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_bulk" id="addEmployeeButton" style="margin-right: 17px;">
                         <i class="fa-solid fa-upload"></i>
                         Add Employee in bulk
                     </a>
 
-                    <a href="{{route('downloadDeptExcel')}}" class="btn add-btn add-employee"  style="margin-right: 19px;">
+                    <a href="{{route('downloadDeptExcel')}}" class="btn add-btn add-employee"  style="margin-right: 17px;">
                         <i class="fa-solid fa-download"></i>
                         Export Department Details
                     </a>
 
-                    <a href="{{route('downloadDesigExcel')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
+                    <a href="{{route('downloadDesigExcel')}}" class="btn add-btn add-employee" style="margin-right: 17px;">
                         <i class="fa-solid fa-download"></i>
                         Export Designation Details
                     </a>
 
-                    <a href="{{route('LoctionWiseEmployeeList')}}" class="btn add-btn add-employee" style="margin-right: 19px;">
+                    <a href="{{route('LoctionWiseEmployeeList')}}" class="btn add-btn add-employee" style="margin-right: 17px;">
                         <i class="fa-solid fa-plus"></i>
                         Add Employee Into Multi Location
                     </a>
@@ -773,6 +773,7 @@
 
                 },
                 error: function(xhr, status, error) {
+                console.log(error,status,xhr);
                     if(xhr.status === 404){
                         Swal.fire({
                             icon: 'error',

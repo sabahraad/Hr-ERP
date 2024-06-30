@@ -25,8 +25,7 @@ class designationsController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $company_id= auth()->user()->company_id;
-
+        
         $data= new Designation;
         $data->desigTitle = $request->desigTitle;
         $data->details = $request->details;

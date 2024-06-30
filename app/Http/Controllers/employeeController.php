@@ -10,6 +10,7 @@ use App\Models\Salary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
+use Carbon\Exceptions\InvalidFormatException;
 
 
 class employeeController extends Controller
@@ -42,9 +43,23 @@ class employeeController extends Controller
             ], 422);
         }
 
-        $company_id= auth()->user()->company_id;
-        $joining_date = Carbon::createFromFormat('d-m-Y', $request->joining_date)->format('Y-m-d');
+        $company_id = auth()->user()->company_id;
+        // Parse joining_date and dob with flexible format handling
+        $joining_date = $request->joining_date ? $this->parseDate($request->joining_date) : null;
+        $dob = $request->dob ? $this->parseDate($request->dob) : null;
+        $user = $this->createUser($request, $company_id);
+        $user_id = $user->id;
 
+        $employee = $this->createEmployee($request, $user_id, $company_id, $joining_date, $dob);
+
+        if ($request->has('salary')) {
+            $this->createSalary($request->salary, $employee->emp_id, $company_id, $joining_date);
+        }
+        return response()->json(['message' => 'Employee Added Successfully', 'data' => $employee], 201);
+    }
+
+    private function createUser($request, $company_id)
+    {
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
@@ -52,50 +67,44 @@ class employeeController extends Controller
         $user->company_id = $company_id;
         $user->save();
 
-        $user_id = User::where('email',$request->email)->value('id');
+        return $user;
+    }
 
-        $data=new Employee();
+    private function createEmployee($request, $user_id, $company_id, $joining_date, $dob)
+    {
+        $employee = new Employee();
 
-        if($request->hasFile('image')){
-            $imageName =  time() . '.' . $request->image->extension();
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
-            $imagePath = 'images/' . $imageName;
-            $data->image = $imagePath;
-        }
-               
-        // $user_id = auth()->user()->id;
-        $data->id = $user_id;
-        $data->officeEmployeeID = $request->officeEmployeeID;
-        $data->name = $request->name;
-        $data->gender = $request->gender;
-        $data->dob = $request->dob;
-        $data->joining_date = $joining_date;
-        $data->phone_number = $request->phone_number;
-        $data->dept_id = $request->dept_id;
-        $data->designation_id = $request->designation_id;
-        $data->status = $request->status;
-        $data->company_id = $company_id;
-        
-        if($data->save()){
-            if($request->has('salary')){
-                $sal = new Salary();
-                $sal->salary = $request->salary;
-                $sal->joining_date = $joining_date; 
-                $sal->last_increment_date = $joining_date; 
-                $sal->emp_id = $data->emp_id; 
-                $sal->company_id = $data->company_id; 
-                $sal->save();
-            }
-        }else{
-            return response()->json([
-                'message' => 'something Went Wrong'
-            ],500);
+            $employee->image = 'images/' . $imageName;
         }
 
-        return response()->json([
-            'message' => 'Employee Added Successful',
-            'data' => $data
-        ],201);
+        $employee->id = $user_id;
+        $employee->officeEmployeeID = $request->officeEmployeeID;
+        $employee->name = $request->name;
+        $employee->gender = $request->gender;
+        $employee->dob = $dob;
+        $employee->joining_date = $joining_date;
+        $employee->phone_number = $request->phone_number;
+        $employee->dept_id = $request->dept_id;
+        $employee->designation_id = $request->designation_id;
+        $employee->status = $request->status;
+        $employee->company_id = $company_id;
+        $employee->save();
+
+        return $employee;
+    }
+
+    private function createSalary($salary, $emp_id, $company_id, $joining_date)
+    {
+        $sal = new Salary();
+        $sal->salary = $salary;
+        $sal->joining_date = $joining_date;
+        $sal->last_increment_date = $joining_date;
+        $sal->emp_id = $emp_id;
+        $sal->company_id = $company_id;
+        $sal->save();
     }
 
     public function employeeList(){
@@ -174,72 +183,120 @@ class employeeController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-        $company_id= auth()->user()->company_id;
-        $userInfo = User::where('id',$user_id)->where('company_id',$company_id)->first();
-        $joining_date = $request->joining_date;
-        if(!$userInfo){
-            return response()->json([
-                'message' => 'User Not Found',
-            ],404);
-        }
-        $userInfo->name = $request->name ?? $userInfo->name;
-        $userInfo->email = $request->email ?? $userInfo->email;
-        if($request->has('password')){
-            $userInfo->password = bcrypt($request->password);
-        }
-        $userInfo->save();
+        $company_id = auth()->user()->company_id;
+        $userInfo = $this->updateUser($request, $user_id, $company_id);
 
-        $data=Employee::find($id);
-
-        if(!$data){
-            return response()->json([
-                'message' => 'Employee Not Found',
-            ],404);
+        if (!$userInfo) {
+            return response()->json(['message' => 'User Not Found'], 404);
         }
 
-        if($request->hasFile('image')){
-            $imageName =  time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $imagePath = 'images/' . $imageName;
-            $data->image = $imagePath;
+        $employee = $this->updateEmployeeData($request, $id, $company_id, $user_id);
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee Not Found'], 404);
         }
 
-        // $user_id = Employee::where('emp_id',$id)->value('id');
-        $data->id = $user_id ?? $data->id;
-        $data->officeEmployeeID = $request->officeEmployeeID ?? $data->officeEmployeeID;
-        $data->name = $request->name ?? $data->name;
-        $data->gender = $request->gender ?? $data->gender;
-        $data->dob = $request->dob ?? $data->dob;
-        $data->joining_date = $joining_date ?? $data->joining_date;
-        $data->phone_number = $request->phone_number ?? $data->phone_number;
-        $data->dept_id = $request->dept_id ?? $data->dept_id;
-        $data->designation_id = $request->designation_id ?? $data->designation_id;
-        $data->status = $request->status ?? $data->status;
-        $data->company_id = $company_id;
-        $data->save();
+        if ($request->has('salary')) {
+            $this->updateSalary($request->salary, $employee->emp_id, $company_id, $request->joining_date);
+        }
 
-        if($request->has('salary')){
-            $joiningDate = date('Y-m-d', strtotime($joining_date));
-            $sal = Salary::where('emp_id',$data->emp_id)->first();
-            if($sal){
-                $sal->salary = $request->salary ?? $sal->salary;
-                $sal->joining_date = $joiningDate ?? $sal->joining_date; 
-                $sal->company_id = $data->company_id;
-                $sal->save();
-            }else{
-                $sal = new Salary();
-                $sal->salary = $request->salary;
-                $sal->joining_date = $joiningDate; 
-                $sal->emp_id = $data->emp_id; 
-                $sal->company_id = $data->company_id; 
-                $sal->save();
+        return response()->json(['message' => 'Employee Updated Successfully', 'data' => $employee], 200);
+    }
+
+    private function updateUser($request, $user_id, $company_id)
+    {
+        $user = User::where('id', $user_id)->where('company_id', $company_id)->first();
+
+        if ($user) {
+            $user->name = $request->name ?? $user->name;
+            $user->email = $request->email ?? $user->email;
+
+            if ($request->has('password')) {
+                $user->password = bcrypt($request->password);
+            }
+
+            $user->save();
+        }
+
+        return $user;
+    }
+
+    private function updateEmployeeData($request, $id, $company_id, $user_id)
+    {
+        $employee = Employee::find($id);
+        // Parse joining_date and dob with flexible format handling
+        $joining_date = $request->joining_date ? $this->parseDate($request->joining_date) : null;
+        $dob = $request->dob ? $this->parseDate($request->dob) : null;
+        if ($employee) {
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+                $employee->image = 'images/' . $imageName;
+            }
+
+            $employee->id = $user_id ?? $employee->id;
+            $employee->officeEmployeeID = $request->officeEmployeeID ?? $employee->officeEmployeeID;
+            $employee->name = $request->name ?? $employee->name;
+            $employee->gender = $request->gender ?? $employee->gender;
+            $employee->dob = $dob ?? $employee->dob;
+            $employee->joining_date = $joining_date ?? $employee->joining_date;
+            $employee->phone_number = $request->phone_number ?? $employee->phone_number;
+            $employee->dept_id = $request->dept_id ?? $employee->dept_id;
+            $employee->designation_id = $request->designation_id ?? $employee->designation_id;
+            $employee->status = $request->status ?? $employee->status;
+            $employee->company_id = $company_id;
+            $employee->save();
+        }
+
+        return $employee;
+    }
+
+    private function updateSalary($salary, $emp_id, $company_id, $joining_date)
+    {
+        $sal = Salary::where('emp_id', $emp_id)->first();
+        $joining_date =  $joining_date ? $this->parseDate( $joining_date) : null;
+
+        if ($sal) {
+            $sal->salary = $salary ?? $sal->salary;
+            $sal->joining_date = $joining_date ?? $sal->joining_date;
+            $sal->company_id = $company_id;
+        } else {
+            $sal = new Salary();
+            $sal->salary = $salary;
+            $sal->joining_date = $joining_date;
+            $sal->emp_id = $emp_id;
+            $sal->company_id = $company_id;
+        }
+
+        $sal->save();
+    }
+
+    
+    // Helper function to parse date with flexible formats
+    private function parseDate($dateString)
+    {
+        if (!$dateString) {
+            return null;
+        }
+
+        // List of possible formats to check against
+        $formatsToCheck = ['Y-m-d', 'd-m-Y', 'd/m/Y', 'Y/m/d', 'Ymd', 'dmY'];
+
+        // Try to create a Carbon instance from each format until successful
+        foreach ($formatsToCheck as $format) {
+            try {
+                $carbonDate = Carbon::createFromFormat($format, $dateString);
+                if ($carbonDate && $carbonDate->format($format) === $dateString) {
+                    return $carbonDate->format('Y-m-d');
+                }
+            } catch (InvalidFormatException $e) {
+                // Continue to the next format if current one fails
+                continue;
             }
         }
 
-        return response()->json([
-            'message' => 'Employee Updated Successful',
-            'data' => $data
-        ],200);
+        // If none of the formats matched, return null or handle the error as needed
+        return null;
     }
 
     public function employeeEditApp(Request $request,$id){

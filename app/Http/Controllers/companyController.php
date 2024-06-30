@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use App\Models\Company;
-use App\Models\Department;
-use App\Models\Designation;
-use App\Models\Employee;
-use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -93,8 +89,5 @@ class companyController extends Controller
         return response()->json([
             'message' => 'Company deleted successfully'
         ]);
-
-    
     }
-
 }

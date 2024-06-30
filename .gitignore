@@ -19,3 +19,49 @@ yarn-error.log
 /.idea
 /.vscode
 # public
+
+# Laravel specific
+.env
+.env.*
+vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel Mix
+/public/css/
+/public/js/
+/public/mix-manifest.json
+/public/hot
+
+# Laravel Passport
+/storage/oauth-private.key
+/storage/oauth-public.key
+
+# Laravel Horizon
+/storage/horizon
+
+# Laravel Telescope
+/storage/telescope
+
+# Laravel Dusk
+/storage/logs/chromedriver.log
+
+# PHPUnit
+/phpunit.xml
+/tests/
+
+# Homestead
+/.vagrant/
+Homestead.json
+Homestead.yaml
+
+# IDE specific
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
