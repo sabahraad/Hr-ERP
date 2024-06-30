@@ -16,8 +16,6 @@ class Controller extends BaseController
             'message' => 'Please Enter a Valid Access Token',
             'status' => Response::HTTP_UNAUTHORIZED,
             'error' => 'Invalid Token'
-
-
         ],Response::HTTP_UNAUTHORIZED);
     }
 }
