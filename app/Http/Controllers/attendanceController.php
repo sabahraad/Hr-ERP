@@ -530,18 +530,19 @@ class attendanceController extends Controller
     {
         if ($shiftEmployee) {
             $shift_time = Shift::find($shiftEmployee->shifts_id);
-            $totalTime = Carbon::createFromFormat('H:i:s', $shift_time->shifts_start_time)
-                ->addHours($shift_time->shifts_grace_time->hour)
-                ->addMinutes($shift_time->shifts_grace_time->minute)
-                ->addSeconds($shift_time->shifts_grace_time->second)
-                ->format('H:i:s');
+            $shifts_start_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_start_time);
+            $shifts_grace_time = Carbon::createFromFormat('H:i:s',$shift_time->shifts_grace_time);
+            $totalTime = $shifts_start_time->addHours($shifts_grace_time->hour)
+                            ->addMinutes($shifts_grace_time->minute)
+                            ->addSeconds($shifts_grace_time->second);
+                $totalTime = $totalTime->format('H:i:s');
         } else {
             $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
             $graceTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('grace_time'));
             $totalTime = $officeTime->addHours($graceTime->hour)
-                ->addMinutes($graceTime->minute)
-                ->addSeconds($graceTime->second)
-                ->format('H:i:s');
+                        ->addMinutes($graceTime->minute)
+                        ->addSeconds($graceTime->second);
+            $totalTime = $totalTime->format('H:i:s');
         }
 
         return $totalTime > $currentTime ? 1 : 2;

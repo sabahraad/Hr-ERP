@@ -271,3 +271,4 @@ Route::get('/designation-name-list/{id}',[App\Http\Controllers\designationsContr
 
 //motivationalSpeech
 Route::get('/motivationalSpeech', [App\Http\Controllers\motivationalSpeechController::class, 'motivationalSpeech']);
+
