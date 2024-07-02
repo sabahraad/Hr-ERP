@@ -255,7 +255,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="input-block mb-12">
-                                <a class="btn btn-primary" href="{{ url('/') . '/' . 'storage/excels/testraad.xlsx' }}" download>Download Sample Excel</a>
+                                <a class="btn btn-primary" href="{{ url('/') . '/' . 'storage/excels/Sample Bulk Employee.xlsx' }}" download>Download Sample Excel</a>
                             </div>
                         </div>
 

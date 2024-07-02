@@ -52,8 +52,6 @@ class leaveController extends Controller
         $data->company_id = $company_id;
         $data->save();
 
-        // $data= leaveSetting::where('leave_type',$request->leave_type)->get();
-
         return response()->json([
             'message'=> 'Leave Type Added',
             'data'=>$data
@@ -97,8 +95,6 @@ class leaveController extends Controller
         $data->status = $request->status;
         $data->company_id = $company_id;
         $data->save();
-
-        // $data= leaveSetting::where('company_id',$company_id)->get();
 
         return response()->json([
             'message'=> 'Leave Type details Updated',
@@ -207,8 +203,6 @@ class leaveController extends Controller
                 'message' => 'You can apply for '.$availableLeaveCount.' days',
             ],403);
         }
-
-
 
         $data = new leaveApplication();
         if($request->has('image')){
@@ -678,5 +672,4 @@ class leaveController extends Controller
         ],200);
     }
 
-    
 }
