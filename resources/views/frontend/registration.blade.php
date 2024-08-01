@@ -357,7 +357,14 @@ $(document).ready(function() {
                             title: 'Validation Error',
                             html: errorMessage
                         });
-                    }
+                    }else{
+						Swal.fire({
+							icon: 'error',
+							title: 'Registration failed',
+							text: 'An error occurred while processing your request. Please try again later.',
+							html : xhr.responseJSON.error
+						});
+					}
                 }
             });
         });

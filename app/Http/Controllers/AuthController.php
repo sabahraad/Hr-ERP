@@ -59,101 +59,56 @@ class AuthController extends Controller
                 'error' => $validator->errors(),
             ], 422);
         }
-      
-        // Create the company
-        $company = $this->createCompany($request);
-
-        // Create the user
-        $user = $this->createUser($request, $company);
-
-        // Create the department
-        $department = $this->createDepartment($company);
-
-        // Create the designation
-        $designation = $this->createDesignation($department);
-
-        // Create the employee
-        $employee = $this->createEmployee($request, $user, $department, $designation, $company);
-
-        // Create the salary record
-        $this->createSalary($employee, $company);
-        
-        return response()->json([
-            'message' => 'Company Successfully Registered',
-        ],Response::HTTP_CREATED);
-    }
-
-    private function createCompany($request)
-    {
-        $imageName = time() . '.' . $request->logo->extension();
+      //Create Company
+        $imageName =  time() . '.' . $request->logo->extension();
         $request->logo->move(public_path('images'), $imageName);
         $imagePath = 'images/' . $imageName;
-    
-        $company = new Company();
-        $company->companyName = $request->companyName;
-        $company->logo = $imagePath;
-        $company->address = $request->address;
-        $company->contactNumber = $request->contactNumber;
-        $company->companyDetails = $request->companyDetails;
-        $company->save();
-    
-        return $company;
-    }
-    
-    private function createUser($request, $company)
-    {
+
+        $data = new Company();
+        $data->companyName = $request->companyName;
+        $data->logo = $imagePath;
+        $data->address = $request->address;
+        $data->contactNumber = $request->contactNumber;
+        $data->companyDetails = $request->companyDetails;
+        $data->save();
+
+        
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        $user->company_id = $company->id;
+        $user->company_id = $data->company_id;
         $user->role = 2;
         $user->save();
-    
-        return $user;
-    }
-    
-    private function createDepartment($company)
-    {
-        $department = new Department();
-        $department->deptTitle = 'People Care';
-        $department->company_id = $company->id;
-        $department->save();
-    
-        return $department;
-    }
-    
-    private function createDesignation($department)
-    {
-        $designation = new Designation();
-        $designation->desigTitle = 'HR';
-        $designation->dept_id = $department->id;
-        $designation->save();
-    
-        return $designation;
-    }
-    
-    private function createEmployee($request, $user, $department, $designation, $company)
-    {
-        $employee = new Employee();
+
+        $dept = new Department();
+        $dept->deptTitle = "People Care";
+        $dept->company_id = $data->company_id;
+        $dept->save();
+
+        $desig = new Designation();
+        $desig->desigTitle = "HR";
+        $desig->dept_id = $dept->dept_id;
+        $desig->save();
+
+        $employee= new Employee();
         $employee->id = $user->id;
         $employee->officeEmployeeID = $request->officeEmployeeID;
         $employee->name = $request->name;
-        $employee->dept_id = $department->id;
-        $employee->designation_id = $designation->id;
-        $employee->company_id = $company->id;
+        $employee->dept_id = $dept->dept_id;
+        $employee->designation_id = $desig->designation_id;
+        $employee->company_id = $data->company_id;
         $employee->save();
-    
-        return $employee;
-    }
-    
-    private function createSalary($employee, $company)
-    {
-        $salary = new Salary();
-        $salary->salary = 0;
-        $salary->emp_id = $employee->id;
-        $salary->company_id = $company->id;
-        $salary->save();
+
+        $sal = new Salary();
+        $sal->salary = 000000;
+        $sal->emp_id = $employee->emp_id; 
+        $sal->company_id = $data->company_id; 
+        $sal->save();
+        
+        return response()->json([
+            'message' => 'Company Successfully Registered',
+        ],Response::HTTP_CREATED);
     }
 
  
