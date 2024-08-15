@@ -368,7 +368,7 @@ class attendanceController extends Controller
         }
 
         if ($request->action == 2) {  // Check OUT
-            return $this->handleCheckOut($emp_id, $company_id, $currentTime, $shiftEmployee);
+            return $this->handleCheckOut($request,$emp_id, $company_id, $currentTime, $shiftEmployee);
         }
     }
 
@@ -509,9 +509,11 @@ class attendanceController extends Controller
             $data->company_id = $company_id;
             $data->edit_reason = $request->edit_reason;
             $data->editedBY = $request->editedBY;
+            $data->checkIN_latitude = $request->latitude;
+            $data->checkIN_longitude = $request->longitude;
             $data->id = $user_id;
             $data->save();
-
+            
             return response()->json([
                 'message' => 'Attendance Accepted Successfully',
                 'data' => $data,
@@ -553,7 +555,7 @@ class attendanceController extends Controller
         return TimelineSetting::where('emp_id', $emp_id)->exists();
     }
 
-    private function handleCheckOut($emp_id, $company_id, $currentTime, $shiftEmployee)
+    private function handleCheckOut($request, $emp_id, $company_id, $currentTime, $shiftEmployee)
     {
         if ($this->hasCheckedOutToday($emp_id)) {
             return response()->json(['message' => 'Your Are Already Checked OUT'], 400);
@@ -567,8 +569,10 @@ class attendanceController extends Controller
         $data = Attendance::where('emp_id', $emp_id)->orderBy('attendance_id', 'desc')->first();
         $data->OUT = $status;
         $data->OUTstatus = $status;
+        $data->checkOUT_latitude = $request->latitude;
+        $data->checkOUT_longitude = $request->longitude;
         $data->save();
-
+       
         return response()->json([
             'message' => 'Successfully Checked Out for Today',
             'data' => $data
