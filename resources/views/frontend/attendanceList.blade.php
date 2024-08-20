@@ -385,7 +385,6 @@
                     console.log(item.INstatus);
                     var rowColorClass = (item.INstatus === 2 || item.OUTstatus === 2) ? 'bg-danger' : '';
                     var editRoute = '{{ route("editAttendance", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
-                    var showmapRoute = '{{ route("showMap", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
                     var rowData = [
                         rowNum,
                         '<td >' + (item.employee_name || 'N/A') + '</td>',
