@@ -1,6 +1,8 @@
 @include('frontend.header')
 @include('frontend.navbar')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
 <style>
     .table {
             --bs-table-bg: transparent; /* Set it to a transparent color */
@@ -77,6 +79,7 @@
                                         <th>Check In Time</th>
                                         <th>Check Out Time</th>
                                         <th>Late Reason</th>
+                                        <th>Location</th>
                                         <th>Early Out Reason</th>
                                         <th>Attendance Edited By</th>
                                         <th>Attendance Edit Reason</th>
@@ -202,6 +205,22 @@
                 </div>
             </div>
             <!-- /Delete Designation Modal -->
+
+            <!-- Map Modal -->
+            <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Map</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="height: 400px; width: 100%;"></div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <!-- /Map Modal -->
         
         </div>
         <!-- /Page Wrapper -->
@@ -215,6 +234,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -237,6 +257,52 @@
         console.log("A date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
     });
+
+    //map script
+    $(document).ready(function() {
+        var map;  // Declare map variable to be accessible globally
+
+        // Function to initialize the map
+        function initializeMap(checkIN_lat, checkIN_long, checkOUT_lat, checkOUT_long) {
+            // Initialize the map
+            map = L.map('map').setView([checkIN_lat, checkIN_long], 13);
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // Add a marker for Check-IN location
+            L.marker([checkIN_lat, checkIN_long]).addTo(map)
+                .bindPopup('Check-IN Location')
+                .openPopup();
+
+            // Add a marker for Check-OUT location if coordinates are available
+            if (checkOUT_lat && checkOUT_long) {
+                L.marker([checkOUT_lat, checkOUT_long]).addTo(map)
+                    .bindPopup('Check-OUT Location')
+                    .openPopup();
+            }
+        }
+
+        // Handle the modal show event to load the map
+        $('#mapModal').on('shown.bs.modal', function (e) {
+            var button = $(e.relatedTarget);  // Button that triggered the modal
+            var checkIN_lat = button.data('checkin-lat');
+            var checkIN_long = button.data('checkin-long');
+            var checkOUT_lat = button.data('checkout-lat');
+            var checkOUT_long = button.data('checkout-long');
+
+            // Initialize the map with the provided coordinates
+            if (map) {
+                map.remove(); // Remove previous map instance if already exists
+            }
+            initializeMap(checkIN_lat, checkIN_long, checkOUT_lat, checkOUT_long);
+        });
+    });
+
+    //map script end
 
     $(document).ready(function() {
         var jwtToken = "{{ $jwtToken }}";
@@ -319,12 +385,15 @@
                     console.log(item.INstatus);
                     var rowColorClass = (item.INstatus === 2 || item.OUTstatus === 2) ? 'bg-danger' : '';
                     var editRoute = '{{ route("editAttendance", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
+                    var showmapRoute = '{{ route("showMap", ["id" => ":id"]) }}'.replace(':id', item.attendance_id);
                     var rowData = [
                         rowNum,
                         '<td >' + (item.employee_name || 'N/A') + '</td>',
                         '<td >' + (createdAt !== 'null' ? createdAt : 'N/A') + '</td>',
                         '<td >' + (updatedAt !== 'N/A' ? updatedAt : 'N/A')  + '</td>',
                         '<td >' + (item.lateINreason || 'N/A') + '</td>',
+                        // '<td><a href="' + showmapRoute + '" class="btn btn-sm btn-info">Show Map</a></td>',
+                        '<td><a href="#" class="btn btn-sm btn-info show-map-btn" data-bs-toggle="modal" data-bs-target="#mapModal" data-checkin-lat="' + item.checkIN_latitude + '" data-checkin-long="' + item.checkIN_longitude + '" data-checkout-lat="' + item.checkOUT_latitude + '" data-checkout-long="' + item.checkOUT_longitude + '">Show Map</a></td>',
                         '<td >' + (item.earlyOUTreason || 'N/A') + '</td>',
                         '<td >' + (item.edited_by_name || 'N/A') + '</td>',
                         '<td >' + (item.edit_reason || 'N/A') + '</td>',

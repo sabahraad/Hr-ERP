@@ -124,4 +124,15 @@ class attendanceController extends Controller
         return view('frontend.individualAttendanceReport',compact('result'));
     }
 
+    public function showMap($id){
+        
+        $attendance = Attendance::find($id);
+        return view('map', [
+            'checkIN_latitude' => $attendance->checkIN_latitude,
+            'checkIN_longitude' => $attendance->checkIN_longitude,
+            'checkOUT_latitude' => $attendance->checkOUT_latitude,
+            'checkOUT_longitude' => $attendance->checkOUT_longitude,
+        ]);
+    }
+
 }
