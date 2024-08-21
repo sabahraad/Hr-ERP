@@ -128,6 +128,7 @@
 									<li><a href="payslip-reports.html"> Payslip Report </a></li> -->
 									<li><a href="{{route('customReport')}}"> Attendance Report </a></li>
 									<li><a href="{{route('leaveReport')}}"> Leave Report </a></li>
+									<li><a href="{{route('showVisitReport')}}"> Visit Report </a></li>
 									<!-- <li><a href="daily-reports.html"> Daily Report </a></li> -->
 								</ul>
 							</li>
