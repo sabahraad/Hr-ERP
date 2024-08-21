@@ -95,6 +95,7 @@ Route::middleware(SetDefaultJsonResponse::class)->group(function () {
     Route::post('/complete-visit/{id}', [App\Http\Controllers\visitController::class, 'completeVisit']);
     Route::post('/edit-visit/{id}', [App\Http\Controllers\visitController::class, 'editVisit']);
     Route::get('/complete-visit-list', [App\Http\Controllers\visitController::class, 'completeVisitList']);
+    Route::post('/visit-report', [App\Http\Controllers\visitController::class, 'visitReport']);
 
     //meeting
     Route::post('/create-meeting', [App\Http\Controllers\meetingController::class, 'createMeeting']);
