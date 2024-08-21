@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\frontendController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Utils\BaseUrl;
 
-class weekendController extends Controller
+class visitController extends Controller
 {
-    public function weekendlist(){
-
+    public function showVisitReport(){
         $access_token = session('access_token');
         $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/weekend-list',
+        CURLOPT_URL => $baseUrl.'/emp-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -26,15 +25,9 @@ class weekendController extends Controller
         CURLOPT_HTTPHEADER => array(
             'Authorization: Bearer ' . $access_token),
         ));
-
         $response = curl_exec($curl);
-
         curl_close($curl);
-        $dataArray = json_decode($response,true);
-        return view('frontend.weekend',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+        $emp = json_decode($response,true);
+        return view('frontend.visitReport',compact('emp'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
-    public function save(Request $request){
-        dd($request);
-    }
-
 }

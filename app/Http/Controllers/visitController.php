@@ -218,4 +218,30 @@ class visitController extends Controller
             ],200);
         }
     }
+
+    public function visitReport(Request $request){
+        $date = $request->date_range;
+        $dateParts = explode(' - ', $date);
+        $startDate = $dateParts[0];
+        $endDate = $dateParts[1];
+        $emp_id= $request->emp_id;
+        $data = Visit::where('visits.emp_id', $emp_id)
+                    ->whereBetween('visits.created_at', [$startDate, $endDate])
+                    ->join('employees', 'visits.emp_id', '=', 'employees.emp_id')
+                    ->select('visits.*', 'employees.name')
+                    ->orderBy('visits.created_at', 'desc')
+                    ->get();
+        if(count($data)==0){
+            return response()->json([
+                'message'=>'NO Visit History Found',
+                'data'=>$data
+            ],404);
+        }else{
+            return response()->json([
+                'message'=>'Visit History',
+                'data'=>$data
+
+            ],200);
+        }
+    }
 }
