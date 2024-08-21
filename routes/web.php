@@ -115,6 +115,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::post('/update-employee-into-remote', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'updateEmployeeIntoRemote'])->name('updateEmployeeIntoRemote');
     Route::post('/delete-employee-into-remote', [App\Http\Controllers\frontendController\remoteEmployeeController::class, 'deleteEmployeeIntoRemote'])->name('deleteEmployeeIntoRemote');
 
+    // showVisitReport
+    Route::get('/visit-report', [App\Http\Controllers\frontendController\visitController::class, 'showVisitReport'])->name('showVisitReport');
+
 });
  //dept excel download
  Route::get('/export-dept-data', [App\Http\Controllers\frontendController\departmentController::class, 'exportDeptData'])->name('downloadDeptExcel');
@@ -172,3 +175,4 @@ Route::group(['prefix' => 'admin','middleware' => ['admin_check','prevent-back-h
     Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('approveRequisition');
 
 });
+

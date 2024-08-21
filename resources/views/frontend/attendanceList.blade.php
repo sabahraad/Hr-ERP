@@ -270,7 +270,7 @@
             // Add OpenStreetMap tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '© OpenStreetMap'
+                attribution: 'Raad'
             }).addTo(map);
 
             // Add a marker for Check-IN location
