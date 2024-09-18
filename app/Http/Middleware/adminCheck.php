@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class adminCheck
 {
+    //role = 1 = user 
+    //role = 2 = HR
+    //role = 3 = AAMAR dIGITAL EXCESS
+    //role = 4 = Admin
+    //role = 5 = FINENCE
+    //role = 6 = DIRECTOR
     /**
      * Handle an incoming request.
      *
