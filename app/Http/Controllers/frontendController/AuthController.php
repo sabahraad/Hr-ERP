@@ -34,6 +34,8 @@ class AuthController extends Controller
             return redirect()->route('requisitionList'); 
         }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 5){
             return redirect()->route('requisitionList'); 
+        }elseif(session()->has('access_token') && session('access_token') !== null && session('role') == 6){
+            return redirect()->route('director.dashboard'); 
         }else{
             return view('frontend.login');
         }
@@ -127,8 +129,10 @@ class AuthController extends Controller
                 return redirect()->route('dashboard');
             }elseif($role == 3){
                 return redirect()->route('super-admin.dashboard'); 
-            }else{
+            }elseif($role == 4 || $role == 5){
                 return redirect()->route('requisitionList'); 
+            }else{
+                return redirect()->route('director.dashboard');
             }
         }else{
             $access_token = session('access_token');

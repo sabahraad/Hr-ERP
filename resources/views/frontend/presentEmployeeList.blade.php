@@ -1,5 +1,12 @@
-@include('frontend.header')
-@include('frontend.navbar')
+<!-- role = 2 = hr -->
+@if (session('role') == 2)
+    @include('frontend.header')
+    @include('frontend.navbar')
+@else
+    @include('Director.header')
+    @include('Director.navbar')
+@endif
+
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <style>
     .table {

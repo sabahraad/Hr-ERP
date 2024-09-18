@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleCheck
 {
+    //role = 1 = user 
+    //role = 2 = HR
+    //role = 3 = AAMAR dIGITAL EXCESS
+    //role = 4 = Admin
+    //role = 5 = FINENCE
+    //role = 6 = DIRECTOR
     /**
      * Handle an incoming request.
      *
@@ -15,7 +21,7 @@ class RoleCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $allowedRoles = [2, 3];
+        $allowedRoles = [2, 3, 6];
         if(auth()->check() && in_array(auth()->user()->role, $allowedRoles)){
             return $next($request);
         }else{

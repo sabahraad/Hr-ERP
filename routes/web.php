@@ -175,4 +175,10 @@ Route::group(['prefix' => 'admin','middleware' => ['admin_check','prevent-back-h
     Route::post('/approve-requisition', [App\Http\Controllers\Requisition\requisitionController::class, 'approveRequisition'])->name('approveRequisition');
 
 });
+Route::group(['prefix' => 'director','middleware' => ['director_check' ,'prevent-back-history']], function () {
+    Route::get('/dashboard', [App\Http\Controllers\Director\dashboardController::class, 'dashboard'])->name('director.dashboard');
+    Route::get('/requisition-list', [App\Http\Controllers\Director\dashboardController::class, 'requisitionList'])->name('director.requisitionList');
+    Route::get('/presentEmployeeList', [App\Http\Controllers\Director\dashboardController::class, 'presentEmployeeList'])->name('director.presentEmployeeList');
+    Route::get('/absentEmployeeList', [App\Http\Controllers\Director\dashboardController::class, 'absentEmployeeList'])->name('director.absentEmployeeList');
 
+});
