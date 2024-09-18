@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Requisition;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendEmailJob;
 use App\Models\Employee;
 use App\Models\Product;
 use App\Models\Requisition;
@@ -78,6 +79,8 @@ class requisitionController extends Controller
         $data->emp_id = $emp_id;
         $data->company_id = $company_id;
         $data->save();
+
+        SendEmailJob::dispatch();
 
         return response()->json([
             'message'=>'Requisition Added',
