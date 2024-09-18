@@ -1,5 +1,11 @@
-@include('frontend.header')
-@include('frontend.navbar')
+<!-- role = 2 = hr -->
+@if (session('role') == 2)
+    @include('frontend.header')
+    @include('frontend.navbar')
+@else
+    @include('Director.header')
+    @include('Director.navbar')
+@endif
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 			
