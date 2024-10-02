@@ -39,7 +39,7 @@
 
 						</div>
 						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-							<a href="{{route('director.presentEmployeeList')}}">
+							<!-- <a href="{{route('director.presentEmployeeList')}}"> -->
 								<div class="card dash-widget">
 									<div class="card-body">
 										<span class="dash-widget-icon"><i class="fas fa-check-circle"></i></span>
