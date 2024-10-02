@@ -154,4 +154,18 @@ class timeWiseController extends Controller
 
         return view('frontend.absentEmployeeList',compact('data'));
     }
+
+    public function leaveEmployeeList(){
+        $access_token = session('access_token');
+        $company_id = session('company_id');
+        $baseUrl = BaseUrl::get();
+        $today = Carbon::now()->toDateString();
+        $data = LeaveApplication::join('employees', 'leave_applications.emp_id', '=', 'employees.emp_id')
+            ->where('employees.company_id', $company_id)
+            ->whereJsonContains('leave_applications.dateArray', $today)
+            ->select('leave_applications.*', 'leave_applications.status as leave_status', 'employees.*') // Ensure status and all fields from leave_applications are selected
+            ->get();        
+
+        return view('frontend.leaveEmployeeList',compact('data'),['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
+    }
 }

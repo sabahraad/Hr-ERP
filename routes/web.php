@@ -78,6 +78,7 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/dashboard', [App\Http\Controllers\frontendController\timeWiseController::class, 'dashboard'])->name('dashboard');
     Route::get('/presentEmployeeList', [App\Http\Controllers\frontendController\timeWiseController::class, 'presentEmployeeList'])->name('presentEmployeeList');
     Route::get('/absentEmployeeList', [App\Http\Controllers\frontendController\timeWiseController::class, 'absentEmployeeList'])->name('absentEmployeeList');
+    Route::get('/leaveEmployeeList', [App\Http\Controllers\frontendController\timeWiseController::class, 'leaveEmployeeList'])->name('leaveEmployeeList');
 
     
     //Shift
