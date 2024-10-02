@@ -36,7 +36,6 @@ class timeWiseController extends Controller
                                         ->count();
         $total_on_leave = LeaveApplication::join('employees', 'leave_applications.emp_id', '=', 'employees.emp_id')
                                             ->where('employees.company_id', $company_id)
-                                            ->where('leave_applications.status', 1)
                                             ->whereJsonContains('leave_applications.dateArray', $today)
                                             ->count();
         $total_absent = $total_emp - ($total_attendance + $total_on_leave);
