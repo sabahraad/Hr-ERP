@@ -79,8 +79,10 @@ class requisitionController extends Controller
         $data->emp_id = $emp_id;
         $data->company_id = $company_id;
         $data->save();
-
-        SendEmailJob::dispatch();
+        
+        if($company_id == 19){
+            SendEmailJob::dispatch();
+        }
 
         return response()->json([
             'message'=>'Requisition Added',
