@@ -143,13 +143,22 @@ class timeWiseController extends Controller
         $company_id = session('company_id');
         $currentDate = date('Y-m-d');
         $data = Employee::where('company_id', $company_id)
-            ->whereNotExists(function ($query) use ($currentDate) {
-                $query->select(DB::raw(1))
-                    ->from('attendances')
-                    ->whereRaw('attendances.emp_id = employees.emp_id')
-                    ->whereDate('attendances.created_at', $currentDate);
-            })
-            ->pluck('emp_id','name');
+                        ->whereNotExists(function ($query) use ($currentDate) {
+                            // Subquery to exclude employees who have attendance records for the current day
+                            $query->select(DB::raw(1))
+                                ->from('attendances')
+                                ->whereRaw('attendances.emp_id = employees.emp_id')
+                                ->whereDate('attendances.created_at', $currentDate);
+                        })
+                        ->whereNotExists(function ($query) use ($currentDate) {
+                            // Subquery to exclude employees who are on leave for the current day
+                            $query->select(DB::raw(1))
+                                ->from('leave_applications')
+                                ->whereRaw('leave_applications.emp_id = employees.emp_id')
+                                ->whereJsonContains('leave_applications.dateArray', $currentDate); // Assuming the leave date is stored in a 'leave_date' column
+                        })
+                        ->pluck('emp_id', 'name');
+
 
         return view('frontend.absentEmployeeList',compact('data'));
     }

@@ -68,6 +68,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 <!-- Date Range Picker -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+
 <script>
     $(document).ready(function() {
         // Initialize the date range picker
