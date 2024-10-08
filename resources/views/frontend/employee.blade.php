@@ -76,7 +76,11 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>
                                     <h2 class="table-avatar">
-                                        <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
+                                        @if ($employee['image'] == null)
+                                            <a href="#" class="avatar"><img src="{{asset('images/user_avater.png')}}" alt="User Image"></a>
+                                        @else
+                                            <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
+                                        @endif
                                         <a href="#">{{$employee['name']}}</a>
                                     </h2>
                                 </td>

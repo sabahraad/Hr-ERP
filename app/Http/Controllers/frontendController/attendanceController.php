@@ -64,6 +64,7 @@ class attendanceController extends Controller
     }
 
     public function attendanceList(){
+    
         $access_token = session('access_token');
         $baseUrl = $this->baseUrl;
         //employeeList
@@ -83,6 +84,7 @@ class attendanceController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $employee = json_decode($response,true);
+
         return view('frontend.attendanceList',compact('employee'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);        
     }
 

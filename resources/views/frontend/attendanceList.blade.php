@@ -81,8 +81,6 @@
                                         <th>Late Reason</th>
                                         <th>Location</th>
                                         <th>Early Out Reason</th>
-                                        <th>Attendance Edited By</th>
-                                        <th>Attendance Edit Reason</th>
                                         <th >Action</th>
                                     </tr>
                                 </thead>
@@ -391,11 +389,8 @@
                         '<td >' + (createdAt !== 'null' ? createdAt : 'N/A') + '</td>',
                         '<td >' + (updatedAt !== 'N/A' ? updatedAt : 'N/A')  + '</td>',
                         '<td >' + (item.lateINreason || 'N/A') + '</td>',
-                        // '<td><a href="' + showmapRoute + '" class="btn btn-sm btn-info">Show Map</a></td>',
                         '<td><a href="#" class="btn btn-sm btn-info show-map-btn" data-bs-toggle="modal" data-bs-target="#mapModal" data-checkin-lat="' + item.checkIN_latitude + '" data-checkin-long="' + item.checkIN_longitude + '" data-checkout-lat="' + item.checkOUT_latitude + '" data-checkout-long="' + item.checkOUT_longitude + '">Show Map</a></td>',
                         '<td >' + (item.earlyOUTreason || 'N/A') + '</td>',
-                        '<td >' + (item.edited_by_name || 'N/A') + '</td>',
-                        '<td >' + (item.edit_reason || 'N/A') + '</td>',
                         '<td class="' + rowColorClass + '"><div class="dropdown dropdown-action"><a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a><div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="'+editRoute+'" ><i class="fa-solid fa-pencil m-r-5" data-id="'+item.attendance_id+'" ></i> Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_designation" id="editEmployeeButton"><i class="fa-regular fa-trash-can m-r-5" data-id="'+item.attendance_id+'" ></i>Delete</a></div></div></td>'
                     ];
                     // table.row.add(rowData);
