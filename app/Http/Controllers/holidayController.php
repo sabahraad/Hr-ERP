@@ -133,6 +133,7 @@ class holidayController extends Controller
     }
 
     public function deleteHoliday($id){
+        
         Holiday::where('holidays_id',$id)->delete();        
         return response()->json([
             'message' => 'Holiday deleted successfully'

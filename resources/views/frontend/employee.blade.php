@@ -98,7 +98,6 @@
                                             <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
-                                                <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a> -->
                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $employee['emp_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
