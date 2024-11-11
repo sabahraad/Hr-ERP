@@ -76,7 +76,11 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>
                                     <h2 class="table-avatar">
-                                        <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
+                                        @if ($employee['image'] == null)
+                                            <a href="#" class="avatar"><img src="{{asset('images/user_avater.png')}}" alt="User Image"></a>
+                                        @else
+                                            <a href="#" class="avatar"><img src="{{asset($employee['image'])}}" alt="User Image"></a>
+                                        @endif
                                         <a href="#">{{$employee['name']}}</a>
                                     </h2>
                                 </td>
@@ -94,7 +98,6 @@
                                             <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
-                                                <!-- <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $employee['emp_id'] }}"><i class="fa-solid fa-pencil m-r-5" ></i> Edit</a> -->
                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $employee['emp_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                         </div>
                                     </div>

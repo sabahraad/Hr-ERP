@@ -30,6 +30,7 @@ class dashboardController extends Controller
                                             ->where('employees.company_id', $company_id)
                                             ->whereJsonContains('leave_applications.dateArray', $today)
                                             ->count();
+        
         $total_absent = $total_emp - ($total_attendance + $total_on_leave);
         $data = [
             'total_emp' => $total_emp,
@@ -84,4 +85,5 @@ class dashboardController extends Controller
 
         return view('frontend.absentEmployeeList',compact('data'));
     }
+
 }

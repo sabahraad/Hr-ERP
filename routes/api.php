@@ -172,13 +172,12 @@ Route::delete('/delete/office-location/{id}', [App\Http\Controllers\officeLocati
 
 //Weekend List
 Route::post('add-weekend', [App\Http\Controllers\weekendController::class, 'createWeekend'])->name('createWeekend');
-// Route::get('weekend-list', [App\Http\Controllers\weekendController::class, 'WeekendList'])->name('WeekendList');
 Route::delete('/delete/weekend', [App\Http\Controllers\weekendController::class, 'deleteWeekend'])->name('deleteWeekend');
 
 //Holiday
 Route::post('add-holiday', [App\Http\Controllers\holidayController::class, 'createHoliday'])->name('createHoliday');
 Route::post('/edit/holiday/{id}', [App\Http\Controllers\holidayController::class, 'updateHoliday'])->name('updateHoliday');
-Route::post('/delete/holiday/{id}', [App\Http\Controllers\holidayController::class, 'deleteHoliday'])->name('deleteHoliday');
+Route::delete('/delete/holiday/{id}', [App\Http\Controllers\holidayController::class, 'deleteHoliday'])->name('deleteHoliday');
 Route::get('/holiday-details/{id}', [App\Http\Controllers\holidayController::class, 'holidayDetails'])->name('holidayDetails');
 
 //Office-hour / officeSrtting

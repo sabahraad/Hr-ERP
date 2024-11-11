@@ -51,8 +51,10 @@
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 @if ($holiday['company_id'] != null)
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_holiday"><i class="fa-solid fa-pencil m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Edit</a>
-                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_holiday"><i class="fa-regular fa-trash-can m-r-5" data-id="{{ $holiday['holidays_id'] }}"></i> Delete</a>
+                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" id="editEmployeeButton" data-id="{{ $holiday['holidays_id'] }}">
+                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                        </a>
+                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee" data-id="{{ $holiday['holidays_id'] }}"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                                     </div>
                                                 @else
                                                     <div class="dropdown-menu dropdown-menu-right">
@@ -105,7 +107,7 @@
             <!-- /Add Holiday Modal -->
             
             <!-- Edit Holiday Modal -->
-            <div class="modal custom-modal fade" id="edit_holiday" role="dialog">
+            <div class="modal custom-modal fade" id="edit_employee" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -122,10 +124,8 @@
                                     <input class="form-control" id="holidayName" type="text" name="reason">
                                 </div>
                                 <div class="input-block mb-3">
-                                    <label class="col-form-label">Holiday Date <span class="text-danger">*</span></label>
-                                    <div class="cal-icon"><input class="form-control " name="date" type="date"></div>
-
-                                    <!-- <div class="cal-icon"><input id="holidayDate" class="form-control datetimepicker" name="date" ></div> -->
+                                        <label for="inputText4" class="col-form-label">Select Date Range:</label><br>
+                                        <input type="text"  id="date_range" class="form-control" name="date_range">
                                 </div>
                                 <input id ="holidays_id" class="form-control" name="holidays_id" type="hidden">
                                 <div class="submit-section">
@@ -139,7 +139,7 @@
             <!-- /Edit Holiday Modal -->
 
             <!-- Delete Holiday Modal -->
-            <div class="modal custom-modal fade" id="delete_holiday" role="dialog">
+            <div class="modal custom-modal fade" id="delete_employee" role="dialog">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body">
@@ -239,34 +239,56 @@
                 });
             });
 
-            $('.dropdown-item[data-bs-target="#edit_holiday"]').click(function() {
-                // Get the dept_id from the clicked element's data-id attribute
-                var holidays_id = $(this).find('.fa-pencil').data('id');
-
-                // Log the dept_id to the console
-                console.log(holidays_id);
-                var trElement = $(this).closest('tr');
-
-                // Find the 'td' elements within the 'tr'
-                var holidayName = trElement.find('td:eq(1)').text();
-                var holidayDate = trElement.find('td:eq(2)').text();
-
-                // Log the data to the console
-                console.log('holidayName:', holidayName);
-                console.log('holidayDate:', holidayDate);
-                $('#holidayName').val(holidayName);
-                $('#holidayDate').val(holidayDate);
-                $('#holidays_id').val(holidays_id);
-                // Show the modal
-                $('#edit_holiday').modal('show');
+            $(document).on('click', '.edit-employee', function(){
+                var empId = $(this).data('id');
+                // console.log(empId);
+                $.ajax({
+                    url: baseUrl + '/holiday-details/'+empId, 
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#holidayName').val(response.data.reason);
+                        $('#holidayDate').val(response.data.date);
+                        $('#holidays_id').val(response.data.holidays_id);
+                        $('#edit_employee').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseJSON.message)
+                        if(xhr.status === 404){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: xhr.responseJSON.message
+                            });
+                        }
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.error;
+                            var errorMessage = "<ul>";
+                            for (var field in errors) {
+                                errorMessage += "<li>" + errors[field][0] + "</li>";
+                            }
+                            errorMessage += "</ul>";
+                            
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessage
+                            });
+                        }
+                    }
+                });
             });
 
             $('#editSubmit').submit(function(e) {
                 e.preventDefault();
-                var holidays_id = $('#holidays_id').val();
+                var emp_id = $('#holidays_id').val();
+                console.log(emp_id);
                 var formData = new FormData(this);
                 $.ajax({
-                    url: baseUrl + '/edit/holiday/'+holidays_id, 
+                    url: baseUrl + '/edit/holiday/'+emp_id, 
                     type: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + jwtToken
@@ -275,6 +297,7 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        console.log(response);
                         Swal.fire({
                             icon: 'success',
                             title: 'Holiday Edited successfully',
@@ -305,24 +328,20 @@
                 });
             });
 
-            $('.dropdown-item[data-bs-target="#delete_holiday"]').click(function() {
-                // Get the dept_id from the clicked element's data-id attribute
-                var holidays_id = $(this).find('.fa-regular').data('id');
-                // Log the dept_id to the console
-                console.log(holidays_id);
-                var trElement = $(this).closest('tr');
-                $('#holidays_id').val(holidays_id);
+            $(document).on('click', '.delete-employee', function(){
+                var empId = $(this).data('id');
+                console.log(empId);
+                $('#holidays_id').val(empId);
             });
-
+            
             $('#holidayDelete').submit(function(e) {
                 e.preventDefault();
-                var holidays_id = $('#holidays_id').val();
-                console.log(holidays_id);
+                var emp_id = $('#holidays_id').val();
+                console.log(emp_id,'ok');
                 var formData = new FormData(this);
-
                 $.ajax({
-                    url: baseUrl + '/delete/holiday/'+holidays_id, 
-                    type: 'POST',
+                    url: baseUrl + '/delete/holiday/'+emp_id, 
+                    type: 'DELETE',
                     data: formData,
                     headers: {
                         'Authorization': 'Bearer ' + jwtToken
@@ -330,10 +349,11 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        console.log(response);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Holiday successfully deleted',
-                            text: 'You have successfully deleted a holiday',
+                            title: 'Employee successfully deleted',
+                            text: 'You have successfully deleted a employee',
                             showConfirmButton: false, 
                         });
                         setTimeout(function() {
@@ -341,18 +361,11 @@
                         },200);
                     },
                     error: function(xhr, status, error) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.error;
-                            var errorMessage = "<ul>";
-                            for (var field in errors) {
-                                errorMessage += "<li>" + errors[field][0] + "</li>";
-                            }
-                            errorMessage += "</ul>";
-                            
+                        if (xhr.status === 422) {                        
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Validation Error',
-                                html: errorMessage
+                                html: xhr.responseJSON.message
                             });
                         }
                     }

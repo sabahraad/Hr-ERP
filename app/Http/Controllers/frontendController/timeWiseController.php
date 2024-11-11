@@ -36,7 +36,6 @@ class timeWiseController extends Controller
                                         ->count();
         $total_on_leave = LeaveApplication::join('employees', 'leave_applications.emp_id', '=', 'employees.emp_id')
                                             ->where('employees.company_id', $company_id)
-                                            ->where('leave_applications.status', 1)
                                             ->whereJsonContains('leave_applications.dateArray', $today)
                                             ->count();
         $total_absent = $total_emp - ($total_attendance + $total_on_leave);
@@ -144,14 +143,37 @@ class timeWiseController extends Controller
         $company_id = session('company_id');
         $currentDate = date('Y-m-d');
         $data = Employee::where('company_id', $company_id)
-            ->whereNotExists(function ($query) use ($currentDate) {
-                $query->select(DB::raw(1))
-                    ->from('attendances')
-                    ->whereRaw('attendances.emp_id = employees.emp_id')
-                    ->whereDate('attendances.created_at', $currentDate);
-            })
-            ->pluck('emp_id','name');
+                        ->whereNotExists(function ($query) use ($currentDate) {
+                            // Subquery to exclude employees who have attendance records for the current day
+                            $query->select(DB::raw(1))
+                                ->from('attendances')
+                                ->whereRaw('attendances.emp_id = employees.emp_id')
+                                ->whereDate('attendances.created_at', $currentDate);
+                        })
+                        ->whereNotExists(function ($query) use ($currentDate) {
+                            // Subquery to exclude employees who are on leave for the current day
+                            $query->select(DB::raw(1))
+                                ->from('leave_applications')
+                                ->whereRaw('leave_applications.emp_id = employees.emp_id')
+                                ->whereJsonContains('leave_applications.dateArray', $currentDate); // Assuming the leave date is stored in a 'leave_date' column
+                        })
+                        ->pluck('emp_id', 'name');
+
 
         return view('frontend.absentEmployeeList',compact('data'));
+    }
+
+    public function leaveEmployeeList(){
+        $access_token = session('access_token');
+        $company_id = session('company_id');
+        $baseUrl = BaseUrl::get();
+        $today = Carbon::now()->toDateString();
+        $data = LeaveApplication::join('employees', 'leave_applications.emp_id', '=', 'employees.emp_id')
+            ->where('employees.company_id', $company_id)
+            ->whereJsonContains('leave_applications.dateArray', $today)
+            ->select('leave_applications.*', 'leave_applications.status as leave_status', 'employees.*') // Ensure status and all fields from leave_applications are selected
+            ->get();        
+
+        return view('frontend.leaveEmployeeList',compact('data'),['jwtToken' => $access_token,'baseUrl' => $baseUrl]);
     }
 }

@@ -26,17 +26,17 @@
 				
 					<div class="row">
 						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-							<div class="card dash-widget">
-								<div class="card-body">
-									<span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
-									<div class="dash-widget-info">
-										<h3>{{$data['total_emp']}}</h3>
-										<span>Total Employee</span>
+							<a href="{{route('employee')}}">
+								<div class="card dash-widget">
+									<div class="card-body">
+										<span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
+										<div class="dash-widget-info">
+											<h3>{{$data['total_emp']}}</h3>
+											<span>Total Employee</span>
+										</div>
 									</div>
 								</div>
-							</div>
-
-
+							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 							<a href="{{route('presentEmployeeList')}}">
@@ -65,6 +65,7 @@
 							</a>
 						</div>
 						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+						<a href="{{route('leaveEmployeeList')}}">
 							<div class="card dash-widget">
 								<div class="card-body">
 									<span class="dash-widget-icon"><i class="fas fa-bed"></i></span>
@@ -75,7 +76,7 @@
 								</div>
 							</div>
 						</div>
-						
+						</a>
 					</div>
 					
 					<div class="row">

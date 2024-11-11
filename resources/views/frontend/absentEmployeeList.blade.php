@@ -35,6 +35,7 @@
                     <table class="table table-striped custom-table" id="empTable">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Employee ID</th>
                                 <th>Name</th>
                             </tr>
@@ -42,6 +43,7 @@
                         <tbody>
                         @foreach ($data as $employeeName => $employeeId)
                             <tr>
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{ $employeeId }}</td>
                                 <td>{{ $employeeName }}</td>
                             </tr>
