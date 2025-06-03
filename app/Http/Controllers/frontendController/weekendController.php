@@ -15,7 +15,7 @@ class weekendController extends Controller
         $baseUrl = BaseUrl::get();
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://hrm.aamarpay.dev/api/weekend-list',
+        CURLOPT_URL => $baseUrl.'/weekend-list',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -28,7 +28,6 @@ class weekendController extends Controller
         ));
 
         $response = curl_exec($curl);
-
         curl_close($curl);
         $dataArray = json_decode($response,true);
         return view('frontend.weekend',compact('dataArray'), ['jwtToken' => $access_token,'baseUrl' => $baseUrl]);

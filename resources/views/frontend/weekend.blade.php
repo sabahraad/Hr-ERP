@@ -42,6 +42,7 @@
 											<td>Weekend</td>
                                             <form id="msform">
                                                 @csrf
+                                                
                                                 @if($dataArray === null || empty($dataArray['data']))
 
                                                 <td class="text-center">
@@ -93,6 +94,7 @@
                                                 </td> 
 
                                                 @else
+                                               
                                                 @foreach ($dataArray['data'] as $weekend )  
                                                 <td class="text-center">
                                                     <label class="custom_check">
