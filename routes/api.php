@@ -274,3 +274,6 @@ Route::get('/motivationalSpeech', [App\Http\Controllers\motivationalSpeechContro
 
 
 Route::get('/attendanceCheck', [App\Http\Controllers\StellarController::class, 'attendanceCheck']);
+
+//Bulk Attendance for specific user
+Route::get('/bulk-add-attendance', [App\Http\Controllers\BulkAttendanceController::class, 'bulkAddAttendanceForUser']);
