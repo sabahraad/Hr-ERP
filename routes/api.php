@@ -280,3 +280,8 @@ Route::get('/bulk-add-attendance', [App\Http\Controllers\BulkAttendanceControlle
 
 //Bulk Approve all pending leaves for specific user
 Route::get('/approve-all-pending-leaves', [App\Http\Controllers\BulkAttendanceController::class, 'approveAllPendingLeavesForUser']);
+
+// Employee Self-Service Attendance APIs
+Route::post('/check-in', [App\Http\Controllers\frontendController\EmployeeAttendanceController::class, 'checkIn']);
+Route::post('/check-out', [App\Http\Controllers\frontendController\EmployeeAttendanceController::class, 'checkOut']);
+Route::get('/monthly-attendance-report', [App\Http\Controllers\frontendController\EmployeeAttendanceController::class, 'getMonthlyReport']);

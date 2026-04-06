@@ -55,8 +55,7 @@
                                         <th>Late Reason</th>
                                         <th>Check Out Time</th>
                                         <th>Early Out Reason</th>
-                                        <th>Attendance Edited By</th>
-                                        <th>Attendance Edit Reason</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,28 +88,7 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td>
-                                            @if($raw['edited_by_name'] == Null)
-                                                <div >
-                                                    <h4>N/A</h4>
-                                                </div>
-                                            @else
-                                                <div >
-                                                    <h4>{{$raw['edited_by_name']}}</h4>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($raw['edit_reason'] == Null)
-                                                <div >
-                                                    <h4>N/A</h4>
-                                                </div>
-                                            @else
-                                                <div >
-                                                    <h4>{{$raw['edit_reason']}}</h4>
-                                                </div>
-                                            @endif
-                                        </td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>

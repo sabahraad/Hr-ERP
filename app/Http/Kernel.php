@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'admin_check' => \App\Http\Middleware\adminCheck::class,
         'finance_check' => \App\Http\Middleware\financeCheck::class,
         'director_check' => \App\Http\Middleware\directorCheck::class,
+        'attendance_panel_auth' => \App\Http\Middleware\AttendancePanelAuth::class,
 
     ];
 }

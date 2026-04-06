@@ -153,7 +153,6 @@ class BulkAttendanceController extends Controller
             $attendance->emp_id = $emp_id;
             $attendance->company_id = $company_id;
             $attendance->id = $user_id;
-            $attendance->edit_reason = 'Bulk attendance added';
             $attendance->created_at = $checkInTime;
             $attendance->updated_at = $checkOutTime;
             $attendance->save();

@@ -61,8 +61,6 @@
                                     @endphp
                                     <label class="col-form-label">Check Out Time</label>
                                     <input class="form-control" type="datetime-local" name= "updated_at" value="{{$raw->updated_at}}">
-                                    <label class="col-form-label">Reason</label>
-                                    <input class="form-control" type="text" name= "edit_reason" required>
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>

@@ -34,9 +34,7 @@ class attendanceController extends Controller
         'latitude' => 'required|numeric ',
         'longitude' => 'required|numeric',
         'action' => 'required|integer',
-        'reason' => 'string', 
-        'edit_reason' => 'string', 
-        'editedBY' => 'string'
+        'reason' => 'string'
     ];
 
     // public function createAttendance(Request $request)
@@ -506,8 +504,6 @@ class attendanceController extends Controller
             $data->INstatus = $status;
             $data->emp_id = $emp_id;
             $data->company_id = $company_id;
-            $data->edit_reason = $request->edit_reason;
-            $data->editedBY = $request->editedBY;
             $data->checkIN_latitude = $request->latitude;
             $data->checkIN_longitude = $request->longitude;
             $data->id = $user_id;
@@ -734,7 +730,6 @@ class attendanceController extends Controller
     public function attendanceAddedByHR(Request $request){
         $validator = Validator::make($request->all(), [
             'emp_id' => 'required|integer',
-            'edit_reason' => 'required|string',
             'action'  => 'required|integer|in:1,2',
             'datetime'=>'required'
         ]);
@@ -766,8 +761,6 @@ class attendanceController extends Controller
                 $data->INstatus = $on_time_checkIn;
                 $data->emp_id = $request->emp_id;
                 $data->company_id = $company_id;
-                $data->edit_reason = $request->edit_reason;
-                $data->editedBY = $HR_emp_id;
                 $data->id = $user_id;
                 $data->created_at = $request->datetime;
                 $data->save();
@@ -789,8 +782,6 @@ class attendanceController extends Controller
                     $data->OUTstatus = $on_time_check_out;
                     $data->emp_id = $request->emp_id;
                     $data->company_id = $company_id;
-                    $data->edit_reason = $request->edit_reason;
-                    $data->editedBY = $HR_emp_id;
                     $data->id = $user_id;
                     $data->updated_at = $request->datetime;
                     $data->save();
@@ -830,11 +821,9 @@ class attendanceController extends Controller
         $endDate = $dateParts[1];
         $data = Attendance::select(
                         'attendances.*',
-                        'employees.name as employee_name',
-                        'editedByEmployee.name as edited_by_name'
+                        'employees.name as employee_name'
                     )
                     ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
-                    ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
                     ->whereDate('attendances.created_at', '>=', $startDate)
                     ->whereDate('attendances.created_at', '<=', $endDate)
                     ->where('attendances.company_id', $company_id)
@@ -856,7 +845,6 @@ class attendanceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'emp_id' => 'required|integer',
-            'edit_reason' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -881,8 +869,6 @@ class attendanceController extends Controller
         
         $data->created_at = $created_at;
         $data->updated_at = $updated_at;
-        $data->editedBY = $Hr_emp_id;
-        $data->edit_reason = $request->edit_reason;
         $data->save();
 
         return response()->json([

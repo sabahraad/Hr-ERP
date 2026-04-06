@@ -58,11 +58,9 @@ class dashboardController extends Controller
         $currentDate = date('Y-m-d');
         $data = Attendance::select(
                         'attendances.*',
-                        'employees.name as employee_name',
-                        'editedByEmployee.name as edited_by_name'
+                        'employees.name as employee_name'
                     )
                     ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
-                    ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
                     ->whereDate('attendances.created_at', '>=', $currentDate)
                     ->whereDate('attendances.created_at', '<=', $currentDate)
                     ->where('attendances.company_id', $company_id)

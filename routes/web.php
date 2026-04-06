@@ -22,6 +22,20 @@ Route::post('/registration', [App\Http\Controllers\frontendController\AuthContro
 Route::post('/login', [App\Http\Controllers\frontendController\AuthController::class, 'login'])->name('login');
 Route::get('/logout', [App\Http\Controllers\frontendController\AuthController::class, 'logout'])->name('logout');
 
+// Employee Attendance Panel (Separate from Admin)
+Route::prefix('attendance-panel')->group(function () {
+    Route::get('/login', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'showLogin'])->name('attendance-panel.login');
+    Route::post('/login', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'login'])->name('attendance-panel.login.post');
+    Route::get('/logout', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'logout'])->name('attendance-panel.logout');
+    
+    // Protected routes
+    Route::middleware(['attendance_panel_auth'])->group(function () {
+        Route::get('/', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'index'])->name('attendance-panel.index');
+        Route::post('/check-in', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'checkIn'])->name('attendance-panel.checkin');
+        Route::post('/check-out', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'checkOut'])->name('attendance-panel.checkout');
+        Route::get('/monthly-report', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'getMonthlyReport'])->name('attendance-panel.monthly-report');
+    });
+});
 
 Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], function () {
     Route::get('/password-change', [App\Http\Controllers\frontendController\AuthController::class, 'showPasswordChange'])->name('showPasswordChange');
@@ -37,6 +51,9 @@ Route::group(['middleware' => ['check_access_token' ,'prevent-back-history']], f
     Route::get('/attendance-type', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceType'])->name('attendanceType');
     Route::get('/attendance-setting', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceSetting'])->name('attendanceSetting');
     Route::get('/attendance-list', [App\Http\Controllers\frontendController\attendanceController::class, 'attendanceList'])->name('attendanceList');
+    
+    // Employee Self-Service Attendance
+    Route::get('/my-attendance', [App\Http\Controllers\frontendController\EmployeeAttendanceController::class, 'myAttendance'])->name('myAttendance');
     Route::get('/leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'leaveApprover'])->name('leaveApprover');
     Route::get('/add-leave-approver', [App\Http\Controllers\frontendController\leaveController::class, 'addLeaveApprover'])->name('addLeaveApprover');
     

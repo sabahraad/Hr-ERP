@@ -95,11 +95,9 @@ class attendanceController extends Controller
         if($access_token){
             $attendance = Attendance::select(
                             'attendances.*',
-                            'employees.name as employee_name',
-                            'editedByEmployee.name as edited_by_name'
+                            'employees.name as employee_name'
                         )
                         ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
-                        ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
                         ->where('attendances.attendance_id', '=', $id)
                         ->where('attendances.company_id', $company_id)
                         ->get();
@@ -113,11 +111,9 @@ class attendanceController extends Controller
     public function individualAttendanceReport($id,$startDate,$endDate){
         $result = Attendance::select(
                                 'attendances.*',
-                                'employees.name as employee_name',
-                                'editedByEmployee.name as edited_by_name'
+                                'employees.name as employee_name'
                             )
                             ->join('employees', 'attendances.emp_id', '=', 'employees.emp_id')
-                            ->leftJoin('employees as editedByEmployee', 'attendances.editedBY', '=', 'editedByEmployee.emp_id')
                             ->whereDate('attendances.created_at', '>=', $startDate)
                             ->whereDate('attendances.created_at', '<=', $endDate)
                             ->where('attendances.emp_id', $id)

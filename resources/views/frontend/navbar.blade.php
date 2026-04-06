@@ -45,6 +45,9 @@
 								<span>Attendance</span>
 							</li>
 							<li>
+								<a href="{{route('myAttendance')}}"><i class="la la-fingerprint"></i> <span>My Attendance</span></a>
+							</li>
+							<li>
 								<a href="{{route('attendanceList')}}"><i class="la la-houzz"></i> <span>Attendance List</span></a>
 								
 							</li>

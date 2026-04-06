@@ -131,8 +131,7 @@
                                     <label class="col-form-label" for="datetime">Select Date and Time:<span class="text-danger">*</span></label>
                                     <input class="form-control" type="datetime-local" id="datetime" name="datetime" required>
                                     
-                                    <label class="col-form-label">Reason</label>
-                                    <input class="form-control" type="text" name= "edit_reason">
+
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn">Submit</button>
