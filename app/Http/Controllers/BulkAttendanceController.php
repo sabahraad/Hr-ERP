@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Employee;
 use App\Models\Holiday;
 use App\Models\leaveApplication;
+use App\Models\LeaveApprove;
 use App\Models\User;
 use App\Models\Weekend;
 use Carbon\Carbon;
@@ -15,8 +16,9 @@ use Illuminate\Support\Facades\Log;
 class BulkAttendanceController extends Controller
 {
     /**
-     * Bulk add attendance for user_id = 78 from Nov 01 to Jan 31
-     * Attendance time: Random between 10:00 AM and 10:15 AM
+     * Bulk add attendance for user_id = 78 from Feb 18 to March 21
+     * Attendance time: Random between 09:00 AM and 09:30 AM
+     * Attendance checkout time: Random between 04:00 PM and 04:30 PM
      * Checks: Weekends, Holidays, Approved Leaves, Existing Attendance
      */
     public function bulkAddAttendanceForUser()
@@ -31,9 +33,21 @@ class BulkAttendanceController extends Controller
         $emp_id = $employee->emp_id;
         $company_id = User::find($user_id)->company_id;
 
-        // Date range: Nov 01, 2025 to Jan 31, 2026
-        $startDate = Carbon::create(2025, 11, 1);
-        $endDate = Carbon::create(2026, 1, 31);
+        // Date range: Feb 18, 2026 to March 21, 2026
+        $startDate = Carbon::create(2026, 2, 18);
+        $endDate = Carbon::create(2026, 3, 21);
+
+        // Delete existing attendance records for this user in the date range
+        $deletedCount = Attendance::where('emp_id', $emp_id)
+            ->whereBetween('created_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d') . ' 23:59:59'])
+            ->delete();
+
+        Log::info('Existing attendance deleted before bulk add', [
+            'user_id' => $user_id,
+            'emp_id' => $emp_id,
+            'date_range' => $startDate->format('Y-m-d') . ' to ' . $endDate->format('Y-m-d'),
+            'deleted_count' => $deletedCount
+        ]);
 
         // Get weekends for the company
         $weekendData = Weekend::where('company_id', $company_id)->first();
@@ -76,15 +90,6 @@ class BulkAttendanceController extends Controller
             }
         }
 
-        // Get existing attendance dates for the employee
-        $existingAttendance = Attendance::where('emp_id', $emp_id)
-            ->whereBetween('created_at', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d') . ' 23:59:59'])
-            ->get()
-            ->map(function ($attendance) {
-                return Carbon::parse($attendance->created_at)->format('Y-m-d');
-            })
-            ->toArray();
-
         $addedCount = 0;
         $addedAttendanceIds = [];
         $skippedDates = [];
@@ -115,23 +120,28 @@ class BulkAttendanceController extends Controller
                 continue;
             }
 
-            // Check if attendance already exists
-            if (in_array($dateStr, $existingAttendance)) {
-                $skippedDates[] = ['date' => $dateStr, 'reason' => 'Attendance Exists'];
-                $currentLoopDate->addDay();
-                continue;
-            }
-
-            // Generate random time between 10:00 AM and 10:15 AM
-            $randomMinutes = mt_rand(0, 15);
+            // Generate random check-in time between 09:00 AM and 09:30 AM
+            $randomMinutes = mt_rand(0, 30);
             $randomSeconds = mt_rand(0, 59);
             $checkInTime = Carbon::create(
                 $currentLoopDate->year,
                 $currentLoopDate->month,
                 $currentLoopDate->day,
-                10,
+                9,
                 $randomMinutes,
                 $randomSeconds
+            );
+
+            // Generate random check-out time between 04:00 PM and 04:30 PM
+            $randomOutMinutes = mt_rand(0, 30);
+            $randomOutSeconds = mt_rand(0, 59);
+            $checkOutTime = Carbon::create(
+                $currentLoopDate->year,
+                $currentLoopDate->month,
+                $currentLoopDate->day,
+                16, // 4 PM
+                $randomOutMinutes,
+                $randomOutSeconds
             );
 
             // Create attendance record
@@ -145,7 +155,7 @@ class BulkAttendanceController extends Controller
             $attendance->id = $user_id;
             $attendance->edit_reason = 'Bulk attendance added';
             $attendance->created_at = $checkInTime;
-            $attendance->updated_at = $checkInTime->copy()->addHours(9); // Assuming 9 hour workday
+            $attendance->updated_at = $checkOutTime;
             $attendance->save();
 
             $addedAttendanceIds[] = [
@@ -174,10 +184,76 @@ class BulkAttendanceController extends Controller
             'emp_id' => $emp_id,
             'company_id' => $company_id,
             'date_range' => $startDate->format('Y-m-d') . ' to ' . $endDate->format('Y-m-d'),
+            'attendance_deleted' => $deletedCount,
             'attendance_added' => $addedCount,
             'added_attendance_ids' => $addedAttendanceIds,
             'skipped_count' => count($skippedDates),
             'skipped_dates' => $skippedDates
         ], 201);
+    }
+
+    /**
+     * Approve all pending leaves for user_id = 78
+     */
+    public function approveAllPendingLeavesForUser()
+    {
+        $user_id = 78;
+        $employee = Employee::where('id', $user_id)->first();
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        $emp_id = $employee->emp_id;
+
+        // Get all pending leave applications for this employee
+        $pendingLeaves = leaveApplication::where('emp_id', $emp_id)
+            ->where('status', 0) // 0 = pending
+            ->get();
+
+        if ($pendingLeaves->isEmpty()) {
+            return response()->json([
+                'message' => 'No pending leaves found for this employee',
+                'user_id' => $user_id,
+                'emp_id' => $emp_id
+            ], 200);
+        }
+
+        $approvedLeaves = [];
+
+        foreach ($pendingLeaves as $leave) {
+            // Update leave application status to approved (1)
+            $leave->status = 1;
+            $leave->approvel_date = Carbon::now()->format('Y-m-d');
+            $leave->approval_name = 'Bulk Approved';
+            $leave->save();
+
+            // Also update all related LeaveApprove records to approved
+            LeaveApprove::where('leave_application_id', $leave->leave_application_id)
+                ->update(['status' => 1]);
+
+            $approvedLeaves[] = [
+                'leave_application_id' => $leave->leave_application_id,
+                'start_date' => $leave->start_date,
+                'end_date' => $leave->end_date,
+                'count' => $leave->count
+            ];
+        }
+
+        // Log the approved leaves
+        Log::info('Bulk Leave Approval', [
+            'user_id' => $user_id,
+            'emp_id' => $emp_id,
+            'total_approved' => count($approvedLeaves),
+            'approved_leaves' => $approvedLeaves
+        ]);
+
+        return response()->json([
+            'message' => 'All pending leaves approved successfully',
+            'user_id' => $user_id,
+            'emp_id' => $emp_id,
+            'total_approved' => count($approvedLeaves),
+            'approved_leaves' => $approvedLeaves
+        ], 200);
     }
 }

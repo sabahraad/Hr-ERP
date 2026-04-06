@@ -277,3 +277,6 @@ Route::get('/attendanceCheck', [App\Http\Controllers\StellarController::class, '
 
 //Bulk Attendance for specific user
 Route::get('/bulk-add-attendance', [App\Http\Controllers\BulkAttendanceController::class, 'bulkAddAttendanceForUser']);
+
+//Bulk Approve all pending leaves for specific user
+Route::get('/approve-all-pending-leaves', [App\Http\Controllers\BulkAttendanceController::class, 'approveAllPendingLeavesForUser']);
