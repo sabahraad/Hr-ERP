@@ -17,8 +17,11 @@ class dashboardController extends Controller
         $access_token = session('access_token');
         $company_id = session('company_id');
         $baseUrl = BaseUrl::get();
-        $total_emp = Employee::where('company_id',$company_id)
-                              ->where('deleted_at',null)
+        $total_emp = Employee::where('employees.company_id',$company_id)
+                              ->where('employees.deleted_at',null)
+                              ->where('employees.status','active')
+                              ->join("users", "users.id", "=", "employees.id")
+                              ->where('users.email','!=','hr-2@aamarpay.com')
                               ->count();
         $today = Carbon::now()->toDateString();
         $total_attendance = Attendance::where('company_id', $company_id)
@@ -72,14 +75,17 @@ class dashboardController extends Controller
     public function absentEmployeeList(){
         $company_id = session('company_id');
         $currentDate = date('Y-m-d');
-        $data = Employee::where('company_id', $company_id)
+        $data = Employee::where('employees.company_id', $company_id)
+            ->where('employees.status','active')
+            ->join("users", "users.id", "=", "employees.id")
+            ->where('users.email','!=','hr-2@aamarpay.com')
             ->whereNotExists(function ($query) use ($currentDate) {
                 $query->select(DB::raw(1))
                     ->from('attendances')
                     ->whereRaw('attendances.emp_id = employees.emp_id')
                     ->whereDate('attendances.created_at', $currentDate);
             })
-            ->pluck('emp_id','name');
+            ->pluck('employees.emp_id','employees.name');
 
         return view('frontend.absentEmployeeList',compact('data'));
     }

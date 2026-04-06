@@ -570,6 +570,144 @@
                 transform: translate(-50%, 0);
             }
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 480px) {
+            .app-header {
+                padding: 12px 15px;
+            }
+            
+            .app-header h1 {
+                font-size: 16px;
+            }
+            
+            .user-menu span {
+                font-size: 12px;
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .logout-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .tab {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .current-time {
+                font-size: 36px;
+            }
+            
+            .current-date {
+                font-size: 14px;
+            }
+            
+            .check-button {
+                width: 160px;
+                height: 160px;
+                font-size: 16px;
+            }
+            
+            .check-button i {
+                font-size: 40px;
+            }
+            
+            .status-info {
+                padding: 15px;
+                margin-top: 25px;
+            }
+            
+            .status-item .value {
+                font-size: 16px;
+            }
+            
+            .status-item .label {
+                font-size: 11px;
+            }
+            
+            .calendar-grid {
+                gap: 4px;
+                padding: 10px;
+            }
+            
+            .calendar-day {
+                font-size: 12px;
+            }
+            
+            .calendar-day .status-label {
+                font-size: 7px;
+                padding: 1px 2px;
+            }
+            
+            .stats-summary {
+                padding: 12px;
+            }
+            
+            .stats-summary-item .number {
+                font-size: 20px;
+            }
+            
+            .stats-summary-item .label {
+                font-size: 11px;
+            }
+            
+            .stats-chart-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .chart-center-text .number {
+                font-size: 24px;
+            }
+            
+            .stats-legend {
+                gap: 10px;
+            }
+            
+            .legend-item {
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .calendar-day {
+                font-size: 10px;
+            }
+            
+            .calendar-day .status-label {
+                font-size: 6px;
+            }
+            
+            .stats-summary {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .stats-summary-item {
+                flex: 1;
+                min-width: 70px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .check-button:active {
+                transform: scale(0.95);
+            }
+            
+            .tab:active {
+                background: rgba(98, 88, 166, 0.1);
+            }
+        }
     </style>
 </head>
 <body>

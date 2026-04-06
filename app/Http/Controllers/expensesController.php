@@ -259,7 +259,10 @@ class expensesController extends Controller
         )
         ->join('departments', 'employees.dept_id', '=', 'departments.dept_id')
         ->join('designations', 'employees.designation_id', '=', 'designations.designation_id')
+        ->join("users", "users.id", "=", "employees.id")
         ->where('employees.company_id', $company_id)
+        ->where('employees.status','active')
+        ->where('users.email','!=','hr-2@aamarpay.com')
         ->havingRaw('total_amount_sum IS NOT NULL')
         ->get();
         return response()->json([

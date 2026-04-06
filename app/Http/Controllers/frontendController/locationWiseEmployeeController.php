@@ -51,7 +51,11 @@ class locationWiseEmployeeController extends Controller
         $result = LocationWiseEmployee::with('officeLocation')
                                     ->where('company_id', $company_id)
                                     ->get();
-        $employee = Employee::where('company_id',$company_id)->get();
+        $employee = Employee::where('employees.company_id',$company_id)
+                                ->where('employees.status','active')
+                                ->join("users", "users.id", "=", "employees.id")
+                                ->where('users.email','!=','hr-2@aamarpay.com')
+                                ->get(['employees.*']);
         // Extract emp_id values from the $result collection
         $existingEmpIds = $result->flatMap(function ($item) {
             return collect(json_decode($item->employee_ids))->pluck('emp_id')->toArray();
@@ -68,7 +72,11 @@ class locationWiseEmployeeController extends Controller
         $result = LocationWiseEmployee::with('officeLocation')
                                     ->where('company_id', $company_id)
                                     ->get();
-        $employee = Employee::where('company_id',$company_id)->get();
+        $employee = Employee::where('employees.company_id',$company_id)
+                                ->where('employees.status','active')
+                                ->join("users", "users.id", "=", "employees.id")
+                                ->where('users.email','!=','hr-2@aamarpay.com')
+                                ->get(['employees.*']);
         // Extract emp_id values from the $result collection
         $existingEmpIds = $result->flatMap(function ($item) {
             return collect(json_decode($item->employee_ids))->pluck('emp_id')->toArray();
@@ -90,7 +98,11 @@ class locationWiseEmployeeController extends Controller
                                     ->where('company_id', $company_id)
                                     ->where('location_wise_employees_id', '!=', $id)
                                     ->get();
-        $employee = Employee::where('company_id',$company_id)->get();
+        $employee = Employee::where('employees.company_id',$company_id)
+                                ->where('employees.status','active')
+                                ->join("users", "users.id", "=", "employees.id")
+                                ->where('users.email','!=','hr-2@aamarpay.com')
+                                ->get(['employees.*']);
         // Extract emp_id values from the $result collection
         $existingEmpIds = $result->flatMap(function ($item) {
             return collect(json_decode($item->employee_ids))->pluck('emp_id')->toArray();

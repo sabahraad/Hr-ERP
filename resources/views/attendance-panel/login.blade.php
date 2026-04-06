@@ -20,14 +20,18 @@
             box-sizing: border-box;
         }
         
-        body {
+        html, body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            width: 100%;
+        }
+        
+        body {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
         }
         
         .login-container {
@@ -35,44 +39,52 @@
             max-width: 400px;
             background: white;
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 35px 25px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         .logo-section {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
-        .logo-section img {
-            width: 80px;
-            height: 80px;
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+        
+        .logo-icon i {
+            font-size: 35px;
+            color: white;
         }
         
         .logo-section h3 {
             color: #333;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
+            margin-bottom: 5px;
         }
         
         .logo-section p {
             color: #666;
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 13px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #555;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
         }
         
@@ -80,22 +92,26 @@
             position: relative;
         }
         
-        .input-group i {
+        .input-icon {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #667eea;
-            font-size: 18px;
+            font-size: 16px;
+            pointer-events: none;
+            z-index: 1;
         }
         
         .form-control {
             width: 100%;
-            padding: 15px 15px 15px 45px;
+            padding: 14px 45px 14px 45px;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             transition: all 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
         }
         
         .form-control:focus {
@@ -111,21 +127,33 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: #999;
-            font-size: 18px;
+            font-size: 16px;
+            z-index: 10;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .password-toggle:active {
+            color: #667eea;
         }
         
         .btn-login {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
+            margin-top: 8px;
+            -webkit-appearance: none;
+            appearance: none;
         }
         
         .btn-login:hover {
@@ -140,8 +168,8 @@
         .alert {
             padding: 12px 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 18px;
+            font-size: 13px;
         }
         
         .alert-danger {
@@ -156,11 +184,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            flex-direction: column;
         }
         
         .loading-overlay.show {
@@ -168,8 +197,8 @@
         }
         
         .spinner {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
             border-radius: 50%;
@@ -185,6 +214,7 @@
         @media (max-width: 480px) {
             body {
                 padding: 0;
+                align-items: stretch;
             }
             
             .login-container {
@@ -193,6 +223,52 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                padding: 30px 20px;
+            }
+            
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo-icon i {
+                font-size: 30px;
+            }
+            
+            .logo-section h3 {
+                font-size: 20px;
+            }
+            
+            .form-control {
+                padding: 13px 42px 13px 42px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn-login {
+                padding: 14px;
+                font-size: 16px;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 360px) {
+            .login-container {
+                padding: 25px 15px;
+            }
+            
+            .logo-section h3 {
+                font-size: 18px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .password-toggle:hover {
+                color: #999;
+            }
+            
+            .password-toggle:active {
+                color: #667eea;
             }
         }
     </style>
@@ -200,8 +276,8 @@
 <body>
     <div class="login-container">
         <div class="logo-section">
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                <i class="fas fa-fingerprint" style="font-size: 40px; color: white;"></i>
+            <div class="logo-icon">
+                <i class="fas fa-fingerprint"></i>
             </div>
             <h3>Attendance</h3>
             <p>Employee Self Service Portal</p>
@@ -218,17 +294,19 @@
             <div class="form-group">
                 <label>Email Address</label>
                 <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required autofocus>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required autofocus autocomplete="email">
                 </div>
             </div>
             
             <div class="form-group">
                 <label>Password</label>
                 <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
-                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
                 </div>
             </div>
             
@@ -247,20 +325,28 @@
     
     <script>
         // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this;
+        (function() {
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
             
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.classList.remove('fa-eye');
+                        toggleIcon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.classList.remove('fa-eye-slash');
+                        toggleIcon.classList.add('fa-eye');
+                    }
+                });
             }
-        });
+        })();
         
         // Show loading on form submit
         document.getElementById('loginForm').addEventListener('submit', function() {

@@ -34,7 +34,11 @@ class StellarController extends Controller
             if ($takePresent == 0) {
                 continue; // Skip the rest of this iteration and move to the next company
             }
-            $emp_list = Employee::where('company_id', $company_id)->pluck('emp_id');
+            $emp_list = Employee::where('employees.company_id', $company_id)
+                ->where('employees.status','active')
+                ->join("users", "users.id", "=", "employees.id")
+                ->where('users.email','!=','hr-2@aamarpay.com')
+                ->pluck('employees.emp_id');
             foreach($emp_list as $emp_id){
                 $shiftEmployee = $this->getShiftEmployee($company_id, $emp_id);
                 $isWeekend = $this->checkWeekend($company_id, $shiftEmployee);

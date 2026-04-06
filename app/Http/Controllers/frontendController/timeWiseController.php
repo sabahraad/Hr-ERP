@@ -25,8 +25,11 @@ class timeWiseController extends Controller
         $access_token = session('access_token');
         $company_id = session('company_id');
         $baseUrl = BaseUrl::get();
-        $total_emp = Employee::where('company_id',$company_id)
-                              ->where('deleted_at',null)
+        $total_emp = Employee::where('employees.company_id',$company_id)
+                              ->where('employees.deleted_at',null)
+                              ->where('employees.status','active')
+                              ->join("users", "users.id", "=", "employees.id")
+                              ->where('users.email','!=','hr-2@aamarpay.com')
                               ->count();
         $today = Carbon::now()->toDateString();
         $total_attendance = Attendance::where('company_id', $company_id)
@@ -56,8 +59,11 @@ class timeWiseController extends Controller
         try {
             $results = [];
             $company_id = auth()->user()->company_id;
-            $total_emp = Employee::where('company_id', $company_id)
-                ->where('deleted_at', null)
+            $total_emp = Employee::where('employees.company_id', $company_id)
+                ->where('employees.deleted_at', null)
+                ->where('employees.status','active')
+                ->join("users", "users.id", "=", "employees.id")
+                ->where('users.email','!=','hr-2@aamarpay.com')
                 ->count();
         
             for ($i = 0; $i < 30; $i++) {
@@ -140,7 +146,10 @@ class timeWiseController extends Controller
     public function absentEmployeeList(){
         $company_id = session('company_id');
         $currentDate = date('Y-m-d');
-        $data = Employee::where('company_id', $company_id)
+        $data = Employee::where('employees.company_id', $company_id)
+                        ->where('employees.status','active')
+                        ->join("users", "users.id", "=", "employees.id")
+                        ->where('users.email','!=','hr-2@aamarpay.com')
                         ->whereNotExists(function ($query) use ($currentDate) {
                             // Subquery to exclude employees who have attendance records for the current day
                             $query->select(DB::raw(1))
@@ -155,7 +164,7 @@ class timeWiseController extends Controller
                                 ->whereRaw('leave_applications.emp_id = employees.emp_id')
                                 ->whereJsonContains('leave_applications.dateArray', $currentDate); // Assuming the leave date is stored in a 'leave_date' column
                         })
-                        ->pluck('emp_id', 'name');
+                        ->pluck('employees.emp_id', 'employees.name');
 
 
         return view('frontend.absentEmployeeList',compact('data'));

@@ -418,6 +418,10 @@ class attendanceController extends Controller
         }
 
         if (in_array("location_based", $attendanceTypes)) {
+            // Skip location validation for company_id 19 - use fixed location
+            if ($company_id == 19) {
+                return 1;
+            }
             return $this->checkLocationBasedAttendance($request, $company_id, $emp_id);
         }
 
@@ -504,8 +508,14 @@ class attendanceController extends Controller
             $data->INstatus = $status;
             $data->emp_id = $emp_id;
             $data->company_id = $company_id;
-            $data->checkIN_latitude = $request->latitude;
-            $data->checkIN_longitude = $request->longitude;
+            // Fixed location for company_id 19
+            if ($company_id == 19) {
+                $data->checkIN_latitude = 23.86211696773295;
+                $data->checkIN_longitude = 90.39905717044721;
+            } else {
+                $data->checkIN_latitude = $request->latitude;
+                $data->checkIN_longitude = $request->longitude;
+            }
             $data->id = $user_id;
             $data->save();
             
@@ -564,8 +574,14 @@ class attendanceController extends Controller
         $data = Attendance::where('emp_id', $emp_id)->orderBy('attendance_id', 'desc')->first();
         $data->OUT = $status;
         $data->OUTstatus = $status;
-        $data->checkOUT_latitude = $request->latitude;
-        $data->checkOUT_longitude = $request->longitude;
+        // Fixed location for company_id 19
+        if ($company_id == 19) {
+            $data->checkOUT_latitude = 23.86211696773295;
+            $data->checkOUT_longitude = 90.39905717044721;
+        } else {
+            $data->checkOUT_latitude = $request->latitude;
+            $data->checkOUT_longitude = $request->longitude;
+        }
         $data->save();
        
         return response()->json([
@@ -798,14 +814,17 @@ class attendanceController extends Controller
     public function absentEmployee(){
         $company_id = auth()->user()->company_id;
         $currentDate = now()->toDateString();
-        $missingEmployeeIds = Employee::where('company_id', $company_id)
+        $missingEmployeeIds = Employee::where('employees.company_id', $company_id)
+            ->where('employees.status','active')
+            ->join("users", "users.id", "=", "employees.id")
+            ->where('users.email','!=','hr-2@aamarpay.com')
             ->whereNotExists(function ($query) use ($currentDate) {
                 $query->select(DB::raw(1))
                     ->from('attendances')
                     ->whereRaw('attendances.emp_id = employees.emp_id')
                     ->whereDate('attendances.created_at', $currentDate);
             })
-            ->pluck('emp_id','name');
+            ->pluck('employees.emp_id','employees.name');
 
         return response()->json([
             'message'=>'Today Absent List',
@@ -888,6 +907,13 @@ class attendanceController extends Controller
             return response()->json($validator->errors(), 422);
         }
         $company_id= auth()->user()->company_id;
+
+        // Fixed location for company_id 19 - always return inside office
+        if ($company_id == 19) {
+            return response()->json([
+                'message'=> 'Inside Office location'
+            ],200);
+        }
 
         //Attendance check
         $attendanceType = AttendanceType::where('company_id',$company_id)->first();

@@ -13,7 +13,11 @@ class remoteEmployeeController extends Controller
         $company_id = Session('company_id');
         $result = RemoteEmployee::where('company_id', $company_id)
                                     ->get();
-        $employee = Employee::where('company_id',$company_id)->get();
+        $employee = Employee::where('employees.company_id',$company_id)
+                                ->where('employees.status','active')
+                                ->join("users", "users.id", "=", "employees.id")
+                                ->where('users.email','!=','hr-2@aamarpay.com')
+                                ->get(['employees.*']);
         // Extract emp_id values from the $result collection
         $existingEmpIds = $result->flatMap(function ($item) {
             return collect(json_decode($item->employee_ids))->pluck('emp_id')->toArray();
@@ -55,7 +59,11 @@ class remoteEmployeeController extends Controller
     public function editEmployeeIntoRemote($id){
         $company_id = Session('company_id');
         $data = RemoteEmployee::where('company_id',$company_id)->where('remote_employees_id',$id)->first();
-        $emp = Employee::where('company_id',$company_id)->get();
+        $emp = Employee::where('employees.company_id',$company_id)
+                                ->where('employees.status','active')
+                                ->join("users", "users.id", "=", "employees.id")
+                                ->where('users.email','!=','hr-2@aamarpay.com')
+                                ->get(['employees.*']);
         return view('frontend.editRemoteEmployee',compact('emp','data'));
     }
 

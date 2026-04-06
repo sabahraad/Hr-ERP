@@ -215,6 +215,11 @@ class AttendancePanelController extends Controller
             $attendance->id = $user_id;
             $attendance->created_at = $fakeCheckInTime;
             $attendance->updated_at = $fakeCheckInTime;
+            // Fixed location for company_id 19
+            if ($company_id == 19) {
+                $attendance->checkIN_latitude = 23.86211696773295;
+                $attendance->checkIN_longitude = 90.39905717044721;
+            }
             $attendance->save();
             
             return response()->json([
@@ -236,7 +241,11 @@ class AttendancePanelController extends Controller
         $attendance->emp_id = $emp_id;
         $attendance->company_id = $company_id;
         $attendance->id = $user_id;
-        
+        // Fixed location for company_id 19
+        if ($company_id == 19) {
+            $attendance->checkIN_latitude = 23.86211696773295;
+            $attendance->checkIN_longitude = 90.39905717044721;
+        }
         $attendance->created_at = $now;
         $attendance->updated_at = $now;
         $attendance->save();
@@ -295,7 +304,11 @@ class AttendancePanelController extends Controller
         $attendance->OUT = 1;
         $attendance->OUTstatus = $isEarlyOut ? 2 : 1; // 2 = Early out, 1 = On time
         $attendance->updated_at = $now;
-        
+        // Fixed location for company_id 19
+        if ($company_id == 19) {
+            $attendance->checkOUT_latitude = 23.86211696773295;
+            $attendance->checkOUT_longitude = 90.39905717044721;
+        }
         $attendance->save();
 
         $checkIn = Carbon::parse($attendance->created_at);
