@@ -128,7 +128,7 @@ class reportController extends Controller
         $startDate = $dateParts[0];
         $endDate = $dateParts[1];
         $employees = Employee::where('employees.company_id', $company_id)
-                            ->where('employees.status','active')
+                            ->where('employees.status',1)
                             ->join("users", "users.id", "=", "employees.id")
                             ->where('users.email','!=','hr-2@aamarpay.com')
                             ->join('leave_applications', 'employees.emp_id', '=', 'leave_applications.emp_id')

@@ -47,7 +47,7 @@ class timelineController extends Controller
         $company_id = auth()->user()->company_id;
         $data = TimelineSetting::where('timeline_settings.company_id',$company_id)
                                 ->join('employees','employees.emp_id','=','timeline_settings.emp_id')
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->orderby('timeline_settings.updated_at','desc')

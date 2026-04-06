@@ -52,7 +52,7 @@ class locationWiseEmployeeController extends Controller
                                     ->where('company_id', $company_id)
                                     ->get();
         $employee = Employee::where('employees.company_id',$company_id)
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->get(['employees.*']);
@@ -73,7 +73,7 @@ class locationWiseEmployeeController extends Controller
                                     ->where('company_id', $company_id)
                                     ->get();
         $employee = Employee::where('employees.company_id',$company_id)
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->get(['employees.*']);
@@ -99,7 +99,7 @@ class locationWiseEmployeeController extends Controller
                                     ->where('location_wise_employees_id', '!=', $id)
                                     ->get();
         $employee = Employee::where('employees.company_id',$company_id)
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->get(['employees.*']);

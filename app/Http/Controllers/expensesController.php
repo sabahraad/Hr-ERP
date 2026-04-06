@@ -261,7 +261,7 @@ class expensesController extends Controller
         ->join('designations', 'employees.designation_id', '=', 'designations.designation_id')
         ->join("users", "users.id", "=", "employees.id")
         ->where('employees.company_id', $company_id)
-        ->where('employees.status','active')
+        ->where('employees.status',1)
         ->where('users.email','!=','hr-2@aamarpay.com')
         ->havingRaw('total_amount_sum IS NOT NULL')
         ->get();

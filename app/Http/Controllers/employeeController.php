@@ -111,7 +111,7 @@ class employeeController extends Controller
 
         $company_id= auth()->user()->company_id;
         $data = Employee::where('employees.company_id',$company_id)
-                ->where('employees.status','active')
+                ->where('employees.status',1)
                 ->where('users.email','!=','hr-2@aamarpay.com')
                 ->join("users", "users.id", "=", "employees.id")
                 ->join("departments","departments.dept_id","=","employees.dept_id")
@@ -141,7 +141,7 @@ class employeeController extends Controller
     public function empList(){
         $company_id = auth()->user()->company_id;
         $data = Employee::where('employees.company_id',$company_id)
-                ->where('employees.status','active')
+                ->where('employees.status',1)
                 ->where('users.email','!=','hr-2@aamarpay.com')
                 ->join("users", "users.id", "=", "employees.id")
                 ->get(['employees.*', 'users.email']);
@@ -154,7 +154,7 @@ class employeeController extends Controller
     public function employeeListForAdminPanel(){
         $company_id= auth()->user()->company_id;
         $data = Employee::where('employees.company_id',$company_id)
-                ->where('employees.status','active')
+                ->where('employees.status',1)
                 ->where('users.email','!=','hr-2@aamarpay.com')
                 ->join("users", "users.id", "=", "employees.id")
                 ->join("departments","departments.dept_id","=","employees.dept_id")

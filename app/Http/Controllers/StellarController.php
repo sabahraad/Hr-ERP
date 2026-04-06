@@ -35,7 +35,7 @@ class StellarController extends Controller
                 continue; // Skip the rest of this iteration and move to the next company
             }
             $emp_list = Employee::where('employees.company_id', $company_id)
-                ->where('employees.status','active')
+                ->where('employees.status',1)
                 ->join("users", "users.id", "=", "employees.id")
                 ->where('users.email','!=','hr-2@aamarpay.com')
                 ->pluck('employees.emp_id');

@@ -14,7 +14,7 @@ class remoteEmployeeController extends Controller
         $result = RemoteEmployee::where('company_id', $company_id)
                                     ->get();
         $employee = Employee::where('employees.company_id',$company_id)
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->get(['employees.*']);
@@ -60,7 +60,7 @@ class remoteEmployeeController extends Controller
         $company_id = Session('company_id');
         $data = RemoteEmployee::where('company_id',$company_id)->where('remote_employees_id',$id)->first();
         $emp = Employee::where('employees.company_id',$company_id)
-                                ->where('employees.status','active')
+                                ->where('employees.status',1)
                                 ->join("users", "users.id", "=", "employees.id")
                                 ->where('users.email','!=','hr-2@aamarpay.com')
                                 ->get(['employees.*']);

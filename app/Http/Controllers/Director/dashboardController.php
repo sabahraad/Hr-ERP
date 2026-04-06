@@ -19,7 +19,7 @@ class dashboardController extends Controller
         $baseUrl = BaseUrl::get();
         $total_emp = Employee::where('employees.company_id',$company_id)
                               ->where('employees.deleted_at',null)
-                              ->where('employees.status','active')
+                              ->where('employees.status',1)
                               ->join("users", "users.id", "=", "employees.id")
                               ->where('users.email','!=','hr-2@aamarpay.com')
                               ->count();
@@ -76,7 +76,7 @@ class dashboardController extends Controller
         $company_id = session('company_id');
         $currentDate = date('Y-m-d');
         $data = Employee::where('employees.company_id', $company_id)
-            ->where('employees.status','active')
+            ->where('employees.status',1)
             ->join("users", "users.id", "=", "employees.id")
             ->where('users.email','!=','hr-2@aamarpay.com')
             ->whereNotExists(function ($query) use ($currentDate) {
