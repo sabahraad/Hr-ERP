@@ -709,14 +709,20 @@ class attendanceController extends Controller
             if($dateOnly == $date){
                 $created_at = Carbon::parse($value->created_at);
                 if($value->OUT == null){
-                    $timeDifference = $currentDateTime->diff($created_at);
-                    $workingHour = $timeDifference->format('%H:%I:%S');
+                    $totalMinutes = $created_at->diffInMinutes($currentDateTime);
+                    $hours = floor($totalMinutes / 60);
+                    $minutes = $totalMinutes % 60;
+                    $seconds = $created_at->diffInSeconds($currentDateTime) % 60;
+                    $workingHour = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
                     $value->workingHour = $workingHour;
                     $data = $value;
                 }else{
                     $updated_at = Carbon::parse($value->updated_at);
-                    $timeDifference = $created_at->diff($updated_at);
-                    $workingHour = $timeDifference->format('%H:%I:%S');
+                    $totalMinutes = $created_at->diffInMinutes($updated_at);
+                    $hours = floor($totalMinutes / 60);
+                    $minutes = $totalMinutes % 60;
+                    $seconds = $created_at->diffInSeconds($updated_at) % 60;
+                    $workingHour = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
                     $value->workingHour = $workingHour;
                     $data = $value;
                 }

@@ -69,14 +69,18 @@ class EmployeeAttendanceController extends Controller
                 // Calculate working hours
                 $checkIn = Carbon::parse($todayAttendance->created_at);
                 $checkOut = Carbon::parse($todayAttendance->updated_at);
-                $diff = $checkIn->diff($checkOut);
-                $attendanceStatus['working_hours'] = sprintf('%02d:%02d Hr\'s', $diff->h + ($diff->days * 24), $diff->i);
+                $totalMinutes = $checkIn->diffInMinutes($checkOut);
+                $hours = floor($totalMinutes / 60);
+                $minutes = $totalMinutes % 60;
+                $attendanceStatus['working_hours'] = sprintf('%02d:%02d Hr\'s', $hours, $minutes);
             } else {
                 // Calculate working hours so far
                 $checkIn = Carbon::parse($todayAttendance->created_at);
                 $now = Carbon::now();
-                $diff = $checkIn->diff($now);
-                $attendanceStatus['working_hours'] = sprintf('%02d:%02d Hr\'s', $diff->h + ($diff->days * 24), $diff->i);
+                $totalMinutes = $checkIn->diffInMinutes($now);
+                $hours = floor($totalMinutes / 60);
+                $minutes = $totalMinutes % 60;
+                $attendanceStatus['working_hours'] = sprintf('%02d:%02d Hr\'s', $hours, $minutes);
             }
         }
 
@@ -294,8 +298,10 @@ class EmployeeAttendanceController extends Controller
         // Calculate working hours
         $checkIn = Carbon::parse($attendance->created_at);
         $checkOut = $now;
-        $diff = $checkIn->diff($checkOut);
-        $workingHours = sprintf('%02d:%02d Hr\'s', $diff->h + ($diff->days * 24), $diff->i);
+        $totalMinutes = $checkIn->diffInMinutes($checkOut);
+        $hours = floor($totalMinutes / 60);
+        $minutes = $totalMinutes % 60;
+        $workingHours = sprintf('%02d:%02d Hr\'s', $hours, $minutes);
 
         return response()->json([
             'success' => true,
