@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Log;
 class BulkAttendanceController extends Controller
 {
     /**
-     * Bulk add attendance for user_id = 78 from Feb 18 to March 21
-     * Attendance time: Random between 09:00 AM and 09:30 AM
-     * Attendance checkout time: Random between 04:00 PM and 04:30 PM
+     * Bulk add attendance for user_id = 78 from March 21 to April 7, 2026
+     * Attendance time: Random between 10:00 AM and 10:30 AM
+     * Attendance checkout time: Random between 07:00 PM and 08:30 PM
      * Checks: Weekends, Holidays, Approved Leaves, Existing Attendance
      */
     public function bulkAddAttendanceForUser()
@@ -33,9 +33,9 @@ class BulkAttendanceController extends Controller
         $emp_id = $employee->emp_id;
         $company_id = User::find($user_id)->company_id;
 
-        // Date range: Feb 18, 2026 to March 21, 2026
-        $startDate = Carbon::create(2026, 2, 18);
-        $endDate = Carbon::create(2026, 3, 21);
+        // Date range: March 21, 2026 to April 7, 2026
+        $startDate = Carbon::create(2026, 3, 21);
+        $endDate = Carbon::create(2026, 4, 7);
 
         // Delete existing attendance records for this user in the date range
         $deletedCount = Attendance::where('emp_id', $emp_id)
@@ -61,14 +61,23 @@ class BulkAttendanceController extends Controller
             }
         }
 
-        // Get holidays for the company within date range
-        $holidays = Holiday::where('company_id', $company_id)
-            ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->pluck('date')
-            ->map(function ($date) {
-                return Carbon::parse($date)->format('Y-m-d');
-            })
-            ->toArray();
+        // Get holidays for the company within date range (JSON date format)
+        $holidayRecords = Holiday::where('company_id', $company_id)
+            ->whereNull('deleted_at')
+            ->get();
+        
+        $holidays = [];
+        foreach ($holidayRecords as $record) {
+            $dates = json_decode($record->date, true);
+            if (is_array($dates)) {
+                foreach ($dates as $date) {
+                    $holidayDate = Carbon::parse($date)->format('Y-m-d');
+                    if ($holidayDate >= $startDate->format('Y-m-d') && $holidayDate <= $endDate->format('Y-m-d')) {
+                        $holidays[] = $holidayDate;
+                    }
+                }
+            }
+        }
 
         // Get approved leaves for the employee within date range
         $approvedLeaves = leaveApplication::where('emp_id', $emp_id)
@@ -120,26 +129,26 @@ class BulkAttendanceController extends Controller
                 continue;
             }
 
-            // Generate random check-in time between 09:00 AM and 09:30 AM
+            // Generate random check-in time between 10:00 AM and 10:30 AM
             $randomMinutes = mt_rand(0, 30);
             $randomSeconds = mt_rand(0, 59);
             $checkInTime = Carbon::create(
                 $currentLoopDate->year,
                 $currentLoopDate->month,
                 $currentLoopDate->day,
-                9,
+                10, // 10 AM
                 $randomMinutes,
                 $randomSeconds
             );
 
-            // Generate random check-out time between 04:00 PM and 04:30 PM
-            $randomOutMinutes = mt_rand(0, 30);
+            // Generate random check-out time between 07:00 PM and 08:30 PM
+            $randomOutMinutes = mt_rand(0, 90); // 0 to 90 minutes (7:00 PM to 8:30 PM)
             $randomOutSeconds = mt_rand(0, 59);
             $checkOutTime = Carbon::create(
                 $currentLoopDate->year,
                 $currentLoopDate->month,
                 $currentLoopDate->day,
-                16, // 4 PM
+                19, // 7 PM
                 $randomOutMinutes,
                 $randomOutSeconds
             );
@@ -160,7 +169,8 @@ class BulkAttendanceController extends Controller
             $addedAttendanceIds[] = [
                 'attendance_id' => $attendance->attendance_id,
                 'date' => $dateStr,
-                'check_in_time' => $checkInTime->format('H:i:s')
+                'check_in_time' => $checkInTime->format('H:i:s'),
+                'check_out_time' => $checkOutTime->format('H:i:s')
             ];
 
             $addedCount++;

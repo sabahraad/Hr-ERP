@@ -433,12 +433,23 @@ class AttendancePanelController extends Controller
             }
         }
 
-        // Get approved leaves
+        // Get approved leaves - check if leave overlaps with current month
         $approvedLeaves = leaveApplication::where('emp_id', $emp_id)
             ->where('status', 1)
             ->where(function ($query) use ($month, $year) {
-                $query->whereMonth('start_date', $month)
-                    ->whereYear('start_date', $year);
+                $query->where(function ($q) use ($month, $year) {
+                    // Leave starts in current month
+                    $q->whereMonth('start_date', $month)
+                      ->whereYear('start_date', $year);
+                })->orWhere(function ($q) use ($month, $year) {
+                    // Leave ends in current month
+                    $q->whereMonth('end_date', $month)
+                      ->whereYear('end_date', $year);
+                })->orWhere(function ($q) use ($month, $year) {
+                    // Leave spans across current month (starts before, ends after)
+                    $q->whereDate('start_date', '<', Carbon::createFromDate($year, $month, 1))
+                      ->whereDate('end_date', '>', Carbon::createFromDate($year, $month, 1)->endOfMonth());
+                });
             })
             ->get();
 
