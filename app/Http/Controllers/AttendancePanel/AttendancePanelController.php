@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\AttendancePanel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Approvers;
 use App\Models\Attendance;
 use App\Models\AttendanceSetting;
 use App\Models\Employee;
 use App\Models\Holiday;
 use App\Models\leaveApplication;
+use App\Models\leaveSetting;
+use App\Models\LeaveApprove;
 use App\Models\User;
 use App\Models\Weekend;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AttendancePanelController extends Controller
 {
@@ -507,5 +511,252 @@ class AttendancePanelController extends Controller
         }
 
         return $attendanceData;
+    }
+
+    /**
+     * Get available leave types for the employee
+     */
+    public function getLeaveTypes()
+    {
+        if (!Session::has('attendance_user_id')) {
+            return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
+        }
+
+        $company_id = Session::get('attendance_company_id');
+        $emp_id = Session::get('attendance_emp_id');
+
+        // Get all leave types for company
+        $leaveSettings = leaveSetting::where('company_id', $company_id)
+            ->where('status', 1)
+            ->get();
+
+        // Get used leaves
+        $usedLeaves = leaveApplication::where('emp_id', $emp_id)
+            ->where('status', 1)
+            ->get()
+            ->groupBy('leave_setting_id')
+            ->map(function ($items) {
+                return $items->sum('count');
+            });
+
+        // Calculate available leaves
+        $leaveTypes = $leaveSettings->map(function ($leave) use ($usedLeaves) {
+            $used = $usedLeaves[$leave->leave_setting_id] ?? 0;
+            return [
+                'leave_setting_id' => $leave->leave_setting_id,
+                'leave_type' => $leave->leave_type,
+                'total_days' => $leave->days,
+                'used_days' => $used,
+                'available_days' => $leave->days - $used
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaveTypes
+        ]);
+    }
+
+    /**
+     * Get employee's leave applications
+     */
+    public function getMyLeaveRequests()
+    {
+        if (!Session::has('attendance_user_id')) {
+            return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
+        }
+
+        $emp_id = Session::get('attendance_emp_id');
+
+        $leaveRequests = leaveApplication::where('emp_id', $emp_id)
+            ->join('leave_settings', 'leave_applications.leave_setting_id', '=', 'leave_settings.leave_setting_id')
+            ->select(
+                'leave_applications.*',
+                'leave_settings.leave_type'
+            )
+            ->orderBy('leave_applications.created_at', 'desc')
+            ->get()
+            ->map(function ($item) {
+                $statusLabels = [
+                    0 => 'Pending',
+                    1 => 'Approved',
+                    2 => 'Rejected'
+                ];
+                $item->status_label = $statusLabels[$item->status] ?? 'Unknown';
+                return $item;
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequests
+        ]);
+    }
+
+    /**
+     * Submit leave application
+     */
+    public function submitLeaveRequest(Request $request)
+    {
+        if (!Session::has('attendance_user_id')) {
+            return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
+        }
+
+        $emp_id = Session::get('attendance_emp_id');
+        $company_id = Session::get('attendance_company_id');
+
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'leave_setting_id' => 'required|integer',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'reason' => 'required|string',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+
+        // Validate date range
+        if ($startDate > $endDate) {
+            return response()->json([
+                'success' => false,
+                'message' => 'End date cannot be before start date'
+            ], 400);
+        }
+
+        // Build date list excluding weekends and holidays
+        $dateList = [];
+        $currentDate = $startDate->copy();
+        
+        while ($currentDate <= $endDate) {
+            $dateList[] = $currentDate->toDateString();
+            $currentDate->addDay();
+        }
+
+        // Remove holidays
+        $holidays = Holiday::where('company_id', $company_id)->get();
+        foreach ($holidays as $holiday) {
+            $holidayDates = json_decode($holiday->date, true);
+            if (is_array($holidayDates)) {
+                $dateList = array_diff($dateList, $holidayDates);
+            }
+        }
+
+        // Remove weekends
+        $weekend = Weekend::where('company_id', $company_id)->first();
+        if ($weekend) {
+            $dateList = array_filter($dateList, function ($date) use ($weekend) {
+                $dayName = Carbon::parse($date)->format('l');
+                return !$weekend->$dayName;
+            });
+        }
+
+        $dateList = array_values($dateList);
+        $count = count($dateList);
+
+        if ($count == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No valid working days selected'
+            ], 400);
+        }
+
+        // Check available leave balance
+        $leaveSetting = leaveSetting::find($request->leave_setting_id);
+        if (!$leaveSetting) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Leave type not found'
+            ], 404);
+        }
+        
+        $usedLeaves = leaveApplication::where('emp_id', $emp_id)
+            ->where('leave_setting_id', $request->leave_setting_id)
+            ->where('status', 1)
+            ->sum('count');
+        
+        $available = $leaveSetting->days - $usedLeaves;
+
+        if ($count > $available) {
+            return response()->json([
+                'success' => false,
+                'message' => "You can only apply for {$available} days"
+            ], 400);
+        }
+
+        // Check for existing applications on same dates
+        $existingLeaves = leaveApplication::where('emp_id', $emp_id)
+            ->whereIn('status', [0, 1])
+            ->where(function ($query) use ($dateList) {
+                foreach ($dateList as $date) {
+                    $query->orWhereJsonContains('dateArray', $date);
+                }
+            })
+            ->exists();
+
+        if ($existingLeaves) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already applied for leave on some of these dates'
+            ], 400);
+        }
+
+        // Create leave application
+        $leaveApplication = new leaveApplication();
+        $leaveApplication->emp_id = $emp_id;
+        $leaveApplication->leave_setting_id = $request->leave_setting_id;
+        $leaveApplication->start_date = $request->start_date;
+        $leaveApplication->end_date = $request->end_date;
+        $leaveApplication->dateArray = json_encode($dateList);
+        $leaveApplication->count = $count;
+        $leaveApplication->status = 0;
+        $leaveApplication->reason = $request->reason;
+
+        // Handle file upload
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '_' . uniqid() . '.' . $extension;
+            
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $path = $file->storeAs('leave_images', $filename, 'public');
+                $leaveApplication->image = 'storage/' . $path;
+            } elseif ($extension === 'pdf') {
+                $path = $file->storeAs('leave_pdfs', $filename, 'public');
+                $leaveApplication->image = 'storage/' . $path;
+            }
+        }
+
+        $leaveApplication->save();
+
+        // Create approver entries
+        $employee = Employee::where('emp_id', $emp_id)->first();
+        if ($employee) {
+            $approvers = Approvers::where('deptId', $employee->dept_id)->get();
+            
+            foreach ($approvers as $approver) {
+                $leaveApprove = new LeaveApprove();
+                $leaveApprove->dept_id = $employee->dept_id;
+                $leaveApprove->leave_application_id = $leaveApplication->leave_application_id;
+                $leaveApprove->approver_emp_id = $approver->emp_id;
+                $leaveApprove->approver_name = $approver->approver_name;
+                $leaveApprove->status = 0;
+                $leaveApprove->priority = $approver->priority;
+                $leaveApprove->save();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Leave application submitted successfully',
+            'data' => $leaveApplication
+        ]);
     }
 }

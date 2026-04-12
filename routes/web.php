@@ -34,6 +34,11 @@ Route::prefix('attendance-panel')->group(function () {
         Route::post('/check-in', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'checkIn'])->name('attendance-panel.checkin');
         Route::post('/check-out', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'checkOut'])->name('attendance-panel.checkout');
         Route::get('/monthly-report', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'getMonthlyReport'])->name('attendance-panel.monthly-report');
+        
+        // Leave Application Routes
+        Route::get('/leave-types', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'getLeaveTypes'])->name('attendance-panel.leave-types');
+        Route::get('/my-leave-requests', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'getMyLeaveRequests'])->name('attendance-panel.my-leave-requests');
+        Route::post('/submit-leave', [App\Http\Controllers\AttendancePanel\AttendancePanelController::class, 'submitLeaveRequest'])->name('attendance-panel.submit-leave');
     });
 });
 
