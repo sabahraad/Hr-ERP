@@ -1147,6 +1147,124 @@
         .text-muted {
             color: #888;
         }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease;
+        }
+        
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            background: #6258a6;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .detail-value.status-approved {
+            color: #4caf50;
+        }
+        
+        .detail-value.status-pending {
+            color: #ff9800;
+        }
+        
+        .detail-value.status-rejected {
+            color: #f44336;
+        }
+        
+        .reason-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .reason-box label {
+            color: #666;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .reason-box p {
+            color: #333;
+            font-size: 14px;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -1450,6 +1568,19 @@
             <button class="submit-btn" onclick="submitLeaveRequest()">
                 Submit Leave
             </button>
+        </div>
+    </div>
+    
+    <!-- Leave Details Modal -->
+    <div id="leaveDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Leave Details</h3>
+                <button class="modal-close" onclick="closeLeaveModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="leaveModalBody">
+                <!-- Content will be loaded here -->
+            </div>
         </div>
     </div>
     
@@ -2004,7 +2135,15 @@
                 const dateStr = `${startDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long' })} to ${endDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long' })} (${endDate.getFullYear()})`;
                 
                 return `
-                    <div class="leave-card">
+                    <div class="leave-card" 
+                         data-leave-id="${req.leave_application_id}"
+                         data-leave-type="${req.leave_type}"
+                         data-start-date="${req.start_date}"
+                         data-end-date="${req.end_date}"
+                         data-status="${req.status}"
+                         data-status-label="${req.status_label}"
+                         data-reason="${req.reason || ''}"
+                         data-count="${req.count}">
                         <div class="leave-card-avatar" style="display:flex;align-items:center;justify-content:center;background:#6258a6;color:white;font-weight:bold;font-size:20px;">
                             {{ substr(session('attendance_user_name'), 0, 1) }}
                         </div>
@@ -2022,9 +2161,71 @@
         }
 
         function viewLeaveDetails(id) {
-            // Can be implemented to show a modal with leave details
-            showToast('Leave ID: ' + id, 'success');
+            // Find the leave request from the loaded data
+            const leaveCard = document.querySelector(`[data-leave-id="${id}"]`);
+            if (!leaveCard) return;
+            
+            const leaveType = leaveCard.dataset.leaveType;
+            const startDate = leaveCard.dataset.startDate;
+            const endDate = leaveCard.dataset.endDate;
+            const status = leaveCard.dataset.status;
+            const statusLabel = leaveCard.dataset.statusLabel;
+            const reason = leaveCard.dataset.reason || 'No reason provided';
+            const count = leaveCard.dataset.count;
+            
+            const statusClass = status == 1 ? 'status-approved' : (status == 2 ? 'status-rejected' : 'status-pending');
+            
+            const modalBody = document.getElementById('leaveModalBody');
+            modalBody.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Leave Type</span>
+                    <span class="detail-value">${leaveType}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Start Date</span>
+                    <span class="detail-value">${formatDateLong(startDate)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">End Date</span>
+                    <span class="detail-value">${formatDateLong(endDate)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Days</span>
+                    <span class="detail-value">${count} day(s)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value ${statusClass}">${statusLabel}</span>
+                </div>
+                <div class="reason-box">
+                    <label>Reason</label>
+                    <p>${reason}</p>
+                </div>
+            `;
+            
+            document.getElementById('leaveDetailsModal').style.display = 'flex';
         }
+        
+        function closeLeaveModal() {
+            document.getElementById('leaveDetailsModal').style.display = 'none';
+        }
+        
+        function formatDateLong(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('leaveDetailsModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaveModal();
+            }
+        });
 
         // Load Leave Types
         async function loadLeaveTypes() {
