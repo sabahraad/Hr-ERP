@@ -524,24 +524,28 @@ class AttendancePanelController extends Controller
 
         $company_id = Session::get('attendance_company_id');
         $emp_id = Session::get('attendance_emp_id');
+        $currentYear = Carbon::now()->year;
 
         // Get all leave types for company
         $leaveSettings = leaveSetting::where('company_id', $company_id)
             ->where('status', 1)
             ->get();
 
-        // Get used leaves
+        // Get used leaves for the current year only (based on leave dates, not application date)
         $usedLeaves = leaveApplication::where('emp_id', $emp_id)
             ->where('status', 1)
+            ->whereYear('start_date', $currentYear)
             ->get()
-            ->groupBy('leave_setting_id')
+            ->groupBy(function ($item) {
+                return (int) $item->leave_setting_id;
+            })
             ->map(function ($items) {
                 return $items->sum('count');
             });
 
         // Calculate available leaves
         $leaveTypes = $leaveSettings->map(function ($leave) use ($usedLeaves) {
-            $used = $usedLeaves[$leave->leave_setting_id] ?? 0;
+            $used = $usedLeaves[(int) $leave->leave_setting_id] ?? 0;
             return [
                 'leave_setting_id' => $leave->leave_setting_id,
                 'leave_type' => $leave->leave_type,
@@ -677,9 +681,11 @@ class AttendancePanelController extends Controller
             ], 404);
         }
         
+        $currentYear = Carbon::now()->year;
         $usedLeaves = leaveApplication::where('emp_id', $emp_id)
             ->where('leave_setting_id', $request->leave_setting_id)
             ->where('status', 1)
+            ->whereYear('start_date', $currentYear)
             ->sum('count');
         
         $available = $leaveSetting->days - $usedLeaves;

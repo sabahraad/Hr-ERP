@@ -191,8 +191,11 @@ class leaveController extends Controller
             ],403);
         }
 
+        $currentYear = Carbon::now()->year;
         $leaveTaken = leaveApplication::where('leave_setting_id',$request->leave_setting_id)
                              ->where('emp_id',$emp_id)
+                             ->where('status', 1)
+                             ->whereYear('start_date', $currentYear)
                              ->get();
         $leaveTakenCount = $leaveTaken->sum('count');
         $leaveDayCount = leaveSetting::where('leave_setting_id',$request->leave_setting_id)->value('days');
@@ -256,8 +259,14 @@ class leaveController extends Controller
         $company_id = auth()->user()->company_id;
         $user_id = auth()->user()->id;
         $emp_id= Employee::where('id',$user_id)->value('emp_id');
+        $currentYear = Carbon::now()->year;
+        
         $response1= leaveSetting::where('company_id',$company_id)->get();
-        $response2 = leaveApplication::where('emp_id', $emp_id)->where('status',1)->get();
+        // Only count approved leaves from the current year (based on leave dates, not application date)
+        $response2 = leaveApplication::where('emp_id', $emp_id)
+                        ->where('status', 1)
+                        ->whereYear('start_date', $currentYear)
+                        ->get();
        
         $data1 = json_decode($response1, true);
         $data2 = json_decode($response2, true);
@@ -265,10 +274,10 @@ class leaveController extends Controller
         $results = [];
 
         foreach ($data1 as $item1) {
-            $leave_setting_id1 = $item1['leave_setting_id'];
+            $leave_setting_id1 = (int) $item1['leave_setting_id'];
             $days1 = $item1['days'];
             foreach ($data2 as $item2) {
-                $leave_setting_id2 = $item2['leave_setting_id'];
+                $leave_setting_id2 = (int) $item2['leave_setting_id'];
                 $count = $item2['count'];
 
                 if ($leave_setting_id1 === $leave_setting_id2) {
